@@ -8,7 +8,7 @@ const ListSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
+        ref: 'Lesprit_User',
         required: true
     },
     createdAt: {

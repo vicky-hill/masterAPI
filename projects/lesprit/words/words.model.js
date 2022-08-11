@@ -19,12 +19,12 @@ const WordSchema = new mongoose.Schema({
     },
     list: {
         type: mongoose.Schema.ObjectId,
-        ref: 'List',
+        ref: 'Lesprit_List',
         required: true
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
+        ref: 'Lesprit_User',
         required: true
     },
     rating: {
