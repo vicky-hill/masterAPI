@@ -3,18 +3,18 @@ const mongoose = require('mongoose');
 const GroupSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User'
+        ref: 'Minite_User'
     },
     title: {
         type: String
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Minite_User'
     }],
     images: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Image'
+        ref: 'Minite_Image'
     }]
 }, {
     timestamps: true,

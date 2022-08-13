@@ -15,7 +15,7 @@ const BookmarkSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User'
+        ref: 'Minite_User'
     },
     primary: {
         type: Boolean,

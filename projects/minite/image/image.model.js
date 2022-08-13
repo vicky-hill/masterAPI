@@ -7,12 +7,12 @@ const ImageSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
+        ref: 'Minite_User',
         required: true
     },
     bookmark: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Bookmark',
+        ref: 'Minite_Bookmark',
         default: null
     },
     orientation: {
