@@ -20,10 +20,21 @@ app.use(cors());
 app.use('/', routes);
 
 // Set react as static folder
-app.use(express.static('client/build'));
-app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-}); 
+// app.use(express.static('client/build'));
+// app.get('*', (req, res) => {
+//         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+// }); 
+
+// error handler middleware.. catches all errors thrown
+app.use((err, req, res, next) => {
+        if (!err.statusCode) err.statusCode = 500; // eslint-disable-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign
+        if (err.errors && err.errors.length > 0 && err.errors[0] && err.errors[0].messages) err.message = err.errors[0].messages[0];
+
+        res
+                .status(err.statusCode)
+                .send({ status: err.statusCode, error: err.message });
+});
 
 
 app.listen(PORT, console.log('Server running on ' + PORT));

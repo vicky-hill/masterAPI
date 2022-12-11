@@ -11,6 +11,8 @@ const minite_imageRoutes = require('./projects/minite/image/image.routes');
 const minite_groupRoutes = require('./projects/minite/group/group.routes');
 const minite_bookmarkRoutes = require('./projects/minite/bookmarks/bookmarks.routes');
 
+const hotsauce_productRoutes = require('./projects/hotsauce/products/products.routes');
+
 
 // Check backend health
 router.get('/health-check', (req, res) => res.send('Great Health'));
@@ -33,20 +35,28 @@ router.use('/api/lesprit/words', lesprit_wordRoutes)
    Minite
 =================================== */
 
-// Mount auth routes @ api/user
+// Mount auth routes @ api/minite/user
 router.use('/api/minite/user', minite_authRoutes)
 
-// Mount upload routes @ api/upload
+// Mount upload routes @ api/minite/upload
 router.use('/api/minite/upload', minite_uploadRoutes)
 
-// Mount image routes @ api/image
+// Mount image routes @ api/minite/image
 router.use('/api/minite/image', minite_imageRoutes)
 
-// Mount group routes @ api/group
+// Mount group routes @ api/minite/group
 router.use('/api/minite/group', minite_groupRoutes)
 
-// Mount bookmarks routes @ api/bookmark
+// Mount bookmarks routes @ api/minite/bookmark
 router.use('/api/minite/bookmark', minite_bookmarkRoutes)
+
+/* ===================================
+   Hot Sauce
+=================================== */
+
+// Mount product routes @ api/hotsauce/products
+router.use('/api/hotsauce/products', hotsauce_productRoutes)
+
 
 module.exports = router;
 
