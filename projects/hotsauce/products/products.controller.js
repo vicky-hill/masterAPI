@@ -2,7 +2,7 @@ const Product = require('./products.model');
 
 /**
  * Get products
- * @returns [products]
+ * @returns products []
  */
 async function getProducts(req, res, next) {
     try {
@@ -17,7 +17,7 @@ async function getProducts(req, res, next) {
 /**
  * Get one product
  * @param id
- * @returns { product }
+ * @returns product {}
  */
 async function getProduct(req, res, next) {
     try {
@@ -42,7 +42,7 @@ async function getProduct(req, res, next) {
  * @property {string} req.body.level
  * @property {string} req.body.category
  * @property {string} req.body.price
- * @returns { product }
+ * @returns product {}
  */
 async function saveProduct(req, res, next) {
     try {
@@ -65,7 +65,7 @@ async function saveProduct(req, res, next) {
  * @property {string} req.body.level
  * @property {string} req.body.category
  * @property {string} req.body.price
- * @returns { product }
+ * @returns product {}
  */
 async function updateProduct(req, res, next) {
     try {
@@ -86,7 +86,7 @@ async function updateProduct(req, res, next) {
 /**
  * Delete product
  * @param id  
- * @returns { product }
+ * @returns product {}
  */
 async function deleteProduct(req, res, next) {
     try {
