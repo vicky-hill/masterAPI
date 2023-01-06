@@ -4,7 +4,7 @@ const User = require('./users.model');
  * Save a new user
  * @property {string} req.body._id 
  * @property {string} req.body.email
- * @returns user {}
+ * @returns user { _id, email, createdAt }
  */
 async function saveUser(req, res, next) {
     try {
@@ -17,6 +17,26 @@ async function saveUser(req, res, next) {
     }
 }
 
+/**
+ * Get current user
+ * @header x-auth-token
+ * @returns user { _id, email, createdAt }
+ */
+async function getUser(req, res, next) {
+    try {
+        const user = await User.findById(req.userID);
+        
+        if(!user) {
+            res.status(404).json({ msg: 'No user found' })
+        }
+
+        res.status(200).json(user);
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
- saveUser
+ saveUser,
+ getUser
 }
