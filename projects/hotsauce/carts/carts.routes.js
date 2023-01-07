@@ -11,7 +11,7 @@ const cartCtrl = require('./carts.controller');
  */
 router
     .route('/')
-    // .get(protect, cartCtrl.getProducts)
+    .get(protect, cartCtrl.getCart)
     .post(protect, cartCtrl.addToCart)
 
 

@@ -1,4 +1,5 @@
 const Cart = require('./carts.model');
+const mongoose = require('mongoose');
 
 /**
  * Add to cart
@@ -29,13 +30,35 @@ async function addToCart(req, res, next) {
             updatedCart = await Cart.findByIdAndUpdate(cart.id, { $push: { items: req.body } }, { new: true });
         }
 
-        res.status(201).json(updatedCart);
+        res.status(200).json(updatedCart);
+    } catch (err) {
+        next(err);
+        console.log(err)
+    }
+}
+
+/**
+ * Get current user cart
+ * @header x-auth-token
+ * @returns cart {}
+ */
+
+async function getCart(req, res, next) {
+    try {
+        let cart = await Cart.findOne({ userID: req.userID })
+
+        if(!cart) {
+            res.status(404).json({ msg: 'No cart found'});
+        }
+
+        res.status(200).json(cart);
     } catch (err) {
         next(err);
     }
 }
 
 module.exports = {
-    addToCart
+    addToCart,
+    getCart
 }
 
