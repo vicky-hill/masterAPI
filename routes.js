@@ -13,6 +13,7 @@ const minite_bookmarkRoutes = require('./projects/minite/bookmarks/bookmarks.rou
 
 const hotsauce_productRoutes = require('./projects/hotsauce/products/products.routes');
 const hotsauce_userRoutes = require('./projects/hotsauce/users/users.routes');
+const hotsauce_cartRoutes = require('./projects/hotsauce/carts/carts.routes');
 
 
 // Check backend health
@@ -60,6 +61,9 @@ router.use('/api/hotsauce/products', hotsauce_productRoutes)
 
 // Mount user routes @ api/hotsauce/user
 router.use('/api/hotsauce/user', hotsauce_userRoutes)
+
+// Mount user routes @ api/hotsauce/cart
+router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
 
 
 module.exports = router;

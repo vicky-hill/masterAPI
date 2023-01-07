@@ -18,7 +18,7 @@ const ListSchema = new mongoose.Schema({
     slug: String
 })
 
-// Create recipe slug from the title
+// Create list slug from the title
 ListSchema.pre('save', function(next){
     this.slug = slugify(this.title, { lower: true });
     next();

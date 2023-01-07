@@ -9,10 +9,12 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    cart: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'HOTSAUCE_Cart'
     }
+}, {
+    timestamps: true
 })
 
 module.exports = mongoose.model('HOTSAUCE_User', UserSchema);
