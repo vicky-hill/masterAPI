@@ -1,4 +1,5 @@
 const Cart = require('./carts.model');
+const User = require('../users/users.model');
 const mongoose = require('mongoose');
 
 /**
@@ -14,9 +15,10 @@ async function addToCart(req, res, next) {
         let cart = await Cart.findOne({ userID: req.userID });
         let existingCartItem = await Cart.findOne({ 'items.productID': req.body.productID });
 
-        // If user doesn't have a cart yet, create new cart
+        // If user doesn't have a cart yet, create new cart and save it to user
         if (!cart) {
             cart = await Cart.create({ userID: req.userID });
+            await User.findByIdAndUpdate(req.userID, { cart: cart._id})
         }
 
         // If item already exists in cart, up the quantity
