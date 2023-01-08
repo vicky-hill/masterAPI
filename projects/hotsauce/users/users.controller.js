@@ -24,7 +24,7 @@ async function saveUser(req, res, next) {
  */
 async function getUser(req, res, next) {
     try {
-        const user = await User.findById(req.userID);
+        const user = await User.findById(req.userID).populate('cart');
         
         if(!user) {
             res.status(404).json({ msg: 'No user found' })
