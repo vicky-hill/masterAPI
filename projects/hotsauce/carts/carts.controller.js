@@ -14,7 +14,7 @@ async function addToCart(req, res, next) {
     try {
         let updatedCart = {};
         let cart = await Cart.findOne({ userID: req.userID });
-        let existingCartItem = await Cart.findOne({ 'items.productID': req.body.items[0].productID });
+        let cartItem = cart && cart.items.find(item => item.productID.toString() === req.body.items[0].productID);
 
         // If user doesn't have a cart yet, create new cart and save it to user
         if (!cart) {
@@ -23,12 +23,9 @@ async function addToCart(req, res, next) {
         }
 
         // If item already exists in cart, up the quantity
-        if (existingCartItem) {
-            const item = existingCartItem.items.find(item => item.productID.toString() === req.body.items[0].productID);
-
-            updatedCart = await Cart.findOneAndUpdate({ "_id": cart._id, "items._id": item._id },
-                { "$set": { "items.$.quantity": item.quantity + req.body.items[0].quantity } }, { new: true })
-
+        if (cartItem) {
+            updatedCart = await Cart.findOneAndUpdate({ "_id": cart._id, "items._id": cartItem._id },
+                { "$set": { "items.$.quantity": cartItem.quantity + req.body.items[0].quantity } }, { new: true });
         } else {
             updatedCart = await Cart.findByIdAndUpdate(cart.id, { $push: { items: req.body.items } }, { new: true });
         }
@@ -48,10 +45,10 @@ async function addToCart(req, res, next) {
 
 async function getCart(req, res, next) {
     try {
-        let cart = await Cart.findOne({ userID: req.userID })
+        let cart = await Cart.findOne({ userID: req.userID });
 
         if(!cart) {
-            res.status(404).json({ msg: 'No cart found'});
+            cart = await Cart.create({ userID: req.userID });
         }
 
         res.status(200).json(cart);
