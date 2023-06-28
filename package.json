@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server",
-    "server": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "server": "nodemon server.js",
+    "vercel-build": "echo hello"
   },
   "author": "",
   "license": "ISC",
