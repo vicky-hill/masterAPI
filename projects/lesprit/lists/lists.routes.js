@@ -10,7 +10,7 @@ router
     .route('/')
     .get(protect, listCtrl.getLists)
     .post(protect, listCtrl.saveList)
-    .delete(protect, listCtrl.deleteUserLists)
+    // .delete(protect, listCtrl.deleteUserLists)
 
 router
     .route('/:id')

@@ -9,9 +9,11 @@ async function saveImage (req, res) {
         const uploadedImages = [];
 
         for (let i = 0; i < req.body.length; i++) {
-            const uploaded = await Image.create({ url: req.body[i], user: req.user.id })
+            const uploaded = await Image.create({ 
+                ...req.body[i],
+                user: req.user.id 
+            })
             uploadedImages.push(uploaded);
-            
         }
 
         // Put res on top of callback stack

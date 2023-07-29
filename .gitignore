@@ -29,3 +29,4 @@ Icon?
 .expo/
 package-lock.json
 
+.vercel
