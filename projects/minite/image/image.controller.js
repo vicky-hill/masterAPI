@@ -1,17 +1,33 @@
 const Image = require('./image.model');
 const Bookmark = require('../bookmarks/bookmarks.model');
+const utils = require('./image.utils');
+const ImageKit = require('imagekit');
+require('dotenv').config();
 
-/* ===================================
-   Save Image
-=================================== */
-async function saveImage (req, res) {
+
+const imagekit = new ImageKit({
+  urlEndpoint: process.env.IK_URLENDPOINT,
+  publicKey: process.env.IK_PUBLICKEY,
+  privateKey: process.env.IK_PRIVATEKEY
+});
+
+
+/**
+ * Create image
+ * @header x-auth-token
+ * @property req.body.name - name of the event
+ */
+async function createImage (req, res) {
     try {
         const uploadedImages = [];
-
+        
         for (let i = 0; i < req.body.length; i++) {
+            const imageID = await utils.getNewImageID();
+
             const uploaded = await Image.create({ 
                 ...req.body[i],
-                user: req.user.id 
+                user: req.user.id,
+                imageID
             })
             uploadedImages.push(uploaded);
         }
@@ -32,15 +48,15 @@ async function saveImage (req, res) {
 =================================== */
 async function getImages (req, res) {
     try {
-        const bookmark = await Bookmark.findById(req.params.id);
+        // const bookmark = await Bookmark.findById(req.params.id);
         
-        let query = { user: req.user.id }
+        // let query = { user: req.user.id }
 
-        if(!bookmark.primary) {
-            query.bookmark = bookmark._id.toString();
-        }
+        // if(!bookmark.primary) {
+        //     query.bookmark = bookmark._id.toString();
+        // }
     
-        const images = await Image.find(query);
+        const images = await Image.find({ user: req.user.id }).populate("event");
 
         res.status(200).json(images);
     } catch (err) {
@@ -95,10 +111,21 @@ async function deleteImages (req, res) {
     }
 }
 
+async function imageKitAuth (req, res) {
+    try {
+        const result = imagekit.getAuthenticationParameters();
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500)
+    }
+}
+
 
 module.exports = {
-    saveImage,
+    createImage,
     getImages,
     updateImage,
-    deleteImages
+    deleteImages,
+    imageKitAuth
 }

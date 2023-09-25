@@ -8,13 +8,19 @@ const imageCtrl = require('./image.controller');
 // api/image
 router
     .route('/')
-    .post(protect, imageCtrl.saveImage)
+    .get(protect, imageCtrl.getImages)
+    .post(protect, imageCtrl.createImage)
     .delete(protect, imageCtrl.deleteImages)
 
 router
+    .route('/imagekit')
+    .get(imageCtrl.imageKitAuth)
+
+router
     .route('/:id')
-    .get(protect, imageCtrl.getImages)
     .put(protect, imageCtrl.updateImage)
+
+
 
 
 

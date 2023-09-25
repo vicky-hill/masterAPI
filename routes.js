@@ -10,6 +10,7 @@ const minite_uploadRoutes = require('./projects/minite/upload/upload.routes')
 const minite_imageRoutes = require('./projects/minite/image/image.routes')
 const minite_groupRoutes = require('./projects/minite/group/group.routes')
 const minite_bookmarkRoutes = require('./projects/minite/bookmarks/bookmarks.routes')
+const minite_eventRoutes = require('./projects/minite/events/event.routes')
 
 const hotsauce_productRoutes = require('./projects/hotsauce/products/products.routes')
 const hotsauce_userRoutes = require('./projects/hotsauce/users/users.routes')
@@ -53,6 +54,9 @@ router.use('/api/minite/group', minite_groupRoutes)
 
 // Mount bookmarks routes @ api/minite/bookmark
 router.use('/api/minite/bookmark', minite_bookmarkRoutes)
+
+// Mount events routes @ api/minite/event
+router.use('/api/minite/event', minite_eventRoutes)
 
 /* ===================================
    Hot Sauce

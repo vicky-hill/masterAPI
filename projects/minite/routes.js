@@ -1,11 +1,12 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-const authRoutes = require('./auth/auth.routes');
-const uploadRoutes = require('./upload/upload.routes');
-const imageRoutes = require('./image/image.routes');
-const groupRoutes = require('./group/group.routes');
-const bookmarkRoutes = require('./bookmarks/bookmarks.routes');
+const authRoutes = require('./auth/auth.routes')
+const uploadRoutes = require('./upload/upload.routes')
+const imageRoutes = require('./image/image.routes')
+const groupRoutes = require('./group/group.routes')
+const bookmarkRoutes = require('./bookmarks/bookmarks.routes')
+const eventRoutes = require('./events/event.routes')
 
 // Mount auth routes @ api/user
 router.use('/api/user', authRoutes)
@@ -21,6 +22,9 @@ router.use('/api/group', groupRoutes)
 
 // Mount bookmarks routes @ api/bookmark
 router.use('/api/bookmark', bookmarkRoutes)
+
+// Mount event routes @ api/event
+router.use('/api/event', eventRoutes)
 
 
 // Check backend health

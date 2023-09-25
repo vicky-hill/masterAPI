@@ -9,9 +9,18 @@ const ImageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageID: {
+        type: String,
+        required: true
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'Minite_User',
+        required: true
+    },
+    event: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Minite_Event',
         required: true
     },
     bookmark: {
@@ -26,17 +35,17 @@ const ImageSchema = new mongoose.Schema({
     },
     version: {
         type: String,
-        enum: ['main', 'post', 'crop', 'original'],
+        enum: ['main', 'post', 'crop', 'original', 'alt'],
         default: 'main'
     },
     year: {
         type: String,
         default: new Date().getFullYear()
-    },
-    event: {
-        type: String
     }
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
-
 
 module.exports = mongoose.model('Minite_Image', ImageSchema);
