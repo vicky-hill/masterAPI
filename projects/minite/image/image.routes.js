@@ -21,9 +21,6 @@ router
     .put(protect, imageCtrl.updateImage)
 
 
-
-
-
 module.exports = router; 
 
 
