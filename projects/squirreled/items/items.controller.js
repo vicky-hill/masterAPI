@@ -16,7 +16,7 @@ async function getItems(req, res) {
 /**
  * Get one item
  * @param id - ID of item to fetch
- * @returns {item}
+ * @returns item {}   
  */
 async function getItem(req, res) {
     try {
@@ -40,7 +40,7 @@ async function getItem(req, res) {
  * @property {String} req.body.category 
  * @property {String} req.body.image 
  * @property {String} req.body.location 
- * @returns {item}
+ * @returns item {}   
  */
 async function saveItem(req, res) {
     try {
@@ -60,7 +60,7 @@ async function saveItem(req, res) {
  * @property {String} req.body.category 
  * @property {String} req.body.image 
  * @property {String} req.body.location 
- * @returns {item}
+ * @returns item {}   
  */
 async function updateItem(req, res) {
     try {
@@ -80,7 +80,7 @@ async function updateItem(req, res) {
 /**
  * Delete item
  * @param id
- * @returns { item }
+ * @returns item {}   
  */
 async function deleteItem(req, res) {
     try {
@@ -100,11 +100,11 @@ async function deleteItem(req, res) {
  * Move Item
  * @param id - Item ID
  * @property { string } req.body.location - Where to move the item
- * @returns { item }    
+ * @returns item {}       
  */
 async function moveItem(req, res) {
     try {
-        const { location }  = req.body.location;
+        const { location } = req.body;
         const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true });
 
         if (!item) {
@@ -120,7 +120,7 @@ async function moveItem(req, res) {
 /**
  * Trash Item
  * @param id - Item ID
- * @returns { item }    
+ * @returns item {}   
  */
 async function trashItem(req, res) {
     try {
@@ -137,6 +137,28 @@ async function trashItem(req, res) {
 }
 
 
+/**
+ * Move Item
+ * @property {array} ids 
+ * @property {string} req.body.location - Where to move the item
+ * @returns [{ item }]  
+ */
+async function moveItems(req, res) {
+    try {
+        const { location } = req.body;
+    
+        const items = await Promise.all(req.body.ids.map((id) => (
+            Item.findByIdAndUpdate(id, { location }, { new: true })
+        )))
+
+        res.json(items);
+    } catch (err) {
+        console.log(err)
+        res.status(500).json(err);
+    }
+}
+
+
 
 module.exports = {
     getItems,
@@ -145,5 +167,6 @@ module.exports = {
     updateItem,
     deleteItem,
     moveItem,
-    trashItem
+    trashItem,
+    moveItems
 }

@@ -15,9 +15,11 @@ router
 
 
 /** 
+* @route api/squirreled/items/move
 * @route api/squirreled/items/:id/move
 * @route api/squirreled/items/:id/trash
 */
+router.route('/move').put(itemCtrl.moveItems);
 router.route('/:id/move').put(itemCtrl.moveItem);
 router.route('/:id/trash').put(itemCtrl.trashItem);
 
