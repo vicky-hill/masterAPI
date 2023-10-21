@@ -138,7 +138,7 @@ async function trashItem(req, res) {
 
 
 /**
- * Move Item
+ * Move Items
  * @property {array} ids 
  * @property {string} req.body.location - Where to move the item
  * @returns [{ item }]  
@@ -158,6 +158,24 @@ async function moveItems(req, res) {
     }
 }
 
+/**
+ * Trash Items
+ * @property {array} ids 
+ * @returns [{ item }]  
+ */
+async function trashItems(req, res) {
+    try {    
+        const items = await Promise.all(req.body.ids.map((id) => (
+            Item.findByIdAndUpdate(id, { trash: true }, { new: true })
+        )))
+
+        res.json(items);
+    } catch (err) {
+        console.log(err)
+        res.status(500).json(err);
+    }
+}
+
 
 
 module.exports = {
@@ -168,5 +186,6 @@ module.exports = {
     deleteItem,
     moveItem,
     trashItem,
-    moveItems
+    moveItems,
+    trashItems
 }

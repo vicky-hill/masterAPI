@@ -20,6 +20,7 @@ router
 * @route api/squirreled/items/:id/trash
 */
 router.route('/move').put(itemCtrl.moveItems);
+router.route('/trash').put(itemCtrl.trashItems);
 router.route('/:id/move').put(itemCtrl.moveItem);
 router.route('/:id/trash').put(itemCtrl.trashItem);
 
