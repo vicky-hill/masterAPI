@@ -4,41 +4,35 @@ const router = express.Router();
 const itemCtrl = require('./items.controller');
 
 /**
- * @route api/squirreled/items
- * @get Get all items
- * @post Save item
+ * @get api/squirreled/items - get all items
+ * @post api/squirreled/items - create new item
  */
 router
     .route('/')
     .get(itemCtrl.getItems)
     .post(itemCtrl.saveItem)
 
-
 /** 
-* @route api/squirreled/items/move
-* @route api/squirreled/items/:id/move
-* @route api/squirreled/items/:id/trash
+* @put api/squirreled/items/move - move multiple items
+* @put api/squirreled/items/trash - trash multiple items
+* @put api/squirreled/items/:id/move - move one item
+* @put api/squirreled/items/:id/trash - trash one item
 */
 router.route('/move').put(itemCtrl.moveItems);
 router.route('/trash').put(itemCtrl.trashItems);
 router.route('/:id/move').put(itemCtrl.moveItem);
 router.route('/:id/trash').put(itemCtrl.trashItem);
 
-
-
 /**
- * @route api/squirreled/items/:id
- * @get Get one item
- * @put Update item
- * @delete Delete item
+ * @get api/squirreled/items/:id - get item by id
+ * @put api/squirreled/items/:id - update item
+ * @delete api/squirreled/items/:id - delete item
  */
 router
     .route('/:id')
     .get(itemCtrl.getItem)
     .put(itemCtrl.updateItem)
     .delete(itemCtrl.deleteItem)
-
-
 
 
 
