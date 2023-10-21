@@ -6,7 +6,8 @@ const Item = require('./items.model');
  */
 async function getItems(req, res) {
     try {
-        const items = await Item.find({ trash: false });
+        const items = await Item.find({ trash: false }).populate('location');
+ 
         res.json(items);
     } catch (err) {
         console.log(err);

@@ -17,7 +17,8 @@ const ItemSchema = new mongoose.Schema({
         required: true
     },
     location: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: 'Squirreled_Location',
         required: true
     },
     trash: {
