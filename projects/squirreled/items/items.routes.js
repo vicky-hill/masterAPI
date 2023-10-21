@@ -4,7 +4,7 @@ const router = express.Router();
 const itemCtrl = require('./items.controller');
 
 /**
- * @route api/squirrled
+ * @route api/squirreled/items
  * @get Get all items
  * @post Save item
  */
@@ -13,8 +13,16 @@ router
     .get(itemCtrl.getItems)
     .post(itemCtrl.saveItem)
 
+
+/** 
+* @route api/squirreled/items/:id/move
+*/
+router.route('/:id/move').put(itemCtrl.moveItem);
+
+
+
 /**
- * @route api/squirrled/:id
+ * @route api/squirreled/items/:id
  * @get Get one item
  * @put Update item
  * @delete Delete item
@@ -24,6 +32,8 @@ router
     .get(itemCtrl.getItem)
     .put(itemCtrl.updateItem)
     .delete(itemCtrl.deleteItem)
+
+
 
 
 

@@ -6,9 +6,9 @@ require('dotenv').config();
 
 
 const imagekit = new ImageKit({
-  urlEndpoint: process.env.IK_URL_ENDPOINT,
-  publicKey: process.env.IK_PUBLIC_KEY,
-  privateKey: process.env.IK_PRIVATE_KEY
+    urlEndpoint: process.env.IK_URL_ENDPOINT,
+    publicKey: process.env.IK_PUBLIC_KEY,
+    privateKey: process.env.IK_PRIVATE_KEY
 });
 
 
@@ -17,14 +17,14 @@ const imagekit = new ImageKit({
  * @header x-auth-token
  * @property req.body.name - name of the event
  */
-async function createImage (req, res) {
+async function createImage(req, res) {
     try {
         const uploadedImages = [];
-        
+
         for (let i = 0; i < req.body.length; i++) {
             const imageID = await utils.getNewImageID();
 
-            const uploaded = await Image.create({ 
+            const uploaded = await Image.create({
                 ...req.body[i],
                 user: req.user.id,
                 imageID
@@ -36,7 +36,7 @@ async function createImage (req, res) {
         setTimeout(() => {
             res.status(200).json(uploadedImages);
         }, 1)
-    
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something didnt work right' });
@@ -46,38 +46,39 @@ async function createImage (req, res) {
 /* ===================================
    Get all images
 =================================== */
-async function getImages (req, res) {
+async function getImages(req, res) {
     try {
         // const bookmark = await Bookmark.findById(req.params.id);
-        
+
         // let query = { user: req.user.id }
 
         // if(!bookmark.primary) {
         //     query.bookmark = bookmark._id.toString();
         // }
-    
-        const images = await Image.find({ user: req.user.id }).populate("event");
+
+        const images = await Image.find({ user: req.user.id })
+            // .populate("event");
 
         res.status(200).json(images);
     } catch (err) {
         console.log(err);
-        res.status(500).json({msg: 'Something went wrong'});
+        res.status(500).json({ msg: 'Something went wrong' });
     }
 }
 
 /* ===================================
    Update image
 =================================== */
-async function updateImage (req, res) {
+async function updateImage(req, res) {
     try {
         let image = await Image.findById(req.params.id);
 
-        if(!image) {
+        if (!image) {
             return res.status(404).json({ msg: 'Image not found' });
         }
 
-        if(image.user.toString() !== req.user.id) {
-            return res.status(403).json({ msg: 'You are not authorized to update the image'})
+        if (image.user.toString() !== req.user.id) {
+            return res.status(403).json({ msg: 'You are not authorized to update the image' })
         }
 
         image = await Image.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -92,11 +93,11 @@ async function updateImage (req, res) {
 /* ===================================
    Delete images
 =================================== */
-async function deleteImages (req, res) {
+async function deleteImages(req, res) {
     try {
         const deletedImages = [];
 
-        for(let i = 0; i < req.body.length; i++) {
+        for (let i = 0; i < req.body.length; i++) {
             const deletedImage = await Image.findByIdAndDelete(req.body[i]);
             deletedImages.push(deletedImage._id);
         }
@@ -104,14 +105,14 @@ async function deleteImages (req, res) {
         setTimeout(() => {
             res.status(200).json(deletedImages)
         }, 1)
-        
+
     } catch (err) {
         console.log(err);
         res.status(500)
     }
 }
 
-async function imageKitAuth (req, res) {
+async function imageKitAuth(req, res) {
     try {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);

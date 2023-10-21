@@ -80,7 +80,7 @@ async function updateItem(req, res) {
 /**
  * Delete item
  * @param id
- * @returns {item}
+ * @returns { item }
  */
 async function deleteItem(req, res) {
     try {
@@ -96,11 +96,32 @@ async function deleteItem(req, res) {
     }
 }
 
+/**
+ * Move Item
+ * @param id - Item ID
+ * @property { string } req.body.location - Where to move the item
+ * @returns { item }    
+ */
+async function moveItem(req, res) {
+    try {
+        const { location }  = req.body.location;
+        const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true });
+
+        if (!item) {
+            return res.status(404).json({ msg: "Item not found" });
+        }
+
+        res.json(item);
+    } catch (err) {
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+}
 
 module.exports = {
     getItems,
     getItem,
     saveItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    moveItem
 }

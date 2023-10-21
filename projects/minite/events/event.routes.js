@@ -9,7 +9,7 @@ router
     .post(protect, eventCtrl.createEvent)
 
 router
-    .route('/:eventID')
+    .route('/:id')
     .get(protect, eventCtrl.getEventByID)
 
 module.exports = router;

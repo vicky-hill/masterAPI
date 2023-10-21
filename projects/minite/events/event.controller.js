@@ -24,7 +24,7 @@ async function createEvent(req, res) {
 async function getAllUserEvents(req, res) {
     try {
         const events = await Event.find({ user: req.user.id })
-            .populate('images')
+            .populate('images');
 
         res.status(200).json(events);
     } catch (err) {
@@ -41,11 +41,8 @@ async function getAllUserEvents(req, res) {
  */
 async function getEventByID(req, res) {
     try {
-        const { eventID } = req.params;
-
-        const event = await Event.findById(eventID)
-            .populate('images');
-
+        const event = await Event.findById("64fe366b7c6fc458c573dd6f").populate('images');
+         
         res.status(200).json(event);
     } catch (err) {
         res.status(500);

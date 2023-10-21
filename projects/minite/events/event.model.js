@@ -9,7 +9,7 @@ const EventSchema = new mongoose.Schema({
         ref: 'Minite_User'
     },
     images: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Minite_Image'
     }],
     year: {
@@ -23,8 +23,4 @@ const EventSchema = new mongoose.Schema({
 });
 
 
-
-
-
-
-module.exports = mongoose.model('Minite_Event', EventSchema)
+module.exports = mongoose.model('Minite_Event', EventSchema);
