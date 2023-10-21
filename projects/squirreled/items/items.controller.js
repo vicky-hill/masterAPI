@@ -6,7 +6,7 @@ const Item = require('./items.model');
  */
 async function getItems(req, res) {
     try {
-        const items = await Item.find()
+        const items = await Item.find({ trash: false });
         res.json(items);
     } catch (err) {
         console.log(err);
@@ -117,11 +117,33 @@ async function moveItem(req, res) {
     }
 }
 
+/**
+ * Trash Item
+ * @param id - Item ID
+ * @returns { item }    
+ */
+async function trashItem(req, res) {
+    try {
+        const item = await Item.findByIdAndUpdate(req.params.id, { trash: true }, { new: true });
+
+        if (!item) {
+            return res.status(404).json({ msg: "Item not found" });
+        }
+
+        res.json(item);
+    } catch (err) {
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+}
+
+
+
 module.exports = {
     getItems,
     getItem,
     saveItem,
     updateItem,
     deleteItem,
-    moveItem
+    moveItem,
+    trashItem
 }
