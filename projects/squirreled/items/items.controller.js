@@ -106,7 +106,7 @@ async function deleteItem(req, res) {
 async function moveItem(req, res) {
     try {
         const { location } = req.body;
-        const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true });
+        const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true }).populate('location');
 
         if (!item) {
             return res.status(404).json({ msg: "Item not found" });
@@ -114,6 +114,7 @@ async function moveItem(req, res) {
 
         res.json(item);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ msg: 'Something went wrong' });
     }
 }
