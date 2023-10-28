@@ -1,4 +1,5 @@
 const Item = require('./items.model');
+const mongoose = require('mongoose');
 
 /**
  * Get all items
@@ -150,8 +151,8 @@ async function moveItems(req, res) {
         const { location } = req.body;
     
         const items = await Promise.all(req.body.ids.map((id) => (
-            Item.findByIdAndUpdate(id, { location }, { new: true })
-        )))
+            Item.findByIdAndUpdate(id, { location }, { new: true }).populate('location')
+        )));
 
         res.json(items);
     } catch (err) {
