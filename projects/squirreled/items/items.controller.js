@@ -1,5 +1,11 @@
 const Item = require('./items.model');
-const mongoose = require('mongoose');
+const ImageKit = require('imagekit');
+
+const imagekit = new ImageKit({
+    urlEndpoint: process.env.IK_URL_ENDPOINT,
+    publicKey: process.env.IK_PUBLIC_KEY,
+    privateKey: process.env.IK_PRIVATE_KEY
+});
 
 /**
  * Get all items
@@ -178,6 +184,19 @@ async function trashItems(req, res) {
         res.status(500).json(err);
     }
 }
+/**
+ * Image Kit Auth
+ * @returns { token, expire, signature }
+ */
+async function imageKitAuth(req, res) {
+    try {
+        const result = imagekit.getAuthenticationParameters();
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500)
+    }
+}
 
 
 module.exports = {
@@ -189,5 +208,6 @@ module.exports = {
     moveItem,
     trashItem,
     moveItems,
-    trashItems
+    trashItems,
+    imageKitAuth
 }

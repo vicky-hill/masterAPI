@@ -13,11 +13,13 @@ router
     .post(itemCtrl.saveItem)
 
 /** 
+* @get api/squirreled/items/auth - get image kit auth
 * @put api/squirreled/items/move - move multiple items
 * @put api/squirreled/items/trash - trash multiple items
 * @put api/squirreled/items/:id/move - move one item
 * @put api/squirreled/items/:id/trash - trash one item
 */
+router.route('/auth').get(itemCtrl.imageKitAuth)
 router.route('/move').put(itemCtrl.moveItems);
 router.route('/trash').put(itemCtrl.trashItems);
 router.route('/:id/move').put(itemCtrl.moveItem);
