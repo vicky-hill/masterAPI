@@ -13,7 +13,9 @@ const imagekit = new ImageKit({
  */
 async function getItems(req, res) {
     try {
-        const items = await Item.find({ trash: false }).populate('location');
+        const items = await Item.find({ trash: false })
+        .populate('location')
+        .sort({createdAt: -1});
  
         res.json(items);
     } catch (err) {
@@ -52,7 +54,8 @@ async function getItem(req, res) {
  */
 async function saveItem(req, res) {
     try {
-        const item = await Item.create(req.body);
+        const createdItem = await Item.create(req.body);
+        const item = await Item.findById(createdItem._id).populate('location')
         res.json(item);
     } catch (err) {
         console.log(err);
