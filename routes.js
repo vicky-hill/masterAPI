@@ -18,6 +18,7 @@ const hotsauce_cartRoutes = require('./projects/hotsauce/carts/carts.routes')
 
 const squirrled_itemRoutes = require('./projects/squirreled/items/items.routes')
 const squirrled_locationRoutes = require('./projects/squirreled/locations/locations.routes')
+const squirrled_userRoutes = require('./projects/squirreled/users/users.routes')
 
 
 // Check backend health
@@ -82,6 +83,9 @@ router.use('/api/squirreled/items', squirrled_itemRoutes)
 
 // Mount item routes @ api/squirreled/locations
 router.use('/api/squirreled/locations', squirrled_locationRoutes)
+
+// Mount item routes @ api/squirreled/user
+router.use('/api/squirreled/user', squirrled_userRoutes)
 
 
 module.exports = router;
