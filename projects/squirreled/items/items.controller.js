@@ -1,5 +1,6 @@
-const Item = require('./items.model');
-const ImageKit = require('imagekit');
+const Item = require('./items.model')
+const ImageKit = require('imagekit')
+const { getItem } = require('./items.utils')
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -7,28 +8,17 @@ const imagekit = new ImageKit({
     privateKey: process.env.IK_PRIVATE_KEY
 });
 
-async function assignItems(req, res) {
-    try {
-        
-        const items = await Item.updateMany({ }, { user: req.user._id }, { new: true });
-
-        res.json(items);
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 /**
  * Get all user items
  * @header x-auth-token
  * @returns [{ item }]
  */
 async function getItems(req, res) {
-    try {            
+    try {
         const items = await Item.find({ trash: false, user: req.user._id })
-        .populate('location user')
-        .sort({createdAt: -1});
- 
+            .populate('location user')
+            .sort({ createdAt: -1 });
+
         res.json(items);
     } catch (err) {
         console.log(err);
@@ -41,15 +31,9 @@ async function getItems(req, res) {
  * @param id - ID of item to fetch
  * @returns item {}   
  */
-async function getItem(req, res) {
+async function getItemByID(req, res) {
     try {
-        const item = await Item.findById(req.params.id).populate('location user');
-
-        if (!item || item.user._id.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ msg: "Item not found" });
-        }
-
-        res.json(item);
+        res.json(req.item);
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });
@@ -73,7 +57,9 @@ async function createItem(req, res) {
             user: req.user._id
         });
 
-        const item = await Item.findById(createdItem._id).populate('location user');
+        const item = await getItem(req, res, createdItem._id);
+        if (!item) return;
+
         res.json(item);
     } catch (err) {
         console.log(err);
@@ -93,13 +79,17 @@ async function createItem(req, res) {
  */
 async function updateItem(req, res) {
     try {
-        const item = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-        if (!item || item.user._id.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ msg: "Item not found" });
-        }
+        const item = await getItem(req, res);
+        if (!item) return;
 
-        res.json(item);
+        const updatedItem = await Item.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        ).populate('location user');
+
+        res.json(updatedItem);
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });
@@ -113,13 +103,11 @@ async function updateItem(req, res) {
  */
 async function deleteItem(req, res) {
     try {
-        const item = await Item.findByIdAndDelete(req.params.id);
+        const item = await getItem(req, res);
+        if (!item) return;
 
-        if (!item || item.user._id.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ msg: "Item not found" });
-        }
-
-        res.json(item)
+        const deletedItem = await Item.findByIdAndDelete(req.params.id);
+        res.json(deletedItem);
     } catch (err) {
         res.status(500).json({ msg: 'Something went wrong' });
     }
@@ -176,7 +164,7 @@ async function trashItem(req, res) {
 async function moveItems(req, res) {
     try {
         const { location } = req.body;
-    
+
         const items = await Promise.all(req.body.ids.map((id) => (
             Item.findByIdAndUpdate(id, { location }, { new: true }).populate('location')
         )));
@@ -194,7 +182,7 @@ async function moveItems(req, res) {
  * @returns [{ item }]  
  */
 async function trashItems(req, res) {
-    try {    
+    try {
         const items = await Promise.all(req.body.ids.map((id) => (
             Item.findByIdAndUpdate(id, { trash: true }, { new: true })
         )))
@@ -222,7 +210,7 @@ async function imageKitAuth(req, res) {
 
 module.exports = {
     getItems,
-    getItem,
+    getItemByID,
     createItem,
     updateItem,
     deleteItem,
@@ -230,6 +218,5 @@ module.exports = {
     trashItem,
     moveItems,
     trashItems,
-    imageKitAuth,
-    assignItems
+    imageKitAuth
 }
