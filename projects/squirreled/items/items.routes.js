@@ -1,7 +1,10 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const { protect } = require('../protect')
 
 const itemCtrl = require('./items.controller');
+
+router.route('/assign').get(protect, itemCtrl.assignItems);
 
 /**
  * @get api/squirreled/items - get all items

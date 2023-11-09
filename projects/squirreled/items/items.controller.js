@@ -7,6 +7,17 @@ const imagekit = new ImageKit({
     privateKey: process.env.IK_PRIVATE_KEY
 });
 
+async function assignItems(req, res) {
+    try {
+        
+        const items = await Item.updateMany({ }, { user: req.user._id }, { new: true });
+
+        res.json(items);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 /**
  * Get all items
  * @returns [{ item }]
@@ -14,7 +25,7 @@ const imagekit = new ImageKit({
 async function getItems(req, res) {
     try {
         const items = await Item.find({ trash: false })
-        .populate('location')
+        .populate('location user')
         .sort({createdAt: -1});
  
         res.json(items);
@@ -212,5 +223,6 @@ module.exports = {
     trashItem,
     moveItems,
     trashItems,
-    imageKitAuth
+    imageKitAuth,
+    assignItems
 }
