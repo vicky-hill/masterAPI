@@ -13,7 +13,7 @@ router.route('/assign').get(protect, itemCtrl.assignItems);
 router
     .route('/')
     .get(protect, itemCtrl.getItems)
-    .post(protect, itemCtrl.saveItem)
+    .post(protect, itemCtrl.createItem)
 
 /** 
 * @get api/squirreled/items/auth - get image kit auth

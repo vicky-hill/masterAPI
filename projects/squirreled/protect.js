@@ -15,8 +15,8 @@ exports.protect = async (req, res, next) => {
         // Verify token
         try {
             const decoded = jwt_decode(token);
-
-            const user = await User.findOne({ userID: decoded.user_id });
+        
+            const user = await User.findOne({ firebaseID: decoded.user_id });
 
             if (!user) {
                 return res.status(401).json({ msg: 'No user found'});

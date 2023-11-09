@@ -20,6 +20,7 @@ async function assignItems(req, res) {
 
 /**
  * Get all user items
+ * @header x-auth-token
  * @returns [{ item }]
  */
 async function getItems(req, res) {
@@ -36,14 +37,15 @@ async function getItems(req, res) {
 
 /**
  * Get one item
+ * @header x-auth-token
  * @param id - ID of item to fetch
  * @returns item {}   
  */
 async function getItem(req, res) {
     try {
-        const item = await Item.findById(req.params.id);
+        const item = await Item.findById(req.params.id).populate('location user');
 
-        if (!item) {
+        if (!item || item.user._id.toString() !== req.user._id.toString()) {
             return res.status(404).json({ msg: "Item not found" });
         }
 
@@ -56,6 +58,7 @@ async function getItem(req, res) {
 
 /**
  * Create an item
+ * @header x-auth-token
  * @property {String} req.body.name 
  * @property {String} req.body.description 
  * @property {String} req.body.category 
@@ -63,10 +66,14 @@ async function getItem(req, res) {
  * @property {String} req.body.location 
  * @returns item {}   
  */
-async function saveItem(req, res) {
+async function createItem(req, res) {
     try {
-        const createdItem = await Item.create(req.body);
-        const item = await Item.findById(createdItem._id).populate('location')
+        const createdItem = await Item.create({
+            ...req.body,
+            user: req.user._id
+        });
+
+        const item = await Item.findById(createdItem._id).populate('location user');
         res.json(item);
     } catch (err) {
         console.log(err);
@@ -88,7 +95,7 @@ async function updateItem(req, res) {
     try {
         const item = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-        if (!item) {
+        if (!item || item.user._id.toString() !== req.user._id.toString()) {
             return res.status(404).json({ msg: "Item not found" });
         }
 
@@ -108,7 +115,7 @@ async function deleteItem(req, res) {
     try {
         const item = await Item.findByIdAndDelete(req.params.id);
 
-        if (!item) {
+        if (!item || item.user._id.toString() !== req.user._id.toString()) {
             return res.status(404).json({ msg: "Item not found" });
         }
 
@@ -216,7 +223,7 @@ async function imageKitAuth(req, res) {
 module.exports = {
     getItems,
     getItem,
-    saveItem,
+    createItem,
     updateItem,
     deleteItem,
     moveItem,
