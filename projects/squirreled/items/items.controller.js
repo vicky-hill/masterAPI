@@ -19,7 +19,7 @@ async function assignItems(req, res) {
 }
 
 /**
- * Get all items
+ * Get all user items
  * @returns [{ item }]
  */
 async function getItems(req, res) {
