@@ -18,6 +18,10 @@ exports.protect = async (req, res, next) => {
 
             const user = await User.findOne({ userID: decoded.user_id });
 
+            if (!user) {
+                return res.status(401).json({ msg: 'No user found'});
+            }
+            
             req.user = user;
             
             next();

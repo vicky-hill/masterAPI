@@ -23,8 +23,8 @@ async function assignItems(req, res) {
  * @returns [{ item }]
  */
 async function getItems(req, res) {
-    try {
-        const items = await Item.find({ trash: false })
+    try {            
+        const items = await Item.find({ trash: false, user: req.user._id })
         .populate('location user')
         .sort({createdAt: -1});
  

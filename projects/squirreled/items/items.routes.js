@@ -12,8 +12,8 @@ router.route('/assign').get(protect, itemCtrl.assignItems);
  */
 router
     .route('/')
-    .get(itemCtrl.getItems)
-    .post(itemCtrl.saveItem)
+    .get(protect, itemCtrl.getItems)
+    .post(protect, itemCtrl.saveItem)
 
 /** 
 * @get api/squirreled/items/auth - get image kit auth
@@ -22,11 +22,11 @@ router
 * @put api/squirreled/items/:id/move - move one item
 * @put api/squirreled/items/:id/trash - trash one item
 */
-router.route('/auth').get(itemCtrl.imageKitAuth)
-router.route('/move').put(itemCtrl.moveItems);
-router.route('/trash').put(itemCtrl.trashItems);
-router.route('/:id/move').put(itemCtrl.moveItem);
-router.route('/:id/trash').put(itemCtrl.trashItem);
+router.route('/auth').get(protect, itemCtrl.imageKitAuth)
+router.route('/move').put(protect, itemCtrl.moveItems);
+router.route('/trash').put(protect, itemCtrl.trashItems);
+router.route('/:id/move').put(protect, itemCtrl.moveItem);
+router.route('/:id/trash').put(protect, itemCtrl.trashItem);
 
 /**
  * @get api/squirreled/items/:id - get item by id
@@ -35,9 +35,9 @@ router.route('/:id/trash').put(itemCtrl.trashItem);
  */
 router
     .route('/:id')
-    .get(itemCtrl.getItem)
-    .put(itemCtrl.updateItem)
-    .delete(itemCtrl.deleteItem)
+    .get(protect, itemCtrl.getItem)
+    .put(protect, itemCtrl.updateItem)
+    .delete(protect, itemCtrl.deleteItem)
 
 
 
