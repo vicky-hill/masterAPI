@@ -7,6 +7,26 @@ const imagekit = new ImageKit({
     privateKey: process.env.IK_PRIVATE_KEY
 });
 
+async function dev(req, res) {
+    try {
+        // const items = await Item.updateMany({ location: { _id: "6533eab837aba85d40329a39" } }, { location: '654e64423c1259ced926ef0d' }, { new: true });   
+        // const items = await Item.find().populate('location');
+
+        // const changeItems = items.filter(item => (
+        //     item.location && item.location._id.toString() === "6533ed7e8488cbc2a8e9b03b"
+        // ));
+
+        // const updatedItems = await Promise.all(changeItems.map((item) => (
+        //     Item.findByIdAndUpdate(item._id, { location: '654e6a185c0b168228252991' }, { new: true }).populate('location')
+        // )));
+       
+        res.json(null);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
 /**
  * Get all user items
  * @header x-auth-token
@@ -192,6 +212,7 @@ async function imageKitAuth(req, res) {
 
 
 module.exports = {
+    dev,
     getItems,
     getItemByID,
     createItem,

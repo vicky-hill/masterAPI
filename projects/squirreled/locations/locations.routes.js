@@ -4,6 +4,8 @@ const { protect, getLocation } = require('../middleware')
 
 const locationCtrl = require('./locations.controller');
 
+router.route('/dev').get(locationCtrl.dev);
+
 /**
  * @get api/squirreled/locations - get all locations
  * @post api/squirreled/locations - create new location
@@ -12,6 +14,13 @@ router
     .route('/')
     .get(protect, locationCtrl.getLocations)
     .post(protect, locationCtrl.createLocation)
+
+/** 
+* @post api/squirreled/locations/:locationID/storage - create a storage are
+*/
+router.route('/:locationID/storage').post(protect, locationCtrl.createStorageArea)
+
+
 
 /**
  * @get api/squirreled/locations/:id - get location by id

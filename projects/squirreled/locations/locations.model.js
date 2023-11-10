@@ -10,9 +10,21 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    path: {
+        type: String
+    },
+    storage_areas: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Squirreled_Location'
+    }],
     description: {
         type: String,
-        required: true
+        required: false
+    },
+    type: {
+        type: String,
+        enum : ['main','sub', 'storage'],
+        default: 'main'
     },
     lastUsed: {
         type: Date,
