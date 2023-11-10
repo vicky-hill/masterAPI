@@ -1,6 +1,5 @@
 const Item = require('./items.model')
 const ImageKit = require('imagekit')
-const { getItem } = require('./items.utils')
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -58,8 +57,7 @@ async function createItem(req, res) {
             user: req.user._id
         });
 
-        const item = await getItem(req, res, createdItem._id);
-        if (!item) return;
+        const item = await Item.findById(createdItem._id).populate('location user');
 
         res.json(item);
     } catch (err) {

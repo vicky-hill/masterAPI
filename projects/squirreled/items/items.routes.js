@@ -20,9 +20,9 @@ router
 * @put api/squirreled/items/:id/move - move one item
 * @put api/squirreled/items/:id/trash - trash one item
 */
-router.route('/auth').get(protect, getItem, itemCtrl.imageKitAuth)
-router.route('/move').put(protect, getItem, itemCtrl.moveItems)
-router.route('/trash').put(protect, getItem, itemCtrl.trashItems)
+router.route('/auth').get(protect, itemCtrl.imageKitAuth)
+router.route('/move').put(protect, itemCtrl.moveItems)
+router.route('/trash').put(protect, itemCtrl.trashItems)
 router.route('/:id/move').put(protect, getItem, itemCtrl.moveItem)
 router.route('/:id/trash').put(protect, getItem, itemCtrl.trashItem)
 
