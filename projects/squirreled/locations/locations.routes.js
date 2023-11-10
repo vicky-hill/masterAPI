@@ -1,5 +1,6 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const { protect, getLocation } = require('../middleware')
 
 const locationCtrl = require('./locations.controller');
 
@@ -9,8 +10,8 @@ const locationCtrl = require('./locations.controller');
  */
 router
     .route('/')
-    .get(locationCtrl.getLocations)
-    .post(locationCtrl.saveLocation)
+    .get(protect, locationCtrl.getLocations)
+    .post(protect, locationCtrl.createLocation)
 
 /**
  * @get api/squirreled/locations/:id - get location by id
@@ -19,9 +20,9 @@ router
  */
 router
     .route('/:id')
-    .get(locationCtrl.getLocation)
-    .put(locationCtrl.updateLocation)
-    .delete(locationCtrl.deleteLocation)
+    .get(protect, getLocation, locationCtrl.getLocation)
+    .put(protect, getLocation, locationCtrl.updateLocation)
+    .delete(protect, getLocation, locationCtrl.deleteLocation)
 
 
 

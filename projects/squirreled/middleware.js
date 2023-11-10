@@ -1,8 +1,9 @@
 const jwt_decode = require('jwt-decode')
 const User = require('./users/users.model')
 const Item = require('./items/items.model')
+const Location = require('./locations/locations.model')
 
-// Protect routes 
+// Protect all routes 
 exports.protect = async (req, res, next) => {
 
     // Get token in the header
@@ -32,6 +33,7 @@ exports.protect = async (req, res, next) => {
 
 };
 
+// Get protected item
 exports.getItem = async (req, res, next) => {
     try {
         const item = await Item.findById(req.params.id).populate('location user');
@@ -41,6 +43,23 @@ exports.getItem = async (req, res, next) => {
         }
 
         req.item = item;
+
+        next();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+// Get protected location
+exports.getLocation = async (req, res, next) => {
+    try {
+        const location = await Location.findById(req.params.id).populate('user');
+
+        if (!location || location.user._id.toString() !== req.user._id.toString()) {
+            return res.status(404).json({ msg: "Location not found" });
+        }
+
+        req.location = location;
 
         next();
     } catch (err) {

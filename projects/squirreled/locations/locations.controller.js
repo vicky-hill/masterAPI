@@ -1,12 +1,15 @@
 const Location = require('./locations.model');
 
 /**
- * Get all locations
+ * Get user locations
  * @returns [{ location }]
  */
 async function getLocations(req, res) {
     try {
-        const locations = await Location.find();
+        const locations = await Location
+            .find({ user: req.user._id })
+            .populate('user');
+
         res.json(locations);
     } catch (err) {
         console.log(err);
@@ -14,19 +17,13 @@ async function getLocations(req, res) {
 }
 
 /**
- * Get one location
+ * Get location by ID
  * @param id - ID of location to fetch
  * @returns location {}   
  */
 async function getLocation(req, res) {
     try {
-        const location = await Location.findById(req.params.id);
-
-        if (!location) {
-            return res.status(404).json({ msg: "Location not found" });
-        }
-
-        res.json(location);
+        res.json(req.location);
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });
@@ -35,13 +32,18 @@ async function getLocation(req, res) {
 
 /**
  * Create a location
+ * @header x-auth-token
  * @property {String} req.body.name 
  * @property {String} req.body.description 
  * @returns location {}   
  */
-async function saveLocation(req, res) {
+async function createLocation(req, res) {
     try {
-        const location = await Location.create(req.body);
+        const location = await Location.create({
+            ...req.body,
+            user: req.user._id
+        });
+
         res.json(location);
     } catch (err) {
         console.log(err);
@@ -58,12 +60,12 @@ async function saveLocation(req, res) {
  */
 async function updateLocation(req, res) {
     try {
-        const location = await Location.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-        if (!location) {
-            return res.status(404).json({ msg: "Location not found" });
-        }
-
+        const location = await Location.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        
         res.json(location);
     } catch (err) {
         console.log(err);
@@ -79,11 +81,6 @@ async function updateLocation(req, res) {
 async function deleteLocation(req, res) {
     try {
         const location = await Location.findByIdAndDelete(req.params.id);
-
-        if (!location) {
-            return res.status(404).json({ msg: "Location not found" });
-        }
-
         res.json(location)
     } catch (err) {
         res.status(500).json({ msg: 'Something went wrong' });
@@ -93,7 +90,7 @@ async function deleteLocation(req, res) {
 module.exports = {
     getLocations,
     getLocation,
-    saveLocation,
+    createLocation,
     updateLocation,
-    deleteLocation,
+    deleteLocation
 }

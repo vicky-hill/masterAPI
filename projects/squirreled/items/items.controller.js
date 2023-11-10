@@ -33,7 +33,8 @@ async function getItems(req, res) {
  */
 async function getItemByID(req, res) {
     try {
-        res.json(req.item);
+        const item = req.item;
+        res.json(item);
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });
@@ -79,10 +80,6 @@ async function createItem(req, res) {
  */
 async function updateItem(req, res) {
     try {
-
-        const item = await getItem(req, res);
-        if (!item) return;
-
         const updatedItem = await Item.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -103,9 +100,6 @@ async function updateItem(req, res) {
  */
 async function deleteItem(req, res) {
     try {
-        const item = await getItem(req, res);
-        if (!item) return;
-
         const deletedItem = await Item.findByIdAndDelete(req.params.id);
         res.json(deletedItem);
     } catch (err) {
@@ -124,10 +118,6 @@ async function moveItem(req, res) {
         const { location } = req.body;
         const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true }).populate('location');
 
-        if (!item) {
-            return res.status(404).json({ msg: "Item not found" });
-        }
-
         res.json(item);
     } catch (err) {
         console.log(err)
@@ -143,11 +133,6 @@ async function moveItem(req, res) {
 async function trashItem(req, res) {
     try {
         const item = await Item.findByIdAndUpdate(req.params.id, { trash: true }, { new: true });
-
-        if (!item) {
-            return res.status(404).json({ msg: "Item not found" });
-        }
-
         res.json(item);
     } catch (err) {
         res.status(500).json({ msg: 'Something went wrong' });
