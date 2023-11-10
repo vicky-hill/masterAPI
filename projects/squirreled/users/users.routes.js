@@ -11,7 +11,7 @@ const userCtrl = require('./users.controller');
  */
 router
     .route('/')
-    .get(protect, userCtrl.getUser)
+    .get(userCtrl.getUser)
     .post(userCtrl.createUser)
 
 module.exports = router; 

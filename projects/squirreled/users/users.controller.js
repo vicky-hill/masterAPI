@@ -1,4 +1,5 @@
 const User = require('./users.model');
+const jwt_decode = require('jwt-decode')
 
 /**
  * Save a new user
@@ -25,14 +26,17 @@ async function createUser(req, res, next) {
  */
 async function getUser(req, res, next) {
     try {
-    console.log('kdjf')
-        const user = await User.findById(req.user._id);
         
-        if(!user) {
-            res.status(404).json({ msg: 'No user found' })
-        }
+        const token = req.header('x-auth-token');
 
-        res.status(200).json(user);
+        if (!token) return res.json(null);
+        
+        const decodedToken = jwt_decode(token);
+        const user = await User.findOne({ firebaseID: decodedToken.user_id });
+        
+        if(!user) res.json(null);
+        
+        res.json(user);
     } catch (err) {
         next(err);
     }
