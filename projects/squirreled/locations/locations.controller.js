@@ -1,4 +1,5 @@
 const Location = require('./locations.model');
+const Item = require('../items/items.model')
 
 async function dev(req, res) {
     try {
@@ -17,14 +18,21 @@ async function getLocations(req, res) {
     try {
         const locations = await Location
             .find({ user: req.user._id, type: 'main' })
-            .populate({
+            .populate([{
                 path: 'storage_areas',
                 model: Location,
                 populate: {
                     path: 'storage_areas',
                     model: Location,
+                    populate: {
+                        path: 'items',
+                        model: Item
+                    }
                 }
-            });
+            }]);
+
+        // const locations = await Location
+        //     .find().populate('items')
 
         res.json(locations);
     } catch (err) {

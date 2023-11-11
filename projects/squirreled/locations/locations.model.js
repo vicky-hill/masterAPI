@@ -23,7 +23,7 @@ const LocationSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum : ['main','sub', 'storage'],
+        enum: ['main', 'sub', 'storage'],
         default: 'main'
     },
     lastUsed: {
@@ -34,6 +34,20 @@ const LocationSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
+}, {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
+});
+
+LocationSchema.virtual('items', {
+    ref: 'Squirreled_Item',
+    localField: '_id',
+    foreignField: 'location',
+    justOne: false
+});
 
 module.exports = mongoose.model('Squirreled_Location', LocationSchema);
