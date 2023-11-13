@@ -31,9 +31,6 @@ async function getLocations(req, res) {
                 }
             }]);
 
-        // const locations = await Location
-        //     .find().populate('items')
-
         res.json(locations);
     } catch (err) {
         console.log(err);

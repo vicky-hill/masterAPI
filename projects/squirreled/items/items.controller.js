@@ -35,7 +35,7 @@ async function dev(req, res) {
 async function getItems(req, res) {
     try {
         const items = await Item.find({ trash: false, user: req.user._id })
-            .populate('location user')
+            .populate('location')
             .sort({ createdAt: -1 });
 
         res.json(items);
