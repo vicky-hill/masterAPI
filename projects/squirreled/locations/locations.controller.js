@@ -26,7 +26,8 @@ async function getLocations(req, res) {
                     model: Location,
                     populate: {
                         path: 'items',
-                        model: Item
+                        model: Item,
+                        match: { trash: false }
                     }
                 }
             }]);
