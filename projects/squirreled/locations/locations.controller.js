@@ -2,12 +2,12 @@ const Location = require('./locations.model');
 const Item = require('../items/items.model')
 
 async function dev(req, res) {
-    try {
-        const locations = await Location.updateMany({}, { type: 'main' }, { new: true });
-        res.json(locations);
-    } catch (err) {
-        console.log(err);
-    }
+    // try {
+    //     const locations = await Location.updateMany({}, { type: 'sub' }, { new: true });
+    //     res.json(locations);
+    // } catch (err) {
+    //     console.log(err);
+    // }
 }
 
 /**
@@ -113,13 +113,20 @@ async function createStorageArea(req, res) {
  */
 async function updateLocation(req, res) {
     try {
-        const location = await Location.findByIdAndUpdate(
+        const { location } = req;
+
+        if (req.body.name) {
+            const updatedPath = location.path.replace(location.name, req.body.name);
+            req.body.path = updatedPath;
+        }
+
+        const updatedLocation = await Location.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         );
 
-        res.json(location);
+        res.json(updatedLocation);
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });

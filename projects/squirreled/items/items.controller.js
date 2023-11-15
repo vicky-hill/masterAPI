@@ -13,14 +13,14 @@ async function dev(req, res) {
         // const items = await Item.find().populate('location');
 
         // const changeItems = items.filter(item => (
-        //     item.location && item.location._id.toString() === "6533ed7e8488cbc2a8e9b03b"
+        //     item.location && item.location._id.toString() === "654e6a405c0b168228252997"
         // ));
 
         // const updatedItems = await Promise.all(changeItems.map((item) => (
-        //     Item.findByIdAndUpdate(item._id, { location: '654e6a185c0b168228252991' }, { new: true }).populate('location')
+        //     Item.findByIdAndUpdate(item._id, { location: '65523c236dca81937df0c968' }, { new: true }).populate('location')
         // )));
        
-        res.json(null);
+        // res.json(updatedItems);
     } catch (err) {
         console.log(err);
     }
