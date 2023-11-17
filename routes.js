@@ -21,6 +21,7 @@ const squirrled_locationRoutes = require('./projects/squirreled/locations/locati
 const squirrled_userRoutes = require('./projects/squirreled/users/users.routes')
 
 const reqdoc_projectRoutes = require('./projects/reqdoc/projects/projects.routes')
+const reqdoc_featuresRoutes = require('./projects/reqdoc/features/features.routes')
 
 
 // Check backend health
@@ -94,8 +95,13 @@ router.use('/api/squirreled/user', squirrled_userRoutes)
    Reqdoc
 =================================== */
 
-// Mount item routes @ api/reqdoc/projects
+// Mount projects routes @ api/reqdoc/projects
 router.use('/api/reqdoc/projects', reqdoc_projectRoutes)
+
+// Mount features routes @ api/reqdoc/features
+router.use('/api/reqdoc/features', reqdoc_featuresRoutes)
+
+
 
 module.exports = router;
 

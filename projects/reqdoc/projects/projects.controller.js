@@ -20,7 +20,14 @@ async function getProjects(req, res) {
  */
 async function getProject(req, res) {
     try {
-        const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id)
+            .populate({
+                path: 'features',
+                match: { main_feature: { $exists: false } },
+                populate: {
+                    path: 'sub_features'
+                }
+            })
         res.json(project);
     } catch (err) {
         console.log(err);
@@ -48,7 +55,7 @@ async function createProject(req, res) {
 
 
 module.exports = {
-  getProjects, 
-  getProject,
-  createProject
+    getProjects,
+    getProject,
+    createProject
 }
