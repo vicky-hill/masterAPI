@@ -76,7 +76,6 @@ async function updateFeature(req, res, next) {
     }
 }
 
-
 /**
  * Create a sub feature
  * @param featureID
