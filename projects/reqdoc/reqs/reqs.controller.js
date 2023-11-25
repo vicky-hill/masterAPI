@@ -1,4 +1,5 @@
-const Req = require('./reqs.model');
+const Req = require('./reqs.model')
+const Feature = require('../features/features.model')
 
 /**
  * Get reqs
@@ -41,19 +42,21 @@ async function getReq(req, res) {
  * @property {String} req.body.title 
  * @property {String} req.body.text 
  * @property {String} req.body.feature 
- * @property {String} req.body.project 
  * @returns req {}   
  */
 async function createReq(req, res) {
     try {
         const reqs = await Req.find({ feature: req.body.feature });
-        const allProjectReqs = await Req.find({ project: req.body.project, changed_req: { $exists: false } });
+        const feature = await Feature.findById(req.body.feature);
+        
+        const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
         const keyNumber = allProjectReqs.length + 1;
 
         const requirement = await Req.create({
             ...req.body,
             key: `Req-${keyNumber.toString().padStart(3, 0)}`,
-            sort: reqs.length
+            sort: reqs.length,
+            project: feature.project
         });
 
         res.json(requirement);
