@@ -46,7 +46,7 @@ async function getReq(req, res) {
  */
 async function createReq(req, res) {
     try {
-        const reqs = await Req.find({ feature: req.body.feature });
+        const reqs = await Req.find({ feature: req.body.feature, changed_req: { $exists: false } });
         const feature = await Feature.findById(req.body.feature);
         
         const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
