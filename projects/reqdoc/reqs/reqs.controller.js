@@ -9,7 +9,7 @@ const Feature = require('../features/features.model')
 async function getReqs(req, res) {
     try {
         const reqs = await Req
-            .find({ features: req.params.feature, changed_req: { $exists: false } })
+            .find({ feature: req.params.feature, changed_req: { $exists: false } })
             .populate({
                 path: 'history',
                 options: { sort: { createdAt: 'desc' } } 
