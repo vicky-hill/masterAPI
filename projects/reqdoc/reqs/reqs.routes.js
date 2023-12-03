@@ -11,15 +11,17 @@ router
     .post(reqCtrl.createReq)
 
 /** 
+* @post api/reqdoc/reqs/sort - update sort of reqs
 * @post api/reqdoc/reqs/:reqID/change - change a req
 */
+router.route('/sort', reqCtrl)
 router.route('/:reqID/change').put(reqCtrl.changeReq)
 
 /**
  * @get api/reqdoc/reqs/:id - get location by id
  */
 router
-    .route('/:project')
+    .route('/:feature')
     .get(reqCtrl.getReqs)
 
 

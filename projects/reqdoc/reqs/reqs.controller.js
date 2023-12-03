@@ -3,13 +3,13 @@ const Feature = require('../features/features.model')
 
 /**
  * Get reqs
- * @param project - id of project
+ * @param feature - id of feature
  * @returns [{ req }]
  */
 async function getReqs(req, res) {
     try {
         const reqs = await Req
-            .find({ project: req.params.project, changed_req: { $exists: false } })
+            .find({ features: req.params.feature, changed_req: { $exists: false } })
             .populate({
                 path: 'history',
                 options: { sort: { createdAt: 'desc' } } 
