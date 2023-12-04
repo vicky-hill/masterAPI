@@ -33,5 +33,12 @@ FeatureSchema.virtual('sub_features', {
     justOne: false
 });
 
+FeatureSchema.virtual('reqs', {
+    ref: 'Reqdoc_Req',
+    localField: '_id',
+    foreignField: 'feature',
+    justOne: false
+})
+
 
 module.exports = mongoose.model('Reqdoc_Feature', FeatureSchema);

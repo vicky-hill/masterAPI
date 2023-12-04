@@ -20,11 +20,20 @@ async function getFeatures(req, res) {
 /**
  * Get feature by ID
  * @param id - ID of feature to fetch
- * @returns feature {}   
+ * @returns feature { _id, name, project, sort, sub_features [], reqs []}   
  */
 async function getFeature(req, res) {
     try {
-        const feature = await Feature.findById(req.params.id).populate('sub_features');
+        const feature = await Feature
+            .findById(req.params.id)
+            .populate([{
+                path: 'sub_features'
+            }, {
+                path: 'reqs',
+                match: { changed_req: { $exists: false } }
+            }]);
+
+
         res.json(feature);
     } catch (err) {
         console.log(err);
@@ -105,9 +114,9 @@ async function createSubFeature(req, res) {
 
 
 module.exports = {
-  getFeatures, 
-  getFeature,
-  createFeature,
-  updateFeature,
-  createSubFeature
+    getFeatures,
+    getFeature,
+    createFeature,
+    updateFeature,
+    createSubFeature
 }
