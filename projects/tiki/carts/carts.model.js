@@ -17,6 +17,11 @@ const CartSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    status: {
+        type: String,
+        enum: ['open', 'closed'],
+        default: 'open'
+    },
     items: [CartItemSchema]
 }, {
     timestamps: true

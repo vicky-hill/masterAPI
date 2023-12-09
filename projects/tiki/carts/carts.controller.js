@@ -1,6 +1,6 @@
-const Cart = require('./carts.model');
-const User = require('../users/users.model');
-const mongoose = require('mongoose');
+const Cart = require('./carts.model')
+const User = require('../users/users.model')
+const { addItemsToCart }  = require('./carts.utils')
 
 /**
  * Add to cart
@@ -12,39 +12,12 @@ async function addToCart(req, res, next) {
     try {
         let cart = await Cart.findOne({ userID: req.userID });
 
-        // If user doesn't have a cart yet, create new cart and save it to user
         if (!cart) {
             cart = await Cart.create({ userID: req.userID });
             await User.findByIdAndUpdate(req.userID, { cart: cart._id })
         }
 
-        const newItems = req.body.items
-            .filter(item => (
-                !cart.items.map(item => item.productID.toString()).includes(item.productID.toString())
-            ))
-
-        const existingItems = req.body.items
-            .filter(item => (
-                cart.items.map(item => item.productID.toString()).includes(item.productID.toString())
-            ))
-            .map(item => (
-                cart.items.find(cartItem => cartItem.productID.toString() === item.productID.toString())
-            ))
-
-        // Existing items: If item already exists in cart, up the quantity
-        if (existingItems && existingItems.length) {
-            for (let i = 0; i < existingItems.length; i++) {
-                const reqItem = req.body.items.find(item => item.productID.toString() === existingItems[i].productID.toString());
-
-                cart = await Cart.findOneAndUpdate({ "_id": cart._id, "items._id": existingItems[i]._id },
-                    { "$set": { "items.$.quantity": existingItems[i].quantity + reqItem.quantity } }, { new: true });
-            }
-        }
-
-        // New Items
-        if (newItems && newItems.length) {
-            cart = await Cart.findByIdAndUpdate(cart.id, { $push: { items: newItems } }, { new: true });
-        }
+        cart = await addItemsToCart(req.body.items, cart);
 
         res.status(200).json(cart);
     } catch (err) {
@@ -88,34 +61,39 @@ async function addToGuestCart(req, res, next) {
             cart = await Cart.create({});
         }
 
-        const newItems = req.body.items
-            .filter(item => (
-                !cart.items.map(item => item.productID.toString()).includes(item.productID.toString())
-            ))
+        cart = await addItemsToCart(req.body.items, cart);
 
-        const existingItems = req.body.items
-            .filter(item => (
-                cart.items.map(item => item.productID.toString()).includes(item.productID.toString())
-            ))
-            .map(item => (
-                cart.items.find(cartItem => cartItem.productID.toString() === item.productID.toString())
-            ))
+        res.status(200).json(cart);
+    } catch (err) {
+        next(err);
+    }
+}
 
-        // Existing items: If item already exists in cart, up the quantity
-        if (existingItems && existingItems.length) {
-            for (let i = 0; i < existingItems.length; i++) {
-                const reqItem = req.body.items.find(item => item.productID.toString() === existingItems[i].productID.toString());
+/**
+ * Convert guest cart to user cart
+ * @header x-auth-token
+ * @property {array} req.body.items [{ productID: string, quantity: number}]
+ * @returns cart {}
+ */
+async function convertCart(req, res, next) {
+    try {
+        let cart = await Cart.findById(req.params.cartID);
+        await addItemsToCart(req.body.items, cart);
+        cart = await Cart.findByIdAndUpdate(req.params.cartID, { userID: req.user._id }, { new: true })
+        
+        res.status(200).json(cart);
+    } catch (err) {
+        next(err);
+    }
+}
 
-                cart = await Cart.findOneAndUpdate({ "_id": cart._id, "items._id": existingItems[i]._id },
-                    { "$set": { "items.$.quantity": existingItems[i].quantity + reqItem.quantity } }, { new: true });
-            }
-        }
-
-        // New Items
-        if (newItems && newItems.length) {
-            cart = await Cart.findByIdAndUpdate(cart.id, { $push: { items: newItems } }, { new: true });
-        }
-
+/**
+ * Get guest cart
+ * @returns cart {}
+ */
+async function getGuestCart(req, res, next) {
+    try {
+        const cart = await Cart.findById(req.params.cartID);
         res.status(200).json(cart);
     } catch (err) {
         next(err);
@@ -136,8 +114,32 @@ async function getAllCarts(req, res, next) {
     }
 }
 
+/**
+ * Get all carts
+ * @param cartItemID
+ * @property req.body.quantity
+ * @returns carts []
+ */
+async function updateQuantity(req, res, next) {
+    try {
+        
+        const cart = await Cart.findOneAndUpdate({ "items._id": req.params.cartItemID },
+            { "$set": { "items.$.quantity": req.body.quantity } }, { new: true });
+  
+        res.status(200).json(cart);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+
+
 
 module.exports = {
+    updateQuantity,
+    convertCart,
+    getGuestCart,
     getAllCarts,
     addToGuestCart,
     addToCart,
