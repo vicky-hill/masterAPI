@@ -43,4 +43,4 @@ ReqSchema.virtual('history', {
 });
 
 
-module.exports = mongoose.model('Reqdoc_Req', ReqSchema);
+module.exports = mongoose.model('REQDOC_Req', ReqSchema);

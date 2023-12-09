@@ -22,4 +22,4 @@ ProjectSchema.virtual('features', {
 });
 
 
-module.exports = mongoose.model('Reqdoc_Location', ProjectSchema);
+module.exports = mongoose.model('REQDOC_Location', ProjectSchema);

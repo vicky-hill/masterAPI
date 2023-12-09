@@ -13,4 +13,4 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 })
 
-module.exports = mongoose.model('Tiki_User', UserSchema);
+module.exports = mongoose.model('TIKI_User', UserSchema);
