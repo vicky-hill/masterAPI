@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CartItemSchema = new mongoose.Schema({
-    productID: {
+    product: {
         type: mongoose.Schema.ObjectId,
         ref: 'TIKI_Product',
         required: true
@@ -13,7 +13,7 @@ const CartItemSchema = new mongoose.Schema({
 })
 
 const CartSchema = new mongoose.Schema({
-    userID: {
+    user: {
         type: String,
         required: false
     },

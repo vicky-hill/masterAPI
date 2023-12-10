@@ -1,23 +1,51 @@
 const Cart = require('./carts.model')
-const User = require('../users/users.model')
-const { addItemsToCart }  = require('./carts.utils')
+const { addMultipleItems, addOneItem, getCart, product }  = require('./carts.utils')
 
 /**
- * Add to cart
+ * Add item to cart
+ * @param cartID
+ * @property req.body.item { productID, quantity }
+ * @returns carts []
+ */
+async function addItem(req, res, next) {
+    try {
+        const { item } = req.body;
+
+        let cart = await getCart(req);
+
+        if (!cart) return res.status(400).json({ msg: 'Cart with the provided cartID does not exist'})
+       
+        cart = await addOneItem(item, cart);
+
+        res.status(200).json(cart);
+    } catch (err) {
+        next(err);
+    }
+}
+
+/**
+ * Merge guest cart
  * @header x-auth-token
  * @property {array} req.body.items [{ productID: string, quantity: number}]
+ * @param cartID 
  * @returns cart {}
  */
-async function addToCart(req, res, next) {
+async function mergeCart(req, res, next) {
     try {
-        let cart = await Cart.findOne({ userID: req.userID });
+        const { cartID } = req.params;
+        delete req.params.cartID;
 
-        if (!cart) {
-            cart = await Cart.create({ userID: req.userID });
-            await User.findByIdAndUpdate(req.userID, { cart: cart._id })
-        }
+        let guestCart = await Cart.findById(cartID);
+        let userCart = await getCart(req);
 
-        cart = await addItemsToCart(req.body.items, cart);
+        const items = guestCart && guestCart.items.map(({ product, quantity}) => ({
+            product,
+            quantity
+        }))
+
+        const cart = await addMultipleItems(items, userCart);
+        
+        await Cart.findByIdAndDelete(cartID);
 
         res.status(200).json(cart);
     } catch (err) {
@@ -28,41 +56,14 @@ async function addToCart(req, res, next) {
 
 /**
  * Get current user cart
- * @header x-auth-token
+ * @header x-auth-token - optional
+ * @param cartID - optional
  * @returns cart {}
  */
 
-async function getCart(req, res, next) {
-    try {
-        let cart = { items: [] };
-        cart = await Cart.findOne({ userID: req.userID });
-
-        res.status(200).json(cart);
-    } catch (err) {
-        next(err);
-    }
-}
-
-
-/**
- * Add to guest cart
- * @property {array} req.body.items [{ productID: string, quantity: number}]
- * @property {string} req.body.cartID
- * @returns cart {}
- */
-async function addToGuestCart(req, res, next) {
-    try {
-        let cart = { items: [] };
-        const { cartID } = req.body;
-
-        if (cartID) {
-            cart = await Cart.findById(req.body.cartID);
-        } else {
-            cart = await Cart.create({});
-        }
-
-        cart = await addItemsToCart(req.body.items, cart);
-
+async function retrieveCart(req, res, next) {
+    try { 
+        const cart = await getCart(req);
         res.status(200).json(cart);
     } catch (err) {
         next(err);
@@ -77,23 +78,12 @@ async function addToGuestCart(req, res, next) {
  */
 async function convertCart(req, res, next) {
     try {
-        let cart = await Cart.findById(req.params.cartID);
-        await addItemsToCart(req.body.items, cart);
-        cart = await Cart.findByIdAndUpdate(req.params.cartID, { userID: req.user._id }, { new: true })
-        
-        res.status(200).json(cart);
-    } catch (err) {
-        next(err);
-    }
-}
+        const { cartID } = req.params;
 
-/**
- * Get guest cart
- * @returns cart {}
- */
-async function getGuestCart(req, res, next) {
-    try {
-        const cart = await Cart.findById(req.params.cartID);
+        let cart = await Cart.findById(cartID);
+        await addMultipleItems(req.body.items, cart);
+        cart = await Cart.findByIdAndUpdate(cartID, { user: req.user._id }, { new: true })
+        
         res.status(200).json(cart);
     } catch (err) {
         next(err);
@@ -107,7 +97,8 @@ async function getGuestCart(req, res, next) {
 async function getAllCarts(req, res, next) {
     try {
         const carts = await Cart.find()
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .populate(product)
         res.status(200).json(carts);
     } catch (err) {
         next(err);
@@ -148,7 +139,7 @@ async function removeItem(req, res, next) {
             { _id: cart._id },
             { $pull: { items: { _id: cartItemID } } },
             { new: true }
-          );
+          ).populate(product);
 
         res.status(200).json(updatedCart);
     } catch (err) {
@@ -161,13 +152,12 @@ async function removeItem(req, res, next) {
 
 
 module.exports = {
+    addItem,
     removeItem,
     updateQuantity,
     convertCart,
-    getGuestCart,
     getAllCarts,
-    addToGuestCart,
-    addToCart,
-    getCart
+    mergeCart,
+    retrieveCart
 }
 

@@ -28,5 +28,24 @@ exports.protect = async (req, res, next) => {
     } catch (err) {
         res.status(401).json({ msg: 'Token is not valid' });
     }
-
 };
+
+exports.extractUser = async (req, res, next) => {
+    try {
+        const token = req.header('x-auth-token');
+
+        if (token) {
+            const decoded = jwt_decode(token);
+
+            const user = await User.findOne({ firebaseID: decoded.user_id });
+    
+            if (user) req.user = user;
+        } else {
+            req.user = null
+        }
+
+        next();
+    } catch (err) {
+      console.log(err);
+    }
+}
