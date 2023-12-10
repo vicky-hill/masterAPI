@@ -115,14 +115,14 @@ async function getAllCarts(req, res, next) {
 }
 
 /**
- * Get all carts
+ * Update cart item quantity
  * @param cartItemID
  * @property req.body.quantity
  * @returns carts []
  */
 async function updateQuantity(req, res, next) {
     try {
-        
+
         const cart = await Cart.findOneAndUpdate({ "items._id": req.params.cartItemID },
             { "$set": { "items.$.quantity": req.body.quantity } }, { new: true });
   
@@ -133,10 +133,35 @@ async function updateQuantity(req, res, next) {
 }
 
 
+/**
+ * Remove item from cart
+ * @param cartItemID
+ * @returns carts []
+ */
+async function removeItem(req, res, next) {
+    try {
+        const { cartItemID } = req.params;
+      
+        const cart = await Cart.findOne({ "items._id": cartItemID });
+        
+        const updatedCart = await Cart.findOneAndUpdate(
+            { _id: cart._id },
+            { $pull: { items: { _id: cartItemID } } },
+            { new: true }
+          );
+
+        res.status(200).json(updatedCart);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 
 
 
 module.exports = {
+    removeItem,
     updateQuantity,
     convertCart,
     getGuestCart,
