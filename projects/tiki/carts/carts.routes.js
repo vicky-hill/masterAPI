@@ -5,10 +5,11 @@ const { protect, extractUser } = require('../middleware');
 const cartCtrl = require('./carts.controller');
 
 /** 
+* @get api/tiki/cart - Get all carts
 * @put api/tiki/cart/:cartID/add - Add item to cart
 * @put api/tiki/cart/:cartID/convert - Convert guest cart to user cart
 * @get api/tiki/cart/:cartID/retrieve - Get a cart
-* @get api/tiki/cart/:cartID/list - Get all carts
+* @get api/tiki/cart/:cartID/merge - Merge guest cart into user cart
 */
 router.route('/').get(cartCtrl.getAllCarts)
 router.route('/:cartID/add').put(extractUser, cartCtrl.addItem)
@@ -17,14 +18,11 @@ router.route('/:cartID/retrieve').get(extractUser, cartCtrl.retrieveCart)
 router.route('/:cartID/merge').put(extractUser, cartCtrl.mergeCart)
 
 /** 
-* @put api/tiki/cart/:cartID/add - Add item to cart
 * @put api/tiki/cart/:cartItemID/update - Update cart item quantity
 * @put api/tiki/cart/:cartItemID/remove - Remove item from cart
 */
-router.route('/:cartID/add').put(extractUser, cartCtrl.addItem)
 router.route('/:cartItemID/update').put(cartCtrl.updateQuantity)
 router.route('/:cartItemID/remove').put(cartCtrl.removeItem)
-
 
 
 module.exports = router; 
