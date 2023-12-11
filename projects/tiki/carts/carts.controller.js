@@ -26,11 +26,10 @@ async function addItem(req, res, next) {
 /**
  * Merge guest cart
  * @header x-auth-token
- * @property {array} req.body.items [{ productID: string, quantity: number}]
  * @param cartID 
  * @returns cart {}
  */
-async function mergeCart(req, res, next) {
+async function convertCart(req, res, next) {
     try {
         const { cartID } = req.params;
         delete req.params.cartID;
@@ -70,25 +69,25 @@ async function retrieveCart(req, res, next) {
     }
 }
 
-/**
- * Convert guest cart to user cart
- * @header x-auth-token
- * @property {array} req.body.items [{ productID: string, quantity: number}]
- * @returns cart {}
- */
-async function convertCart(req, res, next) {
-    try {
-        const { cartID } = req.params;
+// /**
+//  * Convert guest cart to user cart
+//  * @header x-auth-token
+//  * @property {array} req.body.items [{ productID: string, quantity: number}]
+//  * @returns cart {}
+//  */
+// async function convertCart(req, res, next) {
+//     try {
+//         const { cartID } = req.params;
 
-        let cart = await Cart.findById(cartID);
-        await addMultipleItems(req.body.items, cart);
-        cart = await Cart.findByIdAndUpdate(cartID, { user: req.user._id }, { new: true })
+//         let cart = await Cart.findById(cartID);
+//         await addMultipleItems(req.body.items, cart);
+//         cart = await Cart.findByIdAndUpdate(cartID, { user: req.user._id }, { new: true })
         
-        res.status(200).json(cart);
-    } catch (err) {
-        next(err);
-    }
-}
+//         res.status(200).json(cart);
+//     } catch (err) {
+//         next(err);
+//     }
+// }
 
 /**
  * Get all carts
@@ -155,9 +154,9 @@ module.exports = {
     addItem,
     removeItem,
     updateQuantity,
-    convertCart,
+    // convertCart,
     getAllCarts,
-    mergeCart,
+    convertCart,
     retrieveCart
 }
 

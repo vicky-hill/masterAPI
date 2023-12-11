@@ -13,9 +13,9 @@ const cartCtrl = require('./carts.controller');
 */
 router.route('/').get(cartCtrl.getAllCarts)
 router.route('/:cartID/add').put(extractUser, cartCtrl.addItem)
-router.route('/:cartID/convert').put(protect, cartCtrl.convertCart)
+// router.route('/:cartID/convert').put(protect, cartCtrl.convertCart)
 router.route('/:cartID/retrieve').get(extractUser, cartCtrl.retrieveCart)
-router.route('/:cartID/merge').put(extractUser, cartCtrl.mergeCart)
+router.route('/:cartID/convert').put(extractUser, cartCtrl.convertCart)
 
 /** 
 * @put api/tiki/cart/:cartItemID/update - Update cart item quantity
