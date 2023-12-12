@@ -4,12 +4,12 @@ const { addMultipleItems, addOneItem, getCart, product }  = require('./carts.uti
 /**
  * Add item to cart
  * @param cartID
- * @property req.body.item { productID, quantity }
+ * @property req.body { productID, quantity }
  * @returns carts []
  */
 async function addItem(req, res, next) {
     try {
-        const { item } = req.body;
+        const item = req.body;
 
         let cart = await getCart(req);
 
