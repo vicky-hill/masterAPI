@@ -114,7 +114,7 @@ async function updateQuantity(req, res, next) {
     try {
 
         const cart = await Cart.findOneAndUpdate({ "items._id": req.params.cartItemID },
-            { "$set": { "items.$.quantity": req.body.quantity } }, { new: true });
+            { "$set": { "items.$.quantity": req.body.quantity } }, { new: true }).populate('items.product');
   
         res.status(200).json(cart);
     } catch (err) {

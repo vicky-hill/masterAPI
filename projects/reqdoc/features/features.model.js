@@ -7,12 +7,12 @@ const FeatureSchema = new mongoose.Schema({
     },
     project: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Reqdoc_Project',
+        ref: 'REQDOC_Project',
         required: true
     },
     main_feature: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Reqdoc_Feature'
+        ref: 'REQDOC_Feature'
     },
     sort: {
         type: Number
@@ -27,14 +27,14 @@ const FeatureSchema = new mongoose.Schema({
 });
 
 FeatureSchema.virtual('sub_features', {
-    ref: 'Reqdoc_Feature',
+    ref: 'REQDOC_Feature',
     localField: '_id',
     foreignField: 'main_feature',
     justOne: false
 });
 
 FeatureSchema.virtual('reqs', {
-    ref: 'Reqdoc_Req',
+    ref: 'REQDOC_Req',
     localField: '_id',
     foreignField: 'feature',
     justOne: false

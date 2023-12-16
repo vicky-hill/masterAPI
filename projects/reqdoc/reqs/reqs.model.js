@@ -15,12 +15,12 @@ const ReqSchema = new mongoose.Schema({
     },
     project: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Reqdoc_Project',
+        ref: 'REQDOC_Project',
         required: true
     },
     feature: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Reqdoc_Feature',
+        ref: 'REQDOC_Feature',
         required: true
     },
     changed_req: {
@@ -36,7 +36,7 @@ const ReqSchema = new mongoose.Schema({
 });
 
 ReqSchema.virtual('history', {
-    ref: 'Reqdoc_Req',
+    ref: 'REQDOC_Req',
     localField: 'key',
     foreignField: 'changed_req',
     justOne: false

@@ -15,7 +15,7 @@ const ProjectSchema = new mongoose.Schema({
 });
 
 ProjectSchema.virtual('features', {
-    ref: 'Reqdoc_Feature',
+    ref: 'REQDOC_Feature',
     localField: '_id',
     foreignField: 'project',
     justOne: false
