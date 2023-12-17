@@ -99,6 +99,9 @@ async function createReq(req, res, next) {
 async function updateReq(req, res, next) {
     try {
         const reqID = req.params.reqID;
+
+        await validate.updateReq(req.body);
+
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
         if (!updatedReq) return sendError(next, 404, {
@@ -136,7 +139,6 @@ async function changeReq(req, res) {
             sort: changedReq.sort
         };
 
-
         if (title) newReq.text = title;
         if (text) newReq.text = text;
 
@@ -150,10 +152,6 @@ async function changeReq(req, res) {
         res.status(500).json({ msg: 'Something went wrong' });
     }
 }
-
-
-// in the error message return was what is needed for a successful req
-
 
 module.exports = {
     getReqs,

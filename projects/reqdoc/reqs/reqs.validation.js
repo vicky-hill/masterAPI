@@ -9,7 +9,16 @@ const validate = {
         });
 
         await schema.validate(values, { abortEarly: false });
-    }
+    },
+    async updateReq(values) {
+        const schema = yup.object().shape({
+            title: yup.string(),
+            text: yup.string(),
+        });
+
+        await schema.validate(values, { abortEarly: false });
+    },
+
 }
 
 module.exports = validate;
