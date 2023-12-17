@@ -10,7 +10,8 @@ const onError = (err, req, res, next) => {
 
     // Wrong mongoose object ID Error
     if (err.name === 'CastError') {
-        const errorMessage = `Invalid mongoose objectId for ${err.path}`;
+        console.log(err)
+        const errorMessage = `Invalid mongoose objectId for field: ${err.path}`;
         error = new Err(null, errorMessage, 400);
     }
 

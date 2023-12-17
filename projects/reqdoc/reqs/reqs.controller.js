@@ -69,6 +69,10 @@ async function createReq(req, res, next) {
 
         const feature = await Feature.findById(featureID);
 
+        if (!feature) return sendError(next, 404, {
+            error: `Feature with _id ${featureID} does not exist, can't create req for non existing feature`
+        });
+
         const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
         const keyNumber = allProjectReqs.length + 1;
 
@@ -88,18 +92,20 @@ async function createReq(req, res, next) {
 /**
  * Update req
  * @params id
- * @property {String} req.body.name 
+ * @property {String} req.body.title 
+ * @property {String} req.body.text 
  * @returns Req
  */
 async function updateReq(req, res, next) {
     try {
-        const updatedReq = await Req.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const reqID = req.params.reqID;
+        const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
-        if (!updatedReq) {
-            return res.status(404).json({ msg: "Req not found" });
-        }
+        if (!updatedReq) return sendError(next, 404, {
+            error: `Requirement with _id ${reqID} does not exist`
+        });
 
-        const requirement = await Req.findById(updatedReq._id);
+        const requirement = await Req.findById(updatedReq._id).populate('history');
 
         res.status(200).json(requirement);
     } catch (err) {
