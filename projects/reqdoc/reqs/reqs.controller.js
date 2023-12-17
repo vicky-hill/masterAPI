@@ -1,35 +1,44 @@
 const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
+const sendError = require('../../../utils/sendError');
 
 /**
  * Get reqs
- * @param feature - id of feature
- * @returns [{ req }]
+ * @param {objectId} feature 
+ * @returns {array<Req>}
  */
-async function getReqs(req, res) {
+async function getReqs(req, res, next) {
     try {
+        const featureID = req.params.feature;
+        const feature = await Feature.findById(featureID);
+
+        if (!feature) return sendError(next, 404, {
+            error: `Feature with _id ${featureID} does not exist`,
+            message: "We're unable to locate this feature at the moment."
+        });
+
         const reqs = await Req
-            .find({ feature: req.params.feature, changed_req: { $exists: false } })
+            .find({ feature: featureID, changed_req: { $exists: false } })
             .populate({
                 path: 'history',
-                options: { sort: { createdAt: 'desc' } } 
+                options: { sort: { createdAt: 'desc' } }
             })
             .sort({ sort: 1 });
 
         res.json(reqs);
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
 /**
  * Get req by ID
- * @param id - ID of req to fetch
- * @returns req {}   
+ * @param  {objectId} reqID
+ * @returns {Req}
  */
 async function getReq(req, res) {
     try {
-        const requirement = await Req.findById(req.params.id).populate('history');
+        const requirement = await Req.findById(req.params.reqID).populate('history');
         res.json(requirement);
     } catch (err) {
         console.log(err);
@@ -39,16 +48,16 @@ async function getReq(req, res) {
 
 /**
  * Create a req
- * @property {String} req.body.title 
- * @property {String} req.body.text 
- * @property {String} req.body.feature 
- * @returns req {}   
+ * @property {string} req.body.title 
+ * @property {string} req.body.text 
+ * @property {string} req.body.feature 
+ * @returns {Req}
  */
 async function createReq(req, res) {
     try {
         const reqs = await Req.find({ feature: req.body.feature, changed_req: { $exists: false } });
         const feature = await Feature.findById(req.body.feature);
-        
+
         const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
         const keyNumber = allProjectReqs.length + 1;
 
@@ -70,7 +79,7 @@ async function createReq(req, res) {
  * Update req
  * @params id
  * @property {String} req.body.name 
- * @returns req {}   
+ * @returns Req
  */
 async function updateReq(req, res, next) {
     try {
@@ -91,9 +100,9 @@ async function updateReq(req, res, next) {
 /**
  * Change a req
  * @param reqID
- * @property {String} req.body.title 
- * @property {String} req.body.text 
- * @returns latest req {}   
+ * @property {String} title 
+ * @property {String} text 
+ * @returns Req 
  */
 async function changeReq(req, res) {
     try {
@@ -102,14 +111,14 @@ async function changeReq(req, res) {
 
         const changedReq = await Req.findById(reqID);
 
-        const newReq = { 
+        const newReq = {
             key: changedReq.key,
             title: changedReq.title,
             text: changedReq.text,
             project: changedReq.project,
             feature: changedReq.feature,
             sort: changedReq.sort
-         }; 
+        };
 
 
         if (title) newReq.text = title;
@@ -117,7 +126,7 @@ async function changeReq(req, res) {
 
         const latestReq = await Req.create(newReq);
 
-        await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true});
+        await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true });
 
         res.json(latestReq);
     } catch (err) {
@@ -127,11 +136,13 @@ async function changeReq(req, res) {
 }
 
 
+// in the error message return was what is needed for a successful req
+
 
 module.exports = {
-  getReqs, 
-  getReq,
-  createReq,
-  updateReq,
-  changeReq
+    getReqs,
+    getReq,
+    createReq,
+    updateReq,
+    changeReq
 }

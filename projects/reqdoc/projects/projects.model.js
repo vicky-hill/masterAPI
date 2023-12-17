@@ -4,6 +4,10 @@ const ProjectSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },
+    key: {
+        type: String,
+        required: true
     }
 }, {
     toObject: {
@@ -22,4 +26,4 @@ ProjectSchema.virtual('features', {
 });
 
 
-module.exports = mongoose.model('REQDOC_Location', ProjectSchema);
+module.exports = mongoose.model('REQDOC_Project', ProjectSchema);

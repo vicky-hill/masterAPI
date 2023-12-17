@@ -16,6 +16,7 @@ router
 */
 router.route('/sort', reqCtrl)
 router.route('/:reqID/change').put(reqCtrl.changeReq)
+router.route('/:reqID/retrieve').get(reqCtrl.getReq)
 
 /**
  * @get api/reqdoc/reqs/:id - get location by id
