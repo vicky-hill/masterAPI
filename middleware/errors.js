@@ -10,12 +10,9 @@ const onError = (err, req, res, next) => {
 
     // Wrong mongoose object ID Error
     if (err.name === 'CastError') {
-        const message = `We're unable to locate the requested content at the moment.`;
-        const errorMessage = `Invalid mongoose objectId, please verify that the passed id is a valid objectId, path: ${err.path}`;
-        error = new Err(message, errorMessage, 400);
+        const errorMessage = `Invalid mongoose objectId for ${err.path}`;
+        error = new Err(null, errorMessage, 400);
     }
-
-
 
     // Handling validation error
     if (err.name === 'ValidationError') {
@@ -24,14 +21,17 @@ const onError = (err, req, res, next) => {
 
         const missing = err.inner.map(error => error.path);
         const missingFields = missing.join(', ');
-        const errorMessage = `req.body is missing these required field${missing.length > 1 ? 's' : ''}: ${missingFields}`
+        const plural = missing.length > 1;
+        
+        const errorMessage = `req.body is missing ${plural ? 'these': 'this'} required field${plural ? 's' : ''}: ${missingFields}`
 
         err.inner.forEach(error => validation[error.path] = error.message);
 
         error = new Err(message, errorMessage, 400, validation)
     }
 
-    const payload = {
+    let payload = {
+        name: err.name && err.name !== "Error" ? err.name : null,
         error: error.error,
         message: error.message,
         debug: error.debug,
@@ -39,7 +39,11 @@ const onError = (err, req, res, next) => {
         status: error.statusCode
     }
 
-    if (err.name && err.name !== "Error") payload.name = err.name
+    Object.keys(payload).forEach(key => {
+        if (payload[key] === 'null' || !payload[key]) {
+            delete payload[key]
+        }
+    })
 
     res.status(err.statusCode).json(payload);
 }

@@ -1,7 +1,7 @@
 const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
 const sendError = require('../../../utils/sendError')
-const yup = require('yup')
+const validate = require('./reqs.validation')
 
 /**
  * Get reqs
@@ -63,13 +63,7 @@ async function createReq(req, res, next) {
     try {
         const featureID = req.body.feature;
 
-        const schema = yup.object().shape({
-            title: yup.string(),
-            text: yup.string().required("Please enter text for the requirement"),
-            feature: yup.string().required("No feature was provided in req body"),
-        });
-
-        await schema.validate(req.body, { abortEarly: false });
+        await validate.createReq(req.body);
 
         const reqs = await Req.find({ feature: featureID, changed_req: { $exists: false } });
 
