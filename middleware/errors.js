@@ -3,9 +3,9 @@ const Err = require('../utils/errorHandler')
 const onError = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
 
-    let error = {...err};
+    let error = { ...err };
     let validation = {}
-    
+
     error.message = err.message;
 
     // Wrong mongoose object ID Error
@@ -15,20 +15,25 @@ const onError = (err, req, res, next) => {
         error = new Err(message, errorMessage, 400);
     }
 
-    // Handling mongoose validation error
+
+
+    // Handling validation error
     if (err.name === 'ValidationError') {
+
         const message = 'Please fill out all required fields'
 
-        for (let prop in err.errors) {
-            validation[prop] = err.errors[prop].message
-        }
-        
-        error = new Err(message, message, 400, validation)
+        const missing = err.inner.map(error => error.path);
+        const missingFields = missing.join(', ');
+        const errorMessage = `req.body is missing these required field${missing.length > 1 ? 's' : ''}: ${missingFields}`
+
+        err.inner.forEach(error => validation[error.path] = error.message);
+
+        error = new Err(message, errorMessage, 400, validation)
     }
 
     const payload = {
         error: error.error,
-        message: error.message, 
+        message: error.message,
         debug: error.debug,
         validation: error.validation,
         status: error.statusCode

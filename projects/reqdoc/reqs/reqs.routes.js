@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
-const reqCtrl = require('./reqs.controller');
+const reqCtrl = require('./reqs.controller')
 
 /**
  * @post api/reqdoc/reqs - create new req

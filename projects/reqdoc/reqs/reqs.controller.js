@@ -1,6 +1,7 @@
 const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
-const sendError = require('../../../utils/sendError');
+const sendError = require('../../../utils/sendError')
+const yup = require('yup')
 
 /**
  * Get reqs
@@ -39,6 +40,11 @@ async function getReqs(req, res, next) {
 async function getReq(req, res) {
     try {
         const requirement = await Req.findById(req.params.reqID).populate('history');
+
+        if (!requirement) return sendError(next, 404, {
+            error: `Req with _id ${req.params.reqID} does not exist`
+        });
+
         res.json(requirement);
     } catch (err) {
         console.log(err);
@@ -53,10 +59,21 @@ async function getReq(req, res) {
  * @property {string} req.body.feature 
  * @returns {Req}
  */
-async function createReq(req, res) {
+async function createReq(req, res, next) {
     try {
-        const reqs = await Req.find({ feature: req.body.feature, changed_req: { $exists: false } });
-        const feature = await Feature.findById(req.body.feature);
+        const featureID = req.body.feature;
+
+        const schema = yup.object().shape({
+            title: yup.string(),
+            text: yup.string().required("Please enter text for the requirement"),
+            feature: yup.string().required("No feature was provided in req body"),
+        });
+
+        await schema.validate(req.body, { abortEarly: false });
+
+        const reqs = await Req.find({ feature: featureID, changed_req: { $exists: false } });
+
+        const feature = await Feature.findById(featureID);
 
         const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
         const keyNumber = allProjectReqs.length + 1;
@@ -70,8 +87,7 @@ async function createReq(req, res) {
 
         res.json(requirement);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 

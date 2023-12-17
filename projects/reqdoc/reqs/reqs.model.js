@@ -11,7 +11,7 @@ const ReqSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: false
+        required: [true, 'Please enter text for the requirement']
     },
     project: {
         type: mongoose.Schema.ObjectId,
@@ -21,7 +21,7 @@ const ReqSchema = new mongoose.Schema({
     feature: {
         type: mongoose.Schema.ObjectId,
         ref: 'REQDOC_Feature',
-        required: true
+        required: [true, 'Feature is missing in the request body']
     },
     changed_req: {
         type: String
