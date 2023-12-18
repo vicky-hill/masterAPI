@@ -1,5 +1,4 @@
-const Location = require('./locations.model');
-const Item = require('../items/items.model')
+const Location = require('./locations.model')
 
 async function dev(req, res) {
     // try {
@@ -12,7 +11,7 @@ async function dev(req, res) {
 
 /**
  * Get user locations
- * @returns [{ location }]
+ * @return {array<Location>}
  */
 async function getLocations(req, res) {
     try {
@@ -36,7 +35,7 @@ async function getLocations(req, res) {
 /**
  * Get location by ID
  * @param id - ID of location to fetch
- * @returns location {}   
+ * @returns {Location}
  */
 async function getLocation(req, res) {
     try {

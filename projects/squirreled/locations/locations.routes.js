@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { protect, getLocation } = require('../middleware')
+const { protect, getLocation } = require('../utils/middleware')
 
 const locationCtrl = require('./locations.controller');
 

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { protect, getItem } = require('../middleware')
+const { protect, getItem } = require('../utils/middleware')
 
 const itemCtrl = require('./items.controller');
 
