@@ -1,14 +1,17 @@
-const Feature = require('./features.model');
+const Feature = require('./features.model')
+const validate = require('../utils/validation')
 
 /**
  * Get features
- * @param project - id of project
- * @returns [{ feature }]
+ * @param {objectId} projectID
+ * @returns {array<Feature>}
  */
 async function getFeatures(req, res) {
     try {
+        const { projectID } = req.param;
+
         const features = await Feature
-            .find({ project: req.params.project })
+            .find({ project: projectID })
             .sort({ sort: 1 });
 
         res.json(features);
@@ -19,13 +22,15 @@ async function getFeatures(req, res) {
 
 /**
  * Get feature by ID
- * @param id - ID of feature to fetch
- * @returns feature { _id, name, project, sort, sub_features [], reqs []}   
+ * @param {objectId} featureID 
+ * @returns {Feature}  
  */
 async function getFeature(req, res) {
     try {
+        const { featureID } = req.params;
+
         const feature = await Feature
-            .findById(req.params.id)
+            .findById(featureID)
             .populate([{
                 path: 'sub_features'
             }, {
@@ -33,11 +38,13 @@ async function getFeature(req, res) {
                 match: { changed_req: { $exists: false } }
             }]);
 
-
+        if (!feature) return sendError(next, 404, {
+          error: `Feature not found`,
+        });
+        
         res.json(feature);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
     }
 }
 
@@ -45,11 +52,19 @@ async function getFeature(req, res) {
  * Create a feature
  * @property {String} req.body.name 
  * @property {String} req.body.project 
- * @returns feature {}   
+ * @returns {Feature}
  */
 async function createFeature(req, res) {
     try {
+        const projectID = req.body.project;
+
+        await validate.createFeature(req.body);
+        
         const features = await Feature.find({ project: req.body.project });
+
+        if (!features) return sendError(next, 404, {
+          error: `Features with the project _id ${projectID} could not be found`
+        });
 
         const feature = await Feature.create({
             ...req.body,
@@ -59,7 +74,6 @@ async function createFeature(req, res) {
         res.json(feature);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
     }
 }
 
@@ -71,6 +85,8 @@ async function createFeature(req, res) {
  */
 async function updateFeature(req, res, next) {
     try {
+        await validate.updateFeature(req.body);
+
         const updatedFeature = await Feature.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
         if (!updatedFeature) {
@@ -95,7 +111,13 @@ async function createSubFeature(req, res) {
     try {
         const { featureID } = req.params;
 
+        await validate.updateFeature(req.body);
+
         const feature = await Feature.findById(featureID).populate('sub_features');
+
+        if (!feature) return sendError(next, 404, {
+          error: `Feature not found`
+        });
 
         const subFeature = await Feature.create({
             ...req.body,
@@ -107,7 +129,6 @@ async function createSubFeature(req, res) {
         res.json(subFeature);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
     }
 }
 

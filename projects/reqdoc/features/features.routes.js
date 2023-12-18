@@ -18,10 +18,10 @@ router
 router.route('/:featureID/sub').post(featureCtrl.createSubFeature)
 
 /**
- * @get api/reqdoc/features/:id - get location by id
+ * @get api/reqdoc/features/:id - get feature by id
  */
 router
-    .route('/:id')
+    .route('/:featureID')
     .get(featureCtrl.getFeature)
 
 

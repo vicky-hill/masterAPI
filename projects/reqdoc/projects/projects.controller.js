@@ -15,7 +15,7 @@ async function getProjects(req, res) {
 
 /**
  * Get project by ID
- * @param projectID
+ * @param  {objectId} projectID
  * @returns {Project}
  */
 async function getProject(req, res) {
@@ -32,7 +32,7 @@ async function getProject(req, res) {
             })
 
         if (!project) return sendError(next, 404, {
-          error: `Project with _id ${projectID} does not exist`,
+          error: `Project nof found`,
         });
 
         res.json(project);

@@ -27,10 +27,29 @@ async function createProject(values) {
     await schema.validate(values, { abortEarly: false });
 }
 
+async function createFeature(values) {
+    const schema = yup.object().shape({
+        name: yup.string("No name was provided"),
+        project: yup.string("No project ID was provided")
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
+async function updateFeature(values) {
+    const schema = yup.object().shape({
+        name: yup.string("No name was provided"),
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 
 
 module.exports = {
     createReq,
     updateReq,
-    createProject
+    createProject,
+    createFeature,
+    updateFeature
 };

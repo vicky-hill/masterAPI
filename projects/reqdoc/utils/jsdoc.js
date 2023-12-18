@@ -18,6 +18,7 @@
  * @property {string} key
  * @property {number} sort 
  * @property {array<Feature>} sub_features
+ * @property {array<Req>} reqs
  */
 
 /**

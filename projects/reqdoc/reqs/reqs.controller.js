@@ -14,8 +14,7 @@ async function getReqs(req, res, next) {
         const feature = await Feature.findById(featureID);
 
         if (!feature) return sendError(next, 404, {
-            error: `Feature with _id ${featureID} does not exist`,
-            message: "We're unable to locate this feature at the moment."
+            error: `Feature not found`
         });
 
         const reqs = await Req
@@ -42,7 +41,7 @@ async function getReq(req, res) {
         const requirement = await Req.findById(req.params.reqID).populate('history');
 
         if (!requirement) return sendError(next, 404, {
-            error: `Req with _id ${req.params.reqID} does not exist`
+            error: `Req not found`
         });
 
         res.json(requirement);
@@ -105,7 +104,7 @@ async function updateReq(req, res, next) {
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
         if (!updatedReq) return sendError(next, 404, {
-            error: `Requirement with _id ${reqID} does not exist`
+            error: `Req not found`
         });
 
         const requirement = await Req.findById(updatedReq._id).populate('history');
@@ -133,7 +132,7 @@ async function changeReq(req, res) {
         const changedReq = await Req.findById(reqID);
 
         if (!changeReq) return sendError(next, 404, {
-            error: `Req with _id ${reqID} does not exist`
+            error: `Req not found`
         });
 
         const newReq = {
