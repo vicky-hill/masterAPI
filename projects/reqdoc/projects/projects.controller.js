@@ -1,4 +1,5 @@
-const Project = require('./projects.model');
+const Project = require('./projects.model')
+const validate = require('../utils/validation')
 
 /**
  * Get projects
