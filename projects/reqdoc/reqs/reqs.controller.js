@@ -1,16 +1,16 @@
 const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
 const sendError = require('../../../utils/sendError')
-const validate = require('./reqs.validation')
+const validate = require('../utils/validation')
 
 /**
  * Get reqs
- * @param {objectId} feature 
+ * @param {objectId} featureID 
  * @returns {array<Req>}
  */
 async function getReqs(req, res, next) {
     try {
-        const featureID = req.params.feature;
+        const { featureID } = req.params;
         const feature = await Feature.findById(featureID);
 
         if (!feature) return sendError(next, 404, {
@@ -128,7 +128,13 @@ async function changeReq(req, res) {
         const { reqID } = req.params;
         const { title, text } = req.body;
 
+        await validate.updateReq(req.body);
+
         const changedReq = await Req.findById(reqID);
+
+        if (!changeReq) return sendError(next, 404, {
+            error: `Req with _id ${reqID} does not exist`
+        });
 
         const newReq = {
             key: changedReq.key,

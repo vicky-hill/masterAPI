@@ -16,7 +16,7 @@ router
  * @get api/reqdoc/projects/:id - get location by id
  */
 router
-    .route('/:id')
+    .route('/:projectID')
     .get(projectCtrl.getProject)
    
 

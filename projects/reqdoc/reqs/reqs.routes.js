@@ -15,7 +15,7 @@ router
 * @post api/reqdoc/reqs/:reqID/update - update a req
 * @post api/reqdoc/reqs/:reqID/retrieve - get a single req
 */
-router.route('/sort', reqCtrl)
+// router.route('/sort', reqCtrl)
 router.route('/:reqID/change').put(reqCtrl.changeReq)
 router.route('/:reqID/update').put(reqCtrl.updateReq)
 router.route('/:reqID/retrieve').get(reqCtrl.getReq)
@@ -24,7 +24,7 @@ router.route('/:reqID/retrieve').get(reqCtrl.getReq)
  * @get api/reqdoc/reqs/:id - get location by id
  */
 router
-    .route('/:feature')
+    .route('/:featureID')
     .get(reqCtrl.getReqs)
 
 

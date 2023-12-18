@@ -3,6 +3,24 @@
  */
 
 /**
+ * @typedef {object} Project
+ * @property {objectId} _id
+ * @property {string} name
+ * @property {string} key
+ * @property {array<Feature>} [features]
+ */
+
+/**
+ * @typedef {object} Feature
+ * @property {objectId} _id
+ * @property {objectId} project
+ * @property {string} name
+ * @property {string} key
+ * @property {number} sort 
+ * @property {array<Feature>} sub_features
+ */
+
+/**
  * @typedef {object} Req
  * @property {objectId} _id
  * @property {objectId} project
@@ -16,3 +34,6 @@
  * @property {string} [changed_req]
  * @property {array<Req>} [history]
  */
+
+
+

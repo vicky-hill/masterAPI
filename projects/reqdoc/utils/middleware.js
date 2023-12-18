@@ -1,5 +1,5 @@
 const jwt_decode = require('jwt-decode')
-const User = require('./users/users.model')
+const User = require('../users/users.model')
 
 // Protect all routes 
 exports.protect = async (req, res, next) => {

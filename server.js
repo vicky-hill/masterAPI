@@ -3,7 +3,7 @@ const connectDB = require('./config/db')
 const path = require('path')
 const cors = require('cors')
 require('dotenv').config()
-require('./projects/reqdoc/jsdoc')
+require('./projects/reqdoc/utils/jsdoc')
 const onError = require('./middleware/errors')
 
 const app = express();

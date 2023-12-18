@@ -2,7 +2,7 @@ const Project = require('./projects.model');
 
 /**
  * Get projects
- * @returns [{ project }]
+ * @returns {array<Project>}
  */
 async function getProjects(req, res) {
     try {
@@ -15,12 +15,14 @@ async function getProjects(req, res) {
 
 /**
  * Get project by ID
- * @param id - ID of project to fetch
- * @returns project {}   
+ * @param projectID
+ * @returns {Project}
  */
 async function getProject(req, res) {
     try {
-        const project = await Project.findById(req.params.id)
+        const { projectID } = req.params;
+
+        const project = await Project.findById(projectID)
             .populate({
                 path: 'features',
                 match: { main_feature: { $exists: false } },
@@ -28,6 +30,11 @@ async function getProject(req, res) {
                     path: 'sub_features'
                 }
             })
+
+        if (!project) return sendError(next, 404, {
+          error: `Project with _id ${projectID} does not exist`,
+        });
+
         res.json(project);
     } catch (err) {
         console.log(err);
@@ -38,10 +45,12 @@ async function getProject(req, res) {
 /**
  * Create a project
  * @property {String} req.body.name 
- * @returns project {}   
+ * @returns {Project}
  */
 async function createProject(req, res) {
     try {
+        await validate.createProject(req.body);
+
         const project = await Project.create({
             ...req.body,
         });
@@ -52,7 +61,6 @@ async function createProject(req, res) {
         res.status(500).json({ msg: 'Something went wrong' });
     }
 }
-
 
 module.exports = {
     getProjects,
