@@ -16,9 +16,14 @@ router
     .post(protect, locationCtrl.createLocation)
 
 /** 
-* @post api/squirreled/locations/:locationID/storage - create a storage are
+* @get api/squirreled/locations/:locationID/storage - get selected location storage areas and items
+* @post api/squirreled/locations/:locationID/storage - create a storage area
 */
+// router.route('/:locationID/storage').get(protect, locationCtrl.getLocationItems)
 router.route('/:locationID/storage').post(protect, locationCtrl.createStorageArea)
+
+
+router.route('/storage').get(protect, locationCtrl.getLocationItems)
 
 
 

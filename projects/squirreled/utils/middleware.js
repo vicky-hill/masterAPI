@@ -53,7 +53,7 @@ exports.getItem = async (req, res, next) => {
 // Get protected location
 exports.getLocation = async (req, res, next) => {
     try {
-        const location = await Location.findById(req.params.id).populate('user');
+        const location = await Location.findById(req.params.locationID).populate('user');
 
         if (!location || location.user._id.toString() !== req.user._id.toString()) {
             return res.status(404).json({ msg: "Location not found" });

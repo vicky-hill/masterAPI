@@ -11,7 +11,7 @@
  * @property {'sub' | 'main'} type
  * @property {date} lastUsed
  * @property {date} createdAt
- * @property {array<Location>} storage_areas
+ * @property {array<Location>} storage_areas 
  */
 
 

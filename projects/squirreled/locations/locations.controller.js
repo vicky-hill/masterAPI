@@ -47,6 +47,25 @@ async function getLocation(req, res) {
 }
 
 /**
+ * Get location storage areas and items
+ * @query {string} storage 
+ * @returns {Location}
+ */
+async function getLocationItems(req, res) {
+    try {
+        const { locationID } = req.params;
+        const storage = req.query.storage.split(',');
+    
+        const storageAreas1 = await Location.findById(req.params.locationID);
+
+        res.json({ locationID, storage, location });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+}
+
+/**
  * Create a location
  * @header x-auth-token
  * @property {String} req.body.name 
@@ -148,5 +167,6 @@ module.exports = {
     createLocation,
     updateLocation,
     deleteLocation,
-    createStorageArea
+    createStorageArea,
+    getLocationItems
 }
