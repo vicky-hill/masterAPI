@@ -16,15 +16,11 @@ router
     .post(protect, locationCtrl.createLocation)
 
 /** 
-* @get api/squirreled/locations/:locationID/storage - get selected location storage areas and items
+* @get api/squirreled/locations/:locationID/storage?areas - get selected location storage areas and items
 * @post api/squirreled/locations/:locationID/storage - create a storage area
 */
-// router.route('/:locationID/storage').get(protect, locationCtrl.getLocationItems)
+router.route('/:locationID/storage').get(protect, locationCtrl.getLocationItems)
 router.route('/:locationID/storage').post(protect, locationCtrl.createStorageArea)
-
-
-router.route('/storage').get(protect, locationCtrl.getLocationItems)
-
 
 
 /**
@@ -37,8 +33,6 @@ router
     .get(protect, getLocation, locationCtrl.getLocation)
     .put(protect, getLocation, locationCtrl.updateLocation)
     .delete(protect, getLocation, locationCtrl.deleteLocation)
-
-
 
 
 module.exports = router; 

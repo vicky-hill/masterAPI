@@ -1,4 +1,5 @@
 const Location = require('./locations.model')
+const Item = require('../items/items.model')
 
 async function dev(req, res) {
     // try {
@@ -48,17 +49,31 @@ async function getLocation(req, res) {
 
 /**
  * Get location storage areas and items
- * @query {string} storage 
- * @returns {Location}
+ * @query {string} areas 
+ * @returns {object} { storageAreas1: [], storageAreas2: [], items: []}
  */
 async function getLocationItems(req, res) {
     try {
         const { locationID } = req.params;
-        const storage = req.query.storage.split(',');
-    
-        const storageAreas1 = await Location.findById(req.params.locationID);
+        const areas = req.query.areas.split(',');
 
-        res.json({ locationID, storage, location });
+        if (!areas[0]) return sendError(next, 404, {
+            error: `No storage areas were provided in the areas query`
+        });
+
+        if (!locationID) return sendError(next, 404, {
+            error: `No locationID was provided in the params`
+        });
+
+        const storageAreas1 = await Location.findById(locationID)
+            .populate({ path: 'storage_areas', select: '-storage_areas' });
+
+        const storageAreas2 = await Location.findById(areas[0])
+            .populate({ path: 'storage_areas', select: '-storage_areas' });
+
+        const items = await Item.find({ location: areas.length === 1 ? areas[0] : areas[1] }).populate('location');
+
+        res.json({ storageAreas1: storageAreas1.storage_areas, storageAreas2: storageAreas2.storage_areas, items });
     } catch (err) {
         console.log(err);
         res.status(500).json({ msg: 'Something went wrong' });
