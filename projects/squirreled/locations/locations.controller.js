@@ -65,15 +65,12 @@ const getLocationItems = async (req, res, next) => {
             error: `No locationID was provided in the params`
         });
 
-        const storageAreas1 = await Location.findById(locationID)
-            .populate({ path: 'storage_areas', select: '-storage_areas' });
-
-        const storageAreas2 = await Location.findById(areas[0])
-            .populate({ path: 'storage_areas', select: '-storage_areas' });
+        const storageAreas1 = await Location.getStorageAreas(locationID);
+        const storageAreas2 = await Location.getStorageAreas(areas[0]);
 
         const items = await Item.find({ location: areas.length === 1 ? areas[0] : areas[1] }).populate('location');
 
-        res.json({ storageAreas1: storageAreas1.storage_areas, storageAreas2: storageAreas2.storage_areas, items });
+        res.json({ storageAreas1, storageAreas2, items });
     } catch (err) {
         console.log(err);
         next(err);

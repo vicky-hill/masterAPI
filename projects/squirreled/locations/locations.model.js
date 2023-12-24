@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+require("../utils/jsdoc")
 
 const LocationSchema = new mongoose.Schema({
     user: {
@@ -49,5 +50,17 @@ LocationSchema.virtual('items', {
     foreignField: 'location',
     justOne: false
 });
+
+/**
+ * Get Storage Areas
+ * @param {objectId} locationID
+ * @returns {array<Location>}
+ */
+LocationSchema.statics.getStorageAreas = async function (locationID) {
+    const location = await this.findById(locationID)
+        .populate({ path: 'storage_areas', select: '-storage_areas' });
+
+    return location.storage_areas;
+};
 
 module.exports = mongoose.model('Squirreled_Location', LocationSchema);

@@ -14,7 +14,7 @@ const updateReq = async (values) => {
     const schema = yup.object().shape({
         title: yup.string(),
         text: yup.string(),
-    });
+    }); 
 
     await schema.validate(values, { abortEarly: false });
 }
