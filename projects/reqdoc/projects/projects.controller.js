@@ -5,7 +5,7 @@ const validate = require('../utils/validation')
  * Get projects
  * @returns {array<Project>}
  */
-async function getProjects(req, res) {
+const getProjects = async (req, res) => {
     try {
         const projects = await Project.find();
         res.json(projects);
@@ -19,7 +19,7 @@ async function getProjects(req, res) {
  * @param  {objectId} projectID
  * @returns {Project}
  */
-async function getProject(req, res) {
+const getProject = async (req, res) => {
     try {
         const { projectID } = req.params;
 
@@ -48,7 +48,7 @@ async function getProject(req, res) {
  * @property {String} req.body.name 
  * @returns {Project}
  */
-async function createProject(req, res) {
+const createProject = async (req, res) => {
     try {
         await validate.createProject(req.body);
 

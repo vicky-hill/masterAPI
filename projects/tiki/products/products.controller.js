@@ -4,7 +4,7 @@ const Product = require('./products.model');
  * Get products
  * @returns products []
  */
-async function getProducts(req, res, next) {
+const getProducts = async (req, res, next) => {
     try {
         const products = await Product.find()
             .sort({ createdAt: -1 });
@@ -19,7 +19,7 @@ async function getProducts(req, res, next) {
  * @param id
  * @returns product {}
  */
-async function getProduct(req, res, next) {
+const getProduct = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.id);
 
@@ -43,7 +43,7 @@ async function getProduct(req, res, next) {
  * @property {string} req.body.price
  * @returns product {}
  */
-async function saveProduct(req, res, next) {
+const saveProduct = async (req, res, next) => {
     try {
         const newProduct = await Product.create(req.body);
         const product = await Product.findById(newProduct._id);
@@ -65,7 +65,7 @@ async function saveProduct(req, res, next) {
  * @property {string} req.body.price
  * @returns product {}
  */
-async function updateProduct(req, res, next) {
+const updateProduct = async (req, res, next) => {
     try {
         const updateProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
@@ -86,7 +86,7 @@ async function updateProduct(req, res, next) {
  * @param id  
  * @returns product {}
  */
-async function deleteProduct(req, res, next) {
+const deleteProduct = async (req, res, next) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
 

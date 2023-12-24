@@ -1,7 +1,7 @@
 const Location = require('./locations.model')
 const Item = require('../items/items.model')
 
-async function dev(req, res) {
+const dev = async (req, res, next) => {
     // try {
     //     const locations = await Location.updateMany({}, { type: 'sub' }, { new: true });
     //     res.json(locations);
@@ -14,7 +14,7 @@ async function dev(req, res) {
  * Get user locations
  * @return {array<Location>}
  */
-async function getLocations(req, res) {
+const getLocations = async (req, res, next) => {
     try {
         const locations = await Location
             .find({ user: req.user._id, type: 'main' })
@@ -38,12 +38,12 @@ async function getLocations(req, res) {
  * @param id - ID of location to fetch
  * @returns {Location}
  */
-async function getLocation(req, res) {
+const getLocation = async (req, res, next) => {
     try {
         res.json(req.location);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 
@@ -52,7 +52,7 @@ async function getLocation(req, res) {
  * @query {string} areas 
  * @returns {object} { storageAreas1: [], storageAreas2: [], items: []}
  */
-async function getLocationItems(req, res) {
+const getLocationItems = async (req, res, next) => {
     try {
         const { locationID } = req.params;
         const areas = req.query.areas.split(',');
@@ -76,7 +76,7 @@ async function getLocationItems(req, res) {
         res.json({ storageAreas1: storageAreas1.storage_areas, storageAreas2: storageAreas2.storage_areas, items });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 
@@ -86,7 +86,7 @@ async function getLocationItems(req, res) {
  * @property {String} req.body.name 
  * @returns location {}   
  */
-async function createLocation(req, res) {
+const createLocation = async (req, res, next) => {
     try {
         const location = await Location.create({
             ...req.body,
@@ -97,7 +97,7 @@ async function createLocation(req, res) {
         res.json(location);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 
@@ -108,7 +108,7 @@ async function createLocation(req, res) {
  * @property {String} req.body.name 
  * @returns location {}   
  */
-async function createStorageArea(req, res) {
+const createStorageArea = async (req, res, next) => {
     try {
         const { locationID } = req.params;
 
@@ -128,7 +128,7 @@ async function createStorageArea(req, res) {
         res.json(updatedParentLocation);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 
@@ -139,7 +139,7 @@ async function createStorageArea(req, res) {
  * @property {String} req.body.description 
  * @returns location {}   
  */
-async function updateLocation(req, res) {
+const updateLocation = async (req, res, next) => {
     try {
         const { location } = req;
 
@@ -157,7 +157,7 @@ async function updateLocation(req, res) {
         res.json(updatedLocation);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 
@@ -166,12 +166,12 @@ async function updateLocation(req, res) {
  * @param id
  * @returns location {}   
  */
-async function deleteLocation(req, res) {
+const deleteLocation = async (req, res, next) => {
     try {
         const location = await Location.findByIdAndDelete(req.params.id);
         res.json(location)
     } catch (err) {
-        res.status(500).json({ msg: 'Something went wrong' });
+        next(err);
     }
 }
 

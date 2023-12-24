@@ -6,7 +6,7 @@ const User = require('./users.model');
  * @property {string} req.body.email
  * @returns user { _id, email, createdAt }
  */
-async function saveUser(req, res, next) {
+const saveUser = async (req, res, next) => {
     try {
         const newUser = await User.create(req.body);
         const user = await User.findById(newUser._id);
@@ -22,11 +22,11 @@ async function saveUser(req, res, next) {
  * @header x-auth-token
  * @returns user { _id, email, createdAt }
  */
-async function getUser(req, res, next) {
+const getUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.userID).populate('cart');
-        
-        if(!user) {
+
+        if (!user) {
             res.status(404).json({ msg: 'No user found' })
         }
 
@@ -37,6 +37,6 @@ async function getUser(req, res, next) {
 }
 
 module.exports = {
- saveUser,
- getUser
+    saveUser,
+    getUser
 }

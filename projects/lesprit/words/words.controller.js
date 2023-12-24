@@ -3,7 +3,7 @@ const Word = require('./words.model');
 /* ===================================
    Get all words
 =================================== */
-async function getWords (req, res) {
+const getWords = async (req, res) => {
     try {
         const words = await Word.find({ user: req.user.id}).populate({
             path: 'list',
@@ -19,7 +19,7 @@ async function getWords (req, res) {
 /* ===================================
    Get one word
 =================================== */
-async function getWord (req, res) {
+const getWord = async (req, res) => {
     try {
         const word = await Word.findById(req.params.id);
 
@@ -38,7 +38,7 @@ async function getWord (req, res) {
 /* ===================================
    Get review
 =================================== */
-async function getReview (req, res) {
+const getReview = async (req, res) => {
     try {
         const words = await Word.find({ dueDate: { $lte: Date.now() }, user: req.user.id });
         res.status(200).json(words);
@@ -52,7 +52,7 @@ async function getReview (req, res) {
 /* ===================================
    Save word
 =================================== */
-async function saveWord (req, res) {
+const saveWord = async (req, res) => {
     try {
         const reqWord = {
             foreign: req.body.foreign,
@@ -79,7 +79,7 @@ async function saveWord (req, res) {
 /* ===================================
    Update word
 =================================== */
-async function updateWord (req, res) {
+const updateWord = async (req, res) => {
     try {
         const updateWord = await Word.findByIdAndUpdate(req.params.id, req.body, {new: true});
 
@@ -102,7 +102,7 @@ async function updateWord (req, res) {
 /* ===================================
    Delete word
 =================================== */
-async function deleteWord (req,res) {
+const deleteWord = async (req,res) => {
     try {
         const word = await Word.findByIdAndDelete(req.params.id);
 
@@ -123,7 +123,7 @@ async function deleteWord (req,res) {
 /* ===================================
    Dev Routes
 =================================== */
-async function devAll (req, res) {
+const devAll = async (req, res) => {
     try {
         const allWords = await Word.updateMany({}, {$rename: {'spanish': 'foreign'}});
 

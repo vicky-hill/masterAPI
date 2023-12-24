@@ -7,7 +7,7 @@ const { addMultipleItems, addOneItem, getCart, product }  = require('./carts.uti
  * @property req.body { productID, quantity }
  * @returns carts []
  */
-async function addItem(req, res, next) {
+const addItem = async (req, res, next) => {
     try {
         const item = req.body;
 
@@ -29,7 +29,7 @@ async function addItem(req, res, next) {
  * @param cartID 
  * @returns cart {}
  */
-async function convertCart(req, res, next) {
+const convertCart = async (req, res, next) => {
     try {
         const { cartID } = req.params;
         delete req.params.cartID;
@@ -60,7 +60,7 @@ async function convertCart(req, res, next) {
  * @returns cart {}
  */
 
-async function retrieveCart(req, res, next) {
+const retrieveCart = async (req, res, next) => {
     try { 
         const cart = await getCart(req);
         res.status(200).json(cart);
@@ -75,7 +75,7 @@ async function retrieveCart(req, res, next) {
 //  * @property {array} req.body.items [{ productID: string, quantity: number}]
 //  * @returns cart {}
 //  */
-// async function convertCart(req, res, next) {
+// const convertCart = async (req, res, next) => {
 //     try {
 //         const { cartID } = req.params;
 
@@ -93,7 +93,7 @@ async function retrieveCart(req, res, next) {
  * Get all carts
  * @returns carts []
  */
-async function getAllCarts(req, res, next) {
+const getAllCarts = async (req, res, next) => {
     try {
         const carts = await Cart.find()
             .sort({ createdAt: -1 })
@@ -110,7 +110,7 @@ async function getAllCarts(req, res, next) {
  * @property req.body.quantity
  * @returns carts []
  */
-async function updateQuantity(req, res, next) {
+const updateQuantity = async (req, res, next) => {
     try {
 
         const cart = await Cart.findOneAndUpdate({ "items._id": req.params.cartItemID },
@@ -128,7 +128,7 @@ async function updateQuantity(req, res, next) {
  * @param cartItemID
  * @returns carts []
  */
-async function removeItem(req, res, next) {
+const removeItem = async (req, res, next) => {
     try {
         const { cartItemID } = req.params;
       
@@ -145,9 +145,6 @@ async function removeItem(req, res, next) {
         next(err);
     }
 }
-
-
-
 
 
 module.exports = {

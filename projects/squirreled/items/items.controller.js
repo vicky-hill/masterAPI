@@ -7,7 +7,7 @@ const imagekit = new ImageKit({
     privateKey: process.env.IK_PRIVATE_KEY
 });
 
-async function dev(req, res) {
+const dev = async (req, res) => {
     try {
         // const items = await Item.updateMany({ location: { _id: "6533eab837aba85d40329a39" } }, { location: '654e64423c1259ced926ef0d' }, { new: true });   
         // const items = await Item.find().populate('location');
@@ -32,7 +32,7 @@ async function dev(req, res) {
  * @header x-auth-token
  * @returns [{ item }]
  */
-async function getItems(req, res) {
+const getItems = async (req, res) => {
     try {
         const items = await Item.find({ trash: false, user: req.user._id })
             .populate('location')
@@ -50,7 +50,7 @@ async function getItems(req, res) {
  * @param id - ID of item to fetch
  * @returns item {}   
  */
-async function getItemByID(req, res) {
+const getItemByID = async (req, res) => {
     try {
         const item = req.item;
         res.json(item);
@@ -70,7 +70,7 @@ async function getItemByID(req, res) {
  * @property {String} req.body.location 
  * @returns item {}   
  */
-async function createItem(req, res) {
+const createItem = async (req, res) => {
     try {
         const createdItem = await Item.create({
             ...req.body,
@@ -96,7 +96,7 @@ async function createItem(req, res) {
  * @property {String} req.body.location 
  * @returns item {}   
  */
-async function updateItem(req, res) {
+const updateItem = async (req, res) => {
     try {
         const updatedItem = await Item.findByIdAndUpdate(
             req.params.id,
@@ -116,7 +116,7 @@ async function updateItem(req, res) {
  * @param id
  * @returns item {}   
  */
-async function deleteItem(req, res) {
+const deleteItem = async (req, res) => {
     try {
         const deletedItem = await Item.findByIdAndDelete(req.params.id);
         res.json(deletedItem);
@@ -131,7 +131,7 @@ async function deleteItem(req, res) {
  * @property { string } req.body.location - Where to move the item
  * @returns item {}       
  */
-async function moveItem(req, res) {
+const moveItem = async (req, res) => {
     try {
         const { location } = req.body;
         const item = await Item.findByIdAndUpdate(req.params.id, { location }, { new: true }).populate('location');
@@ -148,7 +148,7 @@ async function moveItem(req, res) {
  * @param id - Item ID
  * @returns item {}   
  */
-async function trashItem(req, res) {
+const trashItem = async (req, res) => {
     try {
         const item = await Item.findByIdAndUpdate(req.params.id, { trash: true }, { new: true });
         res.json(item);
@@ -164,7 +164,7 @@ async function trashItem(req, res) {
  * @property {string} req.body.location - Where to move the item
  * @returns [{ item }]  
  */
-async function moveItems(req, res) {
+const moveItems = async (req, res) => {
     try {
         const { location } = req.body;
 
@@ -184,7 +184,7 @@ async function moveItems(req, res) {
  * @property {array} ids 
  * @returns [{ item }]  
  */
-async function trashItems(req, res) {
+const trashItems = async (req, res) => {
     try {
         const items = await Promise.all(req.body.ids.map((id) => (
             Item.findByIdAndUpdate(id, { trash: true }, { new: true })
@@ -200,7 +200,7 @@ async function trashItems(req, res) {
  * Image Kit Auth
  * @returns { token, expire, signature }
  */
-async function imageKitAuth(req, res) {
+const imageKitAuth = async (req, res) => {
     try {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);

@@ -6,7 +6,7 @@ const validate = require('../utils/validation')
  * @param {objectId} projectID
  * @returns {array<Feature>}
  */
-async function getFeatures(req, res) {
+const getFeatures = async (req, res) => {
     try {
         const { projectID } = req.param;
 
@@ -25,7 +25,7 @@ async function getFeatures(req, res) {
  * @param {objectId} featureID 
  * @returns {Feature}  
  */
-async function getFeature(req, res) {
+const getFeature = async (req, res) => {
     try {
         const { featureID } = req.params;
 
@@ -54,7 +54,7 @@ async function getFeature(req, res) {
  * @property {String} req.body.project 
  * @returns {Feature}
  */
-async function createFeature(req, res) {
+const createFeature = async (req, res) => {
     try {
         const projectID = req.body.project;
 
@@ -83,7 +83,7 @@ async function createFeature(req, res) {
  * @property {String} req.body.name 
  * @returns feature {}   
  */
-async function updateFeature(req, res, next) {
+const updateFeature = async (req, res, next) => {
     try {
         await validate.updateFeature(req.body);
 
@@ -107,7 +107,7 @@ async function updateFeature(req, res, next) {
  * @property {String} req.body.name 
  * @returns location {}   
  */
-async function createSubFeature(req, res) {
+const createSubFeature = async (req, res) => {
     try {
         const { featureID } = req.params;
 

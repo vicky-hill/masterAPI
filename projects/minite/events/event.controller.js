@@ -6,7 +6,7 @@ const Event = require('./event.model')
  * @header x-auth-token
  * @property req.body.name - name of the event
  */
-async function createEvent(req, res) {
+const createEvent = async (req, res) => {
     try {
         const event = await Event.create({ ...req.body, user: req.user.id });
 
@@ -21,7 +21,7 @@ async function createEvent(req, res) {
  * @header x-auth-token
  * @returns [{ _id, name, user, year, createdAt, updatedAt }]
  */
-async function getAllUserEvents(req, res) {
+const getAllUserEvents = async (req, res) => {
     try {
         const events = await Event.find({ user: req.user.id })
             .populate('images');
@@ -39,7 +39,7 @@ async function getAllUserEvents(req, res) {
  * @param eventID
  * @returns [{ _id, name, user, year, createdAt, updatedAt }]
  */
-async function getEventByID(req, res) {
+const getEventByID = async (req, res) => {
     try {
         const event = await Event.findById("64fe366b7c6fc458c573dd6f").populate('images');
          

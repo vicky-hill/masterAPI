@@ -1,6 +1,6 @@
 const Group = require('./group.model');
 
-async function getAllMyGroups(req, res) {
+const getAllMyGroups = async (req, res) => {
     try {
         const groups = await Group.find( { $or: [ { owner: req.user.id }, { members: { $in: req.user.id } } ] } )
             .populate('images')
@@ -13,7 +13,7 @@ async function getAllMyGroups(req, res) {
     }
 }
 
-async function getOneGroup(req, res) {
+const getOneGroup = async (req, res) => {
     try {
         const group = await Group.findById(req.params.id).populate('images');
 
@@ -27,7 +27,7 @@ async function getOneGroup(req, res) {
     }
 }
 
-async function saveGroup(req, res) {
+const saveGroup = async (req, res) => {
     try {
         req.body.owner = req.user.id;
         const group =  await Group.create(req.body);
@@ -38,7 +38,7 @@ async function saveGroup(req, res) {
     }
 }
 
-async function addMembers(req, res) {
+const addMembers = async (req, res) => {
     try {
         const group = await Group.findByIdAndUpdate(req.params.id, {$push: { members: { $each: req.body.members }}}, { new: true});
 
@@ -49,7 +49,7 @@ async function addMembers(req, res) {
     }
 }
 
-async function addImages(req, res) {
+const addImages = async (req, res) => {
     try {
         const group = await Group.findByIdAndUpdate(req.params.id, {$push: { images: { $each: req.body.images }}}, { new: true});
         res.status(201).json(group);
@@ -59,7 +59,7 @@ async function addImages(req, res) {
     }
 }
 
-async function deleteGroup(req, res) {
+const deleteGroup = async (req, res) => {
     try {
         const group = await Group.findById(req.params.id);
 

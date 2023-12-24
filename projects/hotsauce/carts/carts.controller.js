@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
  * @property {array} req.body.items [{ productID: string, quantity: number}]
  * @returns cart {}
  */
-async function addToCart(req, res, next) {
+const addToCart = async (req, res, next) => {
     try {
         let cart = await Cart.findOne({ userID: req.userID });
 
@@ -59,7 +59,7 @@ async function addToCart(req, res, next) {
  * @returns cart {}
  */
 
-async function getCart(req, res, next) {
+const getCart = async (req, res, next) => {
     try {
         let cart = { items: [] };
         cart = await Cart.findOne({ userID: req.userID });

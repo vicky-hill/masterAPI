@@ -13,7 +13,7 @@ const getUrl = (userId) => {
 /* ===================================
    Upload image
 =================================== */
-async function uploadImage(req, res) {
+const uploadImage = async (req, res) => {
     try {
 
         let preSignedUrls = [];

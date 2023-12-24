@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 /* ===================================
    Register
 =================================== */
-async function register(req, res) {
+const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -40,7 +40,7 @@ async function register(req, res) {
             { user: user.id, sort: 3, name: 'Temporary', icon: 'time-outline' }
         ]
 
-        async function createBookmark(bookmark) {
+        const createBookmark = async (bookmark) => {
             await Bookmark.create(bookmark);
         }
 
@@ -62,7 +62,7 @@ async function register(req, res) {
 /* ===================================
    Login
 =================================== */
-async function login(req, res) {
+const login = async (req, res) => {
     try {
         const { name, password } = req.body;
 
@@ -92,7 +92,7 @@ async function login(req, res) {
 /* ===================================
    Get user
 =================================== */
-async function getUser(req, res) {
+const getUser = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
 
     res.status(200).json(user);
@@ -102,7 +102,7 @@ async function getUser(req, res) {
 /* ===================================
    Delete User
 =================================== */
-async function deleteUser(req, res) {
+const deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
 
     if (!user) {
@@ -115,7 +115,7 @@ async function deleteUser(req, res) {
 /* ===================================
    Get all users
 =================================== */
-async function getAllUsers (req, res) {
+const getAllUsers = async (req, res) => {
     try {
         const users = await User.find({}).select('_id name');
         res.status(200).json(users);

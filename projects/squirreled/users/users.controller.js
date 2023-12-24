@@ -8,7 +8,7 @@ const jwt_decode = require('jwt-decode')
  * @property {string} req.body.firebaseID
  * @returns user { _id, firebaseID, email, createdAt }
  */
-async function createUser(req, res, next) {
+const createUser = async (req, res, next) => {
     try {
         const newUser = await User.create(req.body);
         const user = await User.findById(newUser._id);
@@ -24,7 +24,7 @@ async function createUser(req, res, next) {
  * @header x-auth-token
  * @returns user { _id, email, createdAt }
  */
-async function getUser(req, res, next) {
+const getUser = async (req, res, next) => {
     try {
         
         const token = req.header('x-auth-token');

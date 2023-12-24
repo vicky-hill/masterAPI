@@ -4,7 +4,7 @@ const User = require('../auth/auth.model');
 /* ===================================
    Save Bookmark
 =================================== */
-async function saveBookmark(req, res) {
+const saveBookmark = async (req, res) => {
     try {
         const existingBookmarks = await Bookmark.find({ user: req.user.id });
 
@@ -32,7 +32,7 @@ async function saveBookmark(req, res) {
 /* ===================================
    Get Bookmarks
 =================================== */
-async function getBookmarks(req, res) {
+const getBookmarks = async (req, res) => {
     try {
         const bookmarks = await Bookmark.find({ user: req.user.id }).sort({ sort: 1});
         res.status(200).json(bookmarks);
@@ -45,7 +45,7 @@ async function getBookmarks(req, res) {
 /* ===================================
    Update Bookmark
 =================================== */
-async function updateBookmark(req, res) {
+const updateBookmark = async (req, res) => {
     try {
         let bookmark = await Bookmark.findById(req.params.id);
 
@@ -70,7 +70,7 @@ async function updateBookmark(req, res) {
 /* ===================================
    Delete Bookmark
 =================================== */
-async function deleteBookmark(req, res) {
+const deleteBookmark = async (req, res) => {
     try {
         const bookmark = await Bookmark.findById(req.params.id);
 
@@ -100,7 +100,7 @@ async function deleteBookmark(req, res) {
 /* ===================================
    Sort Bookmarks
 =================================== */
-async function sortBookmarks(req, res) {
+const sortBookmarks = async (req, res) => {
     try {
         const sortedBookmarks = [];
 

@@ -8,7 +8,7 @@ const validate = require('../utils/validation')
  * @param {objectId} featureID 
  * @returns {array<Req>}
  */
-async function getReqs(req, res, next) {
+const getReqs = async (req, res, next) => {
     try {
         const { featureID } = req.params;
         const feature = await Feature.findById(featureID);
@@ -36,7 +36,7 @@ async function getReqs(req, res, next) {
  * @param  {objectId} reqID
  * @returns {Req}
  */
-async function getReq(req, res) {
+const getReq = async (req, res) => {
     try {
         const requirement = await Req.findById(req.params.reqID).populate('history');
 
@@ -58,7 +58,7 @@ async function getReq(req, res) {
  * @property {string} req.body.feature 
  * @returns {Req}
  */
-async function createReq(req, res, next) {
+const createReq = async (req, res, next) => {
     try {
         const featureID = req.body.feature;
 
@@ -95,7 +95,7 @@ async function createReq(req, res, next) {
  * @property {String} req.body.text 
  * @returns Req
  */
-async function updateReq(req, res, next) {
+const updateReq = async (req, res, next) => {
     try {
         const reqID = req.params.reqID;
 
@@ -122,7 +122,7 @@ async function updateReq(req, res, next) {
  * @property {String} text 
  * @returns Req 
  */
-async function changeReq(req, res) {
+const changeReq = async (req, res) => {
     try {
         const { reqID } = req.params;
         const { title, text } = req.body;

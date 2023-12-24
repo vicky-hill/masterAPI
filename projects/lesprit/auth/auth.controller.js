@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 /* ===================================
    Register
 =================================== */
-async function register (req, res) {
+const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -45,7 +45,7 @@ async function register (req, res) {
 /* ===================================
    Login
 =================================== */
-async function login (req, res) {
+const login = async (req, res) => {
     try {
         const { name, password } = req.body;
 
@@ -72,7 +72,7 @@ async function login (req, res) {
     }
 }
 
-async function getUser (req, res) {
+const getUser = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
 
     res.status(200).json(user);
@@ -82,7 +82,7 @@ async function getUser (req, res) {
 /* ===================================
    Change Languages
 =================================== */
-async function changeLanguages (req, res) {
+const changeLanguages = async (req, res) => {
     try {
 
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -102,7 +102,7 @@ async function changeLanguages (req, res) {
 /* ===================================
    Delete User
 =================================== */
-async function deleteUser (req, res) {
+const deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
 
     if(!user) {

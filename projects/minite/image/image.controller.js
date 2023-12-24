@@ -17,7 +17,7 @@ const imagekit = new ImageKit({
  * @header x-auth-token
  * @property req.body.name - name of the event
  */
-async function createImage(req, res) {
+const createImage = async (req, res) => {
     try {
         const uploadedImages = [];
 
@@ -46,7 +46,7 @@ async function createImage(req, res) {
 /* ===================================
    Get all images
 =================================== */
-async function getImages(req, res) {
+const getImages = async (req, res) => {
     try {
         // const bookmark = await Bookmark.findById(req.params.id);
 
@@ -69,7 +69,7 @@ async function getImages(req, res) {
 /* ===================================
    Update image
 =================================== */
-async function updateImage(req, res) {
+const updateImage = async (req, res) => {
     try {
         let image = await Image.findById(req.params.id);
 
@@ -93,7 +93,7 @@ async function updateImage(req, res) {
 /* ===================================
    Delete images
 =================================== */
-async function deleteImages(req, res) {
+const deleteImages = async (req, res) => {
     try {
         const deletedImages = [];
 
@@ -112,7 +112,7 @@ async function deleteImages(req, res) {
     }
 }
 
-async function imageKitAuth(req, res) {
+const imageKitAuth = async (req, res) => {
     try {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);

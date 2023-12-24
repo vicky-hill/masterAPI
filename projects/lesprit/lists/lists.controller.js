@@ -4,7 +4,7 @@ const Word = require('../words/words.model')
 /* ===================================
    Get all lists
 =================================== */
-async function getLists (req, res) {
+const getLists = async (req, res) => {
     try {
         const lists = await List.find({ user: req.user.id }).sort({ createdAt: -1 });
 
@@ -19,7 +19,7 @@ async function getLists (req, res) {
 /* ===================================
    Save list
 =================================== */
-async function saveList (req, res) {
+const saveList = async (req, res) => {
     try {
         const reqList = { 
             title: req.body.title,
@@ -37,7 +37,7 @@ async function saveList (req, res) {
 /* ===================================
    Get one list
 =================================== */
-async function getList (req, res) {
+const getList = async (req, res) => {
     try {
         const list = await List.findByIdAndUpdate(req.params.id, req.body, {new: true});
 
@@ -55,7 +55,7 @@ async function getList (req, res) {
 /* ===================================
    Update list
 =================================== */
-async function updateList (req, res) {
+const updateList = async (req, res) => {
     try {
         const list = await List.findByIdAndUpdate(req.params.id, req.body, {new: true});
 
@@ -74,7 +74,7 @@ async function updateList (req, res) {
 /* ===================================
    Delete list
 =================================== */
-async function deleteList (req, res) {
+const deleteList = async (req, res) => {
     try {
         const list = await List.findById(req.params.id);
 
@@ -94,7 +94,7 @@ async function deleteList (req, res) {
 /* ===================================
    Delete all lists from user
 =================================== */
-async function deleteUserLists (req, res) {
+const deleteUserLists = async (req, res) => {
     try {
 
         const words = await Word.deleteMany({ user: req.user.id })
