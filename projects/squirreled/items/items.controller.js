@@ -196,6 +196,7 @@ const trashItems = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
 /**
  * Image Kit Auth
  * @returns { token, expire, signature }

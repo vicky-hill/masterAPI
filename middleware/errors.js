@@ -23,8 +23,6 @@ const onError = (err, req, res, next) => {
         const missing = err.inner.map(error => error.path);
         const missingFields = missing.join(', ');
         const plural = missing.length > 1;
-
-        console.log(err)
         
         const errorMessage = `req.body is missing or received wrong values for ${plural ? 'these': 'this'} required field${plural ? 's' : ''}: ${missingFields}`
 

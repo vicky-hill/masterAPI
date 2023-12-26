@@ -1,6 +1,7 @@
 const Location = require('./locations.model')
 const Item = require('../items/items.model')
 
+
 const dev = async (req, res, next) => {
     // try {
     //     const locations = await Location.updateMany({}, { type: 'sub' }, { new: true });
