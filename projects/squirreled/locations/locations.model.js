@@ -52,6 +52,22 @@ LocationSchema.virtual('items', {
 });
 
 /**
+ * Get Location
+ * @param {objectId} locationID
+ * @param {object} user
+ * @returns {Location}
+ */
+LocationSchema.statics.getLocation = async function (locationID, user) {
+    const item = await this.findById(locationID).populate('location user');
+
+    if (!item || item.user._id.toString() !== user._id.toString()) {
+        return null;
+    }
+
+    return item;
+};
+
+/**
  * Get Storage Areas
  * @param {objectId} locationID
  * @returns {array<Location>}
