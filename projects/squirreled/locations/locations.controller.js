@@ -41,6 +41,13 @@ const getLocations = async (req, res, next) => {
  */
 const getLocation = async (req, res, next) => {
     try {
+        const location = await Location.getLocation(req.params.id, req.user);
+
+        if (!location) return sendError(next, 404, {
+          error: `Location doesn't exist or doesn't belong to user`,
+          message: `Location not found`
+        });
+
         res.json(req.location);
     } catch (err) {
         console.log(err);
