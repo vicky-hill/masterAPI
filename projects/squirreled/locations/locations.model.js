@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
+const Err = require('../../../utils/errorHandler')
 require("../utils/jsdoc")
+
 
 const LocationSchema = new mongoose.Schema({
     user: {
@@ -60,8 +62,12 @@ LocationSchema.virtual('items', {
 LocationSchema.statics.getLocation = async function (locationID, user) {
     const location = await this.findById(locationID);
 
-    if (!location || location.user.toString() !== user._id.toString()) {
-        return null;
+    if (!location) {
+        throw new Err("Location not found", "Location doesn't exist", 404)
+    }
+
+    if (location.user.toString() !== user._id.toString()) {
+        throw new Err("Location not found", "Location doesn't belong to user", 404)
     }
 
     return location;

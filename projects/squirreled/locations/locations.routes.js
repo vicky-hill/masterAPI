@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { protect, getLocation } = require('../utils/middleware')
+const { protect } = require('../utils/middleware')
 
 const locationCtrl = require('./locations.controller');
 
@@ -30,9 +30,9 @@ router.route('/:locationID/storage').post(protect, locationCtrl.createStorageAre
  */
 router
     .route('/:locationID')
-    .get(protect, getLocation, locationCtrl.getLocation)
-    .put(protect, getLocation, locationCtrl.updateLocation)
-    .delete(protect, getLocation, locationCtrl.deleteLocation)
+    .get(protect, locationCtrl.getLocation)
+    .put(protect, locationCtrl.updateLocation)
+    .delete(protect, locationCtrl.deleteLocation)
 
 
 module.exports = router; 
