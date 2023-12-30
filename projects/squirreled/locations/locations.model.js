@@ -58,13 +58,13 @@ LocationSchema.virtual('items', {
  * @returns {Location}
  */
 LocationSchema.statics.getLocation = async function (locationID, user) {
-    const item = await this.findById(locationID).populate('location user');
+    const location = await this.findById(locationID);
 
-    if (!item || item.user._id.toString() !== user._id.toString()) {
+    if (!location || location.user.toString() !== user._id.toString()) {
         return null;
     }
 
-    return item;
+    return location;
 };
 
 /**

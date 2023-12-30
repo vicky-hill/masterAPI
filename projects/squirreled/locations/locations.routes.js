@@ -29,7 +29,7 @@ router.route('/:locationID/storage').post(protect, locationCtrl.createStorageAre
  * @delete api/squirreled/locations/:id - delete location
  */
 router
-    .route('/:id')
+    .route('/:locationID')
     .get(protect, getLocation, locationCtrl.getLocation)
     .put(protect, getLocation, locationCtrl.updateLocation)
     .delete(protect, getLocation, locationCtrl.deleteLocation)

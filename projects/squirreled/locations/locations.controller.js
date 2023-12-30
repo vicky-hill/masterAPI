@@ -1,6 +1,6 @@
 const Location = require('./locations.model')
 const Item = require('../items/items.model')
-
+const sendError = require('../../../utils/sendError')
 
 const dev = async (req, res, next) => {
     // try {
@@ -41,16 +41,15 @@ const getLocations = async (req, res, next) => {
  */
 const getLocation = async (req, res, next) => {
     try {
-        const location = await Location.getLocation(req.params.id, req.user);
+        const location = await Location.getLocation(req.params.locationID, req.user);
 
         if (!location) return sendError(next, 404, {
           error: `Location doesn't exist or doesn't belong to user`,
           message: `Location not found`
         });
 
-        res.json(req.location);
+        res.json(location);
     } catch (err) {
-        console.log(err);
         next(err);
     }
 }
