@@ -36,13 +36,13 @@ const getLocations = async (req, res, next) => {
 
 /**
  * Get location by ID
- * @param id - ID of location to fetch
+ * @param locationID - ID of location to fetch
  * @returns {Location}
  */
 const getLocation = async (req, res, next) => {
     try {
-        const { locationID } = req.params;
-        const location = await Location.getLocation(locationID, req.user);
+        const { user, params: { locationID }} = req;
+        const location = await Location.getLocation(locationID, user);
         res.json(location);
     } catch (err) {
         next(err);
@@ -133,14 +133,14 @@ const createStorageArea = async (req, res, next) => {
 
 /**
  * Update location
- * @param id
+ * @param locationID
  * @property {String} req.body.name 
  * @property {String} req.body.description 
  * @returns location {}   
  */
 const updateLocation = async (req, res, next) => {
     try {
-        const { location } = req;
+        const location = await Location.getLocation(req.params.locationID, req.user);
 
         if (req.body.name) {
             const updatedPath = location.path.replace(location.name, req.body.name);
@@ -148,7 +148,7 @@ const updateLocation = async (req, res, next) => {
         }
 
         const updatedLocation = await Location.findByIdAndUpdate(
-            req.params.id,
+            req.params.locationID,
             req.body,
             { new: true }
         );
@@ -162,12 +162,12 @@ const updateLocation = async (req, res, next) => {
 
 /**
  * Delete location
- * @param id
+ * @param locationID
  * @returns location {}   
  */
 const deleteLocation = async (req, res, next) => {
     try {
-        const location = await Location.findByIdAndDelete(req.params.id);
+        const location = await Location.findByIdAndDelete(req.params.locationID);
         res.json(location)
     } catch (err) {
         next(err);
