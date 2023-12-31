@@ -66,7 +66,7 @@ LocationSchema.statics.getLocation = async function (locationID, user) {
         throw new Err("Location not found", "Location doesn't exist", 404)
     }
 
-    if (location.user.toString() !== user._id.toString()) {
+    if (user && location.user.toString() !== user._id.toString()) {
         throw new Err("Location not found", "Location doesn't belong to user", 404)
     }
 

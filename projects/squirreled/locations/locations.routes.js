@@ -4,15 +4,13 @@ const { protect } = require('../utils/middleware')
 
 const locationCtrl = require('./locations.controller');
 
-router.route('/dev').get(locationCtrl.dev);
-
 /**
  * @get api/squirreled/locations - get all locations
  * @post api/squirreled/locations - create new location
  */
 router
     .route('/')
-    .get(protect, locationCtrl.getLocations)
+    .get(protect, locationCtrl.getMainLocations)
     .post(protect, locationCtrl.createLocation)
 
 /** 
@@ -30,7 +28,7 @@ router.route('/:locationID/storage').post(protect, locationCtrl.createStorageAre
  */
 router
     .route('/:locationID')
-    .get(protect, locationCtrl.getLocation)
+    .get(protect, locationCtrl.getLocationByID)
     .put(protect, locationCtrl.updateLocation)
     .delete(protect, locationCtrl.deleteLocation)
 

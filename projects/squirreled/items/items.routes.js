@@ -4,8 +4,6 @@ const { protect, getItem } = require('../utils/middleware')
 
 const itemCtrl = require('./items.controller');
 
-router.route('/dev').get(itemCtrl.dev);
-
 /**
  * @get api/squirreled/items - get all items
  * @post api/squirreled/items - create new item

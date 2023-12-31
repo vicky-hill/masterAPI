@@ -2,20 +2,12 @@ const Location = require('./locations.model')
 const Item = require('../items/items.model')
 const sendError = require('../../../utils/sendError')
 
-const dev = async (req, res, next) => {
-    // try {
-    //     const locations = await Location.updateMany({}, { type: 'sub' }, { new: true });
-    //     res.json(locations);
-    // } catch (err) {
-    //     console.log(err);
-    // }
-}
 
 /**
  * Get user locations
  * @return {array<Location>}
  */
-const getLocations = async (req, res, next) => {
+const getMainLocations = async (req, res, next) => {
     try {
         const locations = await Location
             .find({ user: req.user._id, type: 'main' })
@@ -39,7 +31,7 @@ const getLocations = async (req, res, next) => {
  * @param locationID - ID of location to fetch
  * @returns {Location}
  */
-const getLocation = async (req, res, next) => {
+const getLocationByID = async (req, res, next) => {
     try {
         const { user, params: { locationID }} = req;
         const location = await Location.getLocation(locationID, user);
@@ -82,7 +74,7 @@ const getLocationItems = async (req, res, next) => {
 /**
  * Create a location
  * @header x-auth-token
- * @property {String} req.body.name 
+ * @property {string} req.body.name 
  * @returns location {}   
  */
 const createLocation = async (req, res, next) => {
@@ -109,9 +101,9 @@ const createLocation = async (req, res, next) => {
  */
 const createStorageArea = async (req, res, next) => {
     try {
-        const { locationID } = req.params;
+        const { user, params: { locationID }} = req;
 
-        const location = await Location.findById(locationID);
+        const location = await Location.getLocation(locationID, user);
 
         const storageArea = await Location.create({
             ...req.body,
@@ -140,7 +132,8 @@ const createStorageArea = async (req, res, next) => {
  */
 const updateLocation = async (req, res, next) => {
     try {
-        const location = await Location.getLocation(req.params.locationID, req.user);
+        const { user, params: { locationID }} = req;
+        const location = await Location.getLocation(locationID, user);
 
         if (req.body.name) {
             const updatedPath = location.path.replace(location.name, req.body.name);
@@ -175,9 +168,8 @@ const deleteLocation = async (req, res, next) => {
 }
 
 module.exports = {
-    dev,
-    getLocations,
-    getLocation,
+    getMainLocations,
+    getLocationByID,
     createLocation,
     updateLocation,
     deleteLocation,
