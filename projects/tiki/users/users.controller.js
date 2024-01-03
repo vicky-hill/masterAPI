@@ -26,16 +26,22 @@ const createUser = async (req, res, next) => {
  */
 const getUser = async (req, res, next) => {
     try {
-        
+
         const token = req.header('x-auth-token');
 
-        if (!token) return res.json(null);
-        
+        if (!token) {
+            res.json(null);
+            return;
+        }
+
         const decodedToken = jwt_decode(token);
         const user = await User.findOne({ firebaseID: decodedToken.user_id });
-        
-        if(!user) res.json(null);
-        
+
+        if (!user) {
+            res.json(null);
+            return;
+        }
+
         res.json(user);
     } catch (err) {
         next(err);
@@ -43,6 +49,6 @@ const getUser = async (req, res, next) => {
 }
 
 module.exports = {
- createUser,
- getUser
+    createUser,
+    getUser
 }

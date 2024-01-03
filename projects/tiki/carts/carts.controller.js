@@ -1,5 +1,5 @@
 const Cart = require('./carts.model')
-const { addMultipleItems, addOneItem, getCart, product }  = require('./carts.utils')
+const utils = require('./carts.utils')
 
 /**
  * Add item to cart
@@ -11,11 +11,11 @@ const addItem = async (req, res, next) => {
     try {
         const item = req.body;
 
-        let cart = await getCart(req);
+        let cart = await utils.getCart(req);
 
         if (!cart) return res.status(400).json({ msg: 'Cart with the provided cartID does not exist'})
        
-        cart = await addOneItem(item, cart);
+        cart = await utils.addOneItem(item, cart);
 
         res.status(200).json(cart);
     } catch (err) {
@@ -35,14 +35,14 @@ const convertCart = async (req, res, next) => {
         delete req.params.cartID;
 
         let guestCart = await Cart.findById(cartID);
-        let userCart = await getCart(req);
+        let userCart = utils.getCart(req);
 
         const items = guestCart && guestCart.items.map(({ product, quantity}) => ({
             product,
             quantity
         }))
 
-        const cart = await addMultipleItems(items, userCart);
+        const cart = await utils.addMultipleItems(items, userCart);
         
         await Cart.findByIdAndDelete(cartID);
 
@@ -59,35 +59,14 @@ const convertCart = async (req, res, next) => {
  * @param cartID - optional
  * @returns cart {}
  */
-
 const retrieveCart = async (req, res, next) => {
     try { 
-        const cart = await getCart(req);
+        const cart = await utils.getCart(req);
         res.status(200).json(cart);
     } catch (err) {
         next(err);
     }
 }
-
-// /**
-//  * Convert guest cart to user cart
-//  * @header x-auth-token
-//  * @property {array} req.body.items [{ productID: string, quantity: number}]
-//  * @returns cart {}
-//  */
-// const convertCart = async (req, res, next) => {
-//     try {
-//         const { cartID } = req.params;
-
-//         let cart = await Cart.findById(cartID);
-//         await addMultipleItems(req.body.items, cart);
-//         cart = await Cart.findByIdAndUpdate(cartID, { user: req.user._id }, { new: true })
-        
-//         res.status(200).json(cart);
-//     } catch (err) {
-//         next(err);
-//     }
-// }
 
 /**
  * Get all carts
@@ -97,7 +76,7 @@ const getAllCarts = async (req, res, next) => {
     try {
         const carts = await Cart.find()
             .sort({ createdAt: -1 })
-            .populate(product)
+            .populate(utils.product)
         res.status(200).json(carts);
     } catch (err) {
         next(err);
@@ -138,7 +117,7 @@ const removeItem = async (req, res, next) => {
             { _id: cart._id },
             { $pull: { items: { _id: cartItemID } } },
             { new: true }
-          ).populate(product);
+          ).populate(utils.product);
 
         res.status(200).json(updatedCart);
     } catch (err) {
@@ -151,7 +130,6 @@ module.exports = {
     addItem,
     removeItem,
     updateQuantity,
-    // convertCart,
     getAllCarts,
     convertCart,
     retrieveCart

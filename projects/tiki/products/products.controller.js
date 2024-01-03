@@ -8,7 +8,8 @@ const getProducts = async (req, res, next) => {
     try {
         const products = await Product.find()
             .sort({ createdAt: -1 });
-        res.status(200).json(products);
+
+        res.json(products);
     } catch (err) {
         next(err)
     }

@@ -7,13 +7,11 @@ const cartCtrl = require('./carts.controller');
 /** 
 * @get api/tiki/cart - Get all carts
 * @put api/tiki/cart/:cartID/add - Add item to cart
-* @put api/tiki/cart/:cartID/convert - Convert guest cart to user cart
 * @get api/tiki/cart/:cartID/retrieve - Get a cart
 * @get api/tiki/cart/:cartID/merge - Merge guest cart into user cart
 */
 router.route('/').get(cartCtrl.getAllCarts)
 router.route('/:cartID/add').put(extractUser, cartCtrl.addItem)
-// router.route('/:cartID/convert').put(protect, cartCtrl.convertCart)
 router.route('/:cartID/retrieve').get(extractUser, cartCtrl.retrieveCart)
 router.route('/:cartID/convert').put(extractUser, cartCtrl.convertCart)
 
