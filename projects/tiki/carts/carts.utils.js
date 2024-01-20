@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 
 const product = {
     path: 'items.product',
+    select: 'name image price'
 }
 
 const getCart = async (req) => {

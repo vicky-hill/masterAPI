@@ -2,14 +2,16 @@ const Product = require('./products.model');
 
 /**
  * Get products
- * @returns products []
+ * @returns { data: products [] }
  */
 const getProducts = async (req, res, next) => {
     try {
         const products = await Product.find()
             .sort({ createdAt: -1 });
 
-        res.json(products);
+        res.json({
+            data: products
+        });
     } catch (err) {
         next(err)
     }
@@ -18,7 +20,7 @@ const getProducts = async (req, res, next) => {
 /**
  * Get one product
  * @param id
- * @returns product {}
+ * @returns { data: product {} }
  */
 const getProduct = async (req, res, next) => {
     try {
@@ -28,7 +30,9 @@ const getProduct = async (req, res, next) => {
             return res.status(404).json({ msg: "Product not found" });
         }
 
-        res.status(200).json(product);
+        res.status(200).json({
+            data: product
+        });
     } catch (err) {
         next(err);
     }
