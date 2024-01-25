@@ -16,4 +16,11 @@
  * @property {number} quantity
  */
 
+/**
+ * @typedef {object} Category
+ * @property {objectId} _id
+ * @property {string} name
+ * @property {"active" || "inactive"} status
+ */
+
 

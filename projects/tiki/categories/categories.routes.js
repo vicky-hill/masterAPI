@@ -11,7 +11,7 @@ const categoryCtrl = require('./categories.controller');
 router
     .route('/')
     .get(categoryCtrl.getCategories)
-    .post(categoryCtrl.saveCategory)
+    .post(categoryCtrl.createCategory)
 
 /**
  * @route /api/tiki/categories/:categoryID

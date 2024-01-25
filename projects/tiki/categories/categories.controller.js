@@ -1,4 +1,6 @@
-const Category = require('./categories.model');
+const Category = require('./categories.model')
+const sendError = require('../../../utils/sendError')
+const validate = require('../utils/validation')
 
 /**
  * Get categories
@@ -30,6 +32,10 @@ const getCategory = async (req, res, next) => {
             return res.status(404).json({ msg: "Category not found" });
         }
 
+        if (!category) return sendError(next, 404, {
+            error: `Category not found`
+        });
+
         res.status(200).json({
             data: category
         });
@@ -44,8 +50,10 @@ const getCategory = async (req, res, next) => {
  * @property {string} req.body.status
  * @returns category {}
  */
-const saveCategory = async (req, res, next) => {
+const createCategory = async (req, res, next) => {
     try {
+        await validate.createCategory(req.body);
+
         const newCategory = await Category.create(req.body);
         const category = await Category.findById(newCategory._id);
 
@@ -64,12 +72,14 @@ const saveCategory = async (req, res, next) => {
  */
 const updateCategory = async (req, res, next) => {
     try {
+        await validate.updateCategory(req.body);
+        
         const { categoryID } = req.params;
         const updateCategory = await Category.findByIdAndUpdate(categoryID, req.body, { new: true });
 
-        if (!updateCategory) {
-            return res.status(404).json({ msg: "Category not found" });
-        }
+        if (!updateCategory) return sendError(next, 404, {
+            error: `Category not found`
+        });
 
         const category = await Category.findById(updateCategory._id);
 
@@ -89,9 +99,9 @@ const deleteCategory = async (req, res, next) => {
         const { categoryID } = req.params;
         const category = await Category.findByIdAndDelete(categoryID);
 
-        if (!category) {
-            return res.status(404).json({ msg: "Category not found" });
-        }
+        if (!category) return sendError(next, 404, {
+            error: `Category not found`
+        });
 
         res.status(200).json(category)
     } catch (err) {
@@ -103,7 +113,7 @@ const deleteCategory = async (req, res, next) => {
 module.exports = {
     getCategories,
     getCategory,
-    saveCategory,
+    createCategory,
     updateCategory,
     deleteCategory
 }
