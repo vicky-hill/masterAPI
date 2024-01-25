@@ -27,6 +27,7 @@ const reqdoc_reqsRoutes = require('./projects/reqdoc/reqs/reqs.routes')
 const tiki_userRoutes = require('./projects/tiki/users/users.routes')
 const tiki_productRoutes = require('./projects/tiki/products/products.routes')
 const tiki_cartRoutes = require('./projects/tiki/carts/carts.routes')
+const tiki_categoryRoutes = require('./projects/tiki/categories/categories.routes')
 
 
 
@@ -81,6 +82,7 @@ router.use('/api/reqdoc/reqs', reqdoc_reqsRoutes)
 router.use('/api/tiki/user', tiki_userRoutes)
 router.use('/api/tiki/products', tiki_productRoutes)
 router.use('/api/tiki/cart', tiki_cartRoutes)
+router.use('/api/tiki/categories', tiki_categoryRoutes)
 
 
 module.exports = router;
