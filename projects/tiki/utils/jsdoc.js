@@ -23,4 +23,21 @@
  * @property {"active" || "inactive"} status
  */
 
+/**
+ * @typedef {object} Product
+ * @property {objectId} _id
+ * @property {string} name
+ * @property {string} shortDesc
+ * @property {string} description
+ * @property {string} image
+ * @property {number} price
+ * @property {number} quantity
+ * @property {object} category
+ * @property {property} category._id
+ * @property {property} category.name
+ * @property {date} createdAt
+ * @property {date} updatedAt
+ */
+
+
 

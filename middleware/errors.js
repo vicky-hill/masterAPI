@@ -14,8 +14,8 @@ const onError = (err, req, res, next) => {
         error = new Err(null, errorMessage, 400);
     }
 
-    // Handling validation error
-    if (err.name === 'ValidationError') {
+    // Yup validation error
+    if (err.name === 'ValidationError' && err.inner) {
 
         const message = 'Please fill out all required fields'
 

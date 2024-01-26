@@ -1,4 +1,6 @@
-const Product = require('./products.model');
+const sendError = require('../../../utils/sendError')
+const Product = require('./products.model')
+const validate = require('../utils/validation')
 
 /**
  * Get products
@@ -7,7 +9,11 @@ const Product = require('./products.model');
 const getProducts = async (req, res, next) => {
     try {
         const products = await Product.find()
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .populate({
+                path: 'category',
+                select: 'name'
+            });;
 
         res.json({
             data: products
@@ -19,40 +25,34 @@ const getProducts = async (req, res, next) => {
 
 /**
  * Get one product
- * @param id
+ * @param productID
  * @returns { data: product {} }
  */
 const getProduct = async (req, res, next) => {
     try {
-        const product = await Product.findById(req.params.id);
-
-        if (!product) {
-            return res.status(404).json({ msg: "Product not found" });
-        }
-
-        res.status(200).json({
-            data: product
-        });
+        const { productID } = req.params;
+        const product = await Product.getProductByID(productID);
+        res.status(200).json({ data: product });
     } catch (err) {
         next(err);
     }
 }
 
 /**
- * Save product
+ * Create product
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
  * @property {string} req.body.image
  * @property {string} req.body.category
  * @property {string} req.body.price
- * @returns product {}
+ * @returns { data: Product }
  */
 const saveProduct = async (req, res, next) => {
     try {
+        await validate.createProduct(req.body);
         const newProduct = await Product.create(req.body);
-        const product = await Product.findById(newProduct._id);
-
+        const product = await Product.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
         next(err);
@@ -61,7 +61,7 @@ const saveProduct = async (req, res, next) => {
 
 /**
  * Update product
- * @param id
+ * @param productID
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
@@ -72,13 +72,14 @@ const saveProduct = async (req, res, next) => {
  */
 const updateProduct = async (req, res, next) => {
     try {
-        const updateProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { productID } = req.params;
+        const updateProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true });
 
-        if (!updateProduct) {
-            return res.status(404).json({ msg: "Product not found" });
-        }
+        if (!product) return sendError(next, 404, {
+            error: `Product not found`
+        });
 
-        const product = await Product.findById(updateProduct._id);
+        const product = await Product.getProductByID(updateProduct._id);
 
         res.status(200).json(product);
     } catch (err) {
@@ -88,16 +89,17 @@ const updateProduct = async (req, res, next) => {
 
 /**
  * Delete product
- * @param id  
- * @returns product {}
+ * @param productID 
+ * @returns {Product}
  */
 const deleteProduct = async (req, res, next) => {
     try {
-        const product = await Product.findByIdAndDelete(req.params.id);
+        const { productID } = req.params;
+        const product = await Product.findByIdAndDelete(productID);
 
-        if (!product) {
-            return res.status(404).json({ msg: "Product not found" });
-        }
+        if (!product) return sendError(next, 404, {
+            error: `Product not found`
+        });
 
         res.status(200).json(product)
     } catch (err) {

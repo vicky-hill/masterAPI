@@ -1,5 +1,19 @@
 const yup = require('yup');
 
+const createProduct = async (values) => {
+    const schema = yup.object().shape({
+        name: yup.string().required("No name was provided"),
+        shortDesc: yup.string().required("No short description was provided"),
+        description: yup.string().required("No description was provided"),
+        price: yup.string().required("No price was provided"),
+        quantity: yup.string().required("No quantity was provided"),
+        category: yup.string().required("No category was provided"),
+        image: yup.string().required("No image was provided")
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 const createCategory = async (values) => {
     const schema = yup.object().shape({
         name: yup.string().required("No name was provided"),
@@ -20,6 +34,7 @@ const updateCategory = async (values) => {
 
 
 module.exports = {
+    createProduct,
     createCategory,
     updateCategory,
 };
