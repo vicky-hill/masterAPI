@@ -24,14 +24,29 @@ const getProducts = async (req, res, next) => {
 }
 
 /**
- * Get one product
+ * Get product by ID
  * @param productID
  * @returns { data: product {} }
  */
-const getProduct = async (req, res, next) => {
+const getProductByID = async (req, res, next) => {
     try {
         const { productID } = req.params;
         const product = await Product.getProductByID(productID);
+        res.status(200).json({ data: product });
+    } catch (err) {
+        next(err);
+    }
+}
+
+/**
+ * Get product by url key
+ * @param urlKey
+ * @returns { data: product {} }
+ */
+const getProductByUrlKey = async (req, res, next) => {
+    try {
+        const { urlKey } = req.params;
+        const product = await Product.getProductByKey(urlKey);
         res.status(200).json({ data: product });
     } catch (err) {
         next(err);
@@ -110,7 +125,8 @@ const deleteProduct = async (req, res, next) => {
 
 module.exports = {
     getProducts,
-    getProduct,
+    getProductByID,
+    getProductByUrlKey,
     saveProduct,
     updateProduct,
     deleteProduct

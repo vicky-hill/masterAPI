@@ -14,14 +14,22 @@ router
     .post(productCtrl.saveProduct)
 
 /**
+ * @route /api/tiki/products/key/:urlKey
+ * @get get one product by URL
+ */
+router  
+    .route('/key/:urlKey')
+    .get(productCtrl.getProductByUrlKey)
+
+/**
  * @route /api/tiki/products/:productID
- * @get get one product
+ * @get get one product by ID
  * @put update product
  * @delete remove product
  */
 router 
     .route('/:productID')
-    .get(productCtrl.getProduct)
+    .get(productCtrl.getProductByID)
     .put(productCtrl.updateProduct)
     .delete(productCtrl.deleteProduct)
 
