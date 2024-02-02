@@ -3,12 +3,13 @@ const yup = require('yup');
 const createProduct = async (values) => {
     const schema = yup.object().shape({
         name: yup.string().required("No name was provided"),
-        shortDesc: yup.string().required("No short description was provided"),
+        short_description: yup.string().required("No short description was provided"),
         description: yup.string().required("No description was provided"),
         price: yup.string().required("No price was provided"),
         quantity: yup.string().required("No quantity was provided"),
         category: yup.string().required("No category was provided"),
-        image: yup.string().required("No image was provided")
+        image: yup.string().required("No image was provided"),
+        urlKey: yup.string().required("No url key was provided")
     });
 
     await schema.validate(values, { abortEarly: false });

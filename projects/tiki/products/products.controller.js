@@ -61,12 +61,20 @@ const getProductByUrlKey = async (req, res, next) => {
  * @property {string} req.body.image
  * @property {string} req.body.category
  * @property {string} req.body.price
+ * @property {string} req.body.urlKey
  * @returns { data: Product }
  */
 const saveProduct = async (req, res, next) => {
     try {
         await validate.createProduct(req.body);
-        const newProduct = await Product.create(req.body);
+        const count = await Product.countDocuments({ category: req.body.category })
+       
+        const newProduct = await Product.create({
+            ...req.body,
+            status: 'active',
+            sort: count + 1
+        });
+
         const product = await Product.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
@@ -83,6 +91,7 @@ const saveProduct = async (req, res, next) => {
  * @property {string} req.body.image
  * @property {string} req.body.category
  * @property {string} req.body.price
+ * @property {string} req.body.urlKey
  * @returns product {}
  */
 const updateProduct = async (req, res, next) => {
