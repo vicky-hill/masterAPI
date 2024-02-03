@@ -13,11 +13,13 @@ router
     .get(productCtrl.getProducts)
     .post(productCtrl.saveProduct)
 
+router.route('/imagekit').get(productCtrl.imageKitAuth)
+
 /**
  * @route /api/tiki/products/key/:urlKey
  * @get get one product by URL
  */
-router  
+router
     .route('/key/:urlKey')
     .get(productCtrl.getProductByUrlKey)
 
@@ -27,7 +29,7 @@ router
  * @put update product
  * @delete remove product
  */
-router 
+router
     .route('/:productID')
     .get(productCtrl.getProductByID)
     .put(productCtrl.updateProduct)
