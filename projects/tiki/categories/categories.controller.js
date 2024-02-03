@@ -21,7 +21,7 @@ const getCategories = async (req, res, next) => {
 /**
  * Get one category
  * @param categoryID
- * @returns { data: category {} }
+ * @returns category {}
  */
 const getCategory = async (req, res, next) => {
     try {
@@ -36,9 +36,7 @@ const getCategory = async (req, res, next) => {
             error: `Category not found`
         });
 
-        res.status(200).json({
-            data: category
-        });
+        res.status(200).json(category);
     } catch (err) {
         next(err);
     }

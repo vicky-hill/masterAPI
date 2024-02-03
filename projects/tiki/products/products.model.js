@@ -14,9 +14,6 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: String
-    },
     price: {
         type: Number,
         required: true
@@ -36,14 +33,34 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    images: {
+        type: [
+            {
+                url: String,
+                sort: Number,
+            }
+        ],
+        default: []
+    },
     category: {
         type: mongoose.Schema.ObjectId,
         ref: 'TIKI_Category',
         required: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON:{virtuals:true}, 
+    toObject:{virtuals:true}
 })
+
+ProductSchema.virtual('image').get(function () {
+    if (this.images && this.images.length > 0) {
+        return this.images.sort((a, b) => a.sort - b.sort)[0].url
+    }
+
+    return null;
+});
+
 
 /**
  * Get product by ID

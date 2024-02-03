@@ -8,7 +8,10 @@ const createProduct = async (values) => {
         price: yup.string().required("No price was provided"),
         quantity: yup.string().required("No quantity was provided"),
         category: yup.string().required("No category was provided"),
-        image: yup.string().required("No image was provided"),
+        images: yup.array()
+            .of(yup.string().trim())
+            .min(1, "At least one image is required")
+            .required("No image was provided"),
         urlKey: yup.string().required("No url key was provided")
     });
 
@@ -28,7 +31,7 @@ const updateCategory = async (values) => {
     const schema = yup.object().shape({
         name: yup.string(),
         status: yup.string().oneOf(['inactive', 'active']),
-    }); 
+    });
 
     await schema.validate(values, { abortEarly: false });
 }

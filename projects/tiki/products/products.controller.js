@@ -26,13 +26,13 @@ const getProducts = async (req, res, next) => {
 /**
  * Get product by ID
  * @param productID
- * @returns { data: product {} }
+ * @returns product {}
  */
 const getProductByID = async (req, res, next) => {
     try {
         const { productID } = req.params;
         const product = await Product.getProductByID(productID);
-        res.status(200).json({ data: product });
+        res.status(200).json(product);
     } catch (err) {
         next(err);
     }
@@ -41,13 +41,13 @@ const getProductByID = async (req, res, next) => {
 /**
  * Get product by url key
  * @param urlKey
- * @returns { data: product {} }
+ * @returns product {}
  */
 const getProductByUrlKey = async (req, res, next) => {
     try {
         const { urlKey } = req.params;
         const product = await Product.getProductByKey(urlKey);
-        res.status(200).json({ data: product });
+        res.status(200).json(product);
     } catch (err) {
         next(err);
     }
@@ -58,21 +58,26 @@ const getProductByUrlKey = async (req, res, next) => {
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
- * @property {string} req.body.image
+ * @property {array} req.body.images [url]
  * @property {string} req.body.category
  * @property {string} req.body.price
  * @property {string} req.body.urlKey
- * @returns { data: Product }
+ * @returns product {}
  */
 const saveProduct = async (req, res, next) => {
     try {
         await validate.createProduct(req.body);
-        const count = await Product.countDocuments({ category: req.body.category })
+        const count = await Product.countDocuments({ category: req.body.category });
+        const images = req.body.images.map((img, i) => ({
+            url: img,
+            sort: i + 1
+        }))
        
         const newProduct = await Product.create({
             ...req.body,
             status: 'active',
-            sort: count + 1
+            sort: count + 1,
+            images
         });
 
         const product = await Product.getProductByID(newProduct._id);
@@ -88,7 +93,7 @@ const saveProduct = async (req, res, next) => {
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
- * @property {string} req.body.image
+ * @property {array} req.body.images [url]
  * @property {string} req.body.category
  * @property {string} req.body.price
  * @property {string} req.body.urlKey
@@ -97,9 +102,20 @@ const saveProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
     try {
         const { productID } = req.params;
+        
+        if (req.body.images && req.body.images.length) {
+            req.body.images = req.body.images.map((img, i) => {
+                if (typeof(img) === 'string') {
+                    return { url: img, sort: i + 1 }
+                } else {
+                    return { url: img.url, sort: i + 1, _id: img._id}
+                }
+            })
+        }
+
         const updateProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true });
 
-        if (!product) return sendError(next, 404, {
+        if (!updateProduct) return sendError(next, 404, {
             error: `Product not found`
         });
 
