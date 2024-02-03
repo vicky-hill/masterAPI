@@ -4,7 +4,7 @@ const validate = require('../utils/validation')
 
 /**
  * Get products
- * @returns { data: products [] }
+ * @returns { data: [{Product}]}
  */
 const getProducts = async (req, res, next) => {
     try {
@@ -26,7 +26,7 @@ const getProducts = async (req, res, next) => {
 /**
  * Get product by ID
  * @param productID
- * @returns product {}
+ * @returns {Product}
  */
 const getProductByID = async (req, res, next) => {
     try {
@@ -41,7 +41,7 @@ const getProductByID = async (req, res, next) => {
 /**
  * Get product by url key
  * @param urlKey
- * @returns product {}
+ * @returns {Product}
  */
 const getProductByUrlKey = async (req, res, next) => {
     try {
@@ -62,7 +62,7 @@ const getProductByUrlKey = async (req, res, next) => {
  * @property {string} req.body.category
  * @property {string} req.body.price
  * @property {string} req.body.urlKey
- * @returns product {}
+ * @returns {Product}
  */
 const saveProduct = async (req, res, next) => {
     try {
@@ -93,11 +93,11 @@ const saveProduct = async (req, res, next) => {
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
- * @property {array} req.body.images [url]
+ * @property {array}  req.body.images [url]
  * @property {string} req.body.category
  * @property {string} req.body.price
  * @property {string} req.body.urlKey
- * @returns product {}
+ * @returns {Product}
  */
 const updateProduct = async (req, res, next) => {
     try {

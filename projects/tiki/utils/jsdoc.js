@@ -17,6 +17,13 @@
  */
 
 /**
+ * @typedef {object} Image
+ * @property {objectId} _id
+ * @property {string} url
+ * @property {number} sort
+ */
+
+/**
  * @typedef {object} Category
  * @property {objectId} _id
  * @property {string} name
@@ -33,6 +40,7 @@
  * @property {number} price
  * @property {number} quantity
  * @property {object} category
+ * @property {array<Image>} images
  * @property {property} category._id
  * @property {property} category.name
  * @property {date} createdAt
