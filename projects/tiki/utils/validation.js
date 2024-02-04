@@ -9,7 +9,7 @@ const createProduct = async (values) => {
         quantity: yup.string().required("No quantity was provided"),
         category: yup.string().required("No category was provided"),
         images: yup.array()
-            .of(yup.string().trim())
+            .of(yup.object())
             .min(1, "At least one image is required")
             .required("No image was provided"),
         urlKey: yup.string().required("No url key was provided")
