@@ -101,7 +101,7 @@ const saveProduct = async (req, res, next) => {
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
- * @property {array}  req.body.images [url]
+ * @property {array}  req.body.images [{ url }]
  * @property {string} req.body.category
  * @property {string} req.body.price
  * @property {string} req.body.urlKey
@@ -112,12 +112,10 @@ const updateProduct = async (req, res, next) => {
         const { productID } = req.params;
         
         if (req.body.images && req.body.images.length) {
-            req.body.images = req.body.images.map((img, i) => {
-                if (typeof(img) === 'string') {
-                    return { url: img, sort: i + 1 }
-                } else {
-                    return { url: img.url, sort: i + 1, _id: img._id}
-                }
+            req.body.images = req.body.images.map(({ _id, url, sort }, i) => {
+                return _id ? 
+                    { url, sort: i + 1, _id } : 
+                    { url, sort: i + 1 }
             })
         }
 
