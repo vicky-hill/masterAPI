@@ -12,11 +12,24 @@ const imagekit = new ImageKit({
 
 /**
  * Get products
+ * @param search
  * @returns { data: [{Product}]}
  */
 const getProducts = async (req, res, next) => {
     try {
-        const products = await Product.find()
+        const { search } = req.query;
+
+        const options = {};
+
+        if (search) {
+            options.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }, 
+                { short_description: { $regex: search, $options: 'i' } }
+            ]
+        }
+
+        const products = await Product.find(options)
             .sort({ createdAt: -1 })
             .populate({
                 path: 'category',
@@ -80,7 +93,7 @@ const saveProduct = async (req, res, next) => {
             url,
             sort: i + 1
         }))
-       
+
         const newProduct = await Product.create({
             ...req.body,
             status: 'active',
@@ -110,11 +123,11 @@ const saveProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
     try {
         const { productID } = req.params;
-        
+
         if (req.body.images && req.body.images.length) {
             req.body.images = req.body.images.map(({ _id, url, sort }, i) => {
-                return _id ? 
-                    { url, sort: i + 1, _id } : 
+                return _id ?
+                    { url, sort: i + 1, _id } :
                     { url, sort: i + 1 }
             })
         }
