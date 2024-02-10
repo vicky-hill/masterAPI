@@ -1,7 +1,7 @@
 const sendError = require('../../../utils/sendError')
 const Product = require('./products.model')
 const validate = require('../utils/validation')
-const ImageKit = require('imagekit')
+const ImageKit = require('imagekit');
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -154,6 +154,24 @@ const deleteProduct = async (req, res, next) => {
 }
 
 /**
+ * Check URL Key
+ * @params urlKey
+ * @returns { exists: Boolean }
+ */
+const checkURLKey = async (req, res) => {
+    try {
+        const { urlKey } = req.params;
+
+        const product = await Product.findOne({ urlKey });
+
+        res.json({ exists: product ? true : false });
+    } catch (err) {
+        console.log(err);
+        res.status(500)
+    }
+}
+
+/**
  * Image Kit Auth
  * @returns { token, expire, signature }
  */
@@ -174,5 +192,6 @@ module.exports = {
     saveProduct,
     updateProduct,
     deleteProduct,
-    imageKitAuth
+    imageKitAuth,
+    checkURLKey
 }

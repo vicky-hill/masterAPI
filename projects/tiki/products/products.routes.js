@@ -13,7 +13,8 @@ router
     .get(productCtrl.getProducts)
     .post(productCtrl.saveProduct)
 
-router.route('/imagekit').get(productCtrl.imageKitAuth)
+router.route('/imagekit').get(productCtrl.imageKitAuth);
+router.route('/url-check/:urlKey').get(productCtrl.checkURLKey)
 
 /**
  * @route /api/tiki/products/key/:urlKey
