@@ -17,7 +17,7 @@ const imagekit = new ImageKit({
  */
 const getProducts = async (req, res, next) => {
     try {
-        const { search } = req.query;
+        const { search, category } = req.query;
 
         const options = {};
 
@@ -27,6 +27,10 @@ const getProducts = async (req, res, next) => {
                 { description: { $regex: search, $options: 'i' } }, 
                 { short_description: { $regex: search, $options: 'i' } }
             ]
+        }
+
+        if (category) {
+            options.category = category;
         }
 
         const products = await Product.find(options)
