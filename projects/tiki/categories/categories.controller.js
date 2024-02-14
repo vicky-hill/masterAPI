@@ -1,7 +1,7 @@
 const Category = require('./categories.model')
-const sendError = require('../../../utils/sendError')
 const validate = require('../utils/validation')
 const { getCategories, getCategory } = require ('./categories.utils')
+const checkResource = require('../../../utils/checkResource')
 
 /**
  * Get categories
@@ -68,9 +68,7 @@ const updateCategory = async (req, res, next) => {
         const { categoryID } = req.params;
         const updateCategory = await Category.findByIdAndUpdate(categoryID, req.body, { new: true });
 
-        if (!updateCategory) return sendError(next, 404, {
-            error: `Category not found`
-        });
+        checkResource(updateCategory, 'category');
 
         const category = await getCategory(updateCategory._id);
 
@@ -90,9 +88,7 @@ const deleteCategory = async (req, res, next) => {
         const { categoryID } = req.params;
         const category = await Category.findByIdAndDelete(categoryID);
 
-        if (!category) return sendError(next, 404, {
-            error: `Category not found`
-        });
+        checkResource(category, 'category');
 
         res.status(200).json(category)
     } catch (err) {

@@ -1,4 +1,5 @@
 const Category = require('./categories.model')
+const checkResource = require('../../../utils/checkResource')
 
 const getCategories = async () => {
     const categories = await Category.find().populate({
@@ -14,11 +15,7 @@ const getCategory = async (id) => {
         select: '_id name short_description price urlKey image'
     });
 
-    if (!category) {
-        const error = new Error("Category not found")
-        error.code = 404
-        throw error;
-    }
+    checkResource(category, 'category');
 
     return category;
 }

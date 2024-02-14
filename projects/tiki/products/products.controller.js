@@ -24,7 +24,7 @@ const getProducts = async (req, res, next) => {
         if (search) {
             options.$or = [
                 { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }, 
+                { description: { $regex: search, $options: 'i' } },
                 { short_description: { $regex: search, $options: 'i' } }
             ]
         }
@@ -138,9 +138,7 @@ const updateProduct = async (req, res, next) => {
 
         const updateProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true });
 
-        if (!updateProduct) return sendError(next, 404, {
-            error: `Product not found`
-        });
+        checkResource(updateProduct, 'product');
 
         const product = await Product.getProductByID(updateProduct._id);
 
@@ -160,9 +158,7 @@ const deleteProduct = async (req, res, next) => {
         const { productID } = req.params;
         const product = await Product.findByIdAndDelete(productID);
 
-        if (!product) return sendError(next, 404, {
-            error: `Product not found`
-        });
+        checkResource(product, 'product');
 
         res.status(200).json(product)
     } catch (err) {
