@@ -25,6 +25,6 @@ CategorySchema.virtual('products', {
 });
 
 CategorySchema.virtual('count').get(function () {
-    return this.products.length;
+    return this.products?.length;
 });
 module.exports = mongoose.model('TIKI_Category', CategorySchema);

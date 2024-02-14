@@ -38,11 +38,13 @@ const getProducts = async (req, res, next) => {
             .populate({
                 path: 'category',
                 select: 'name'
-            });;
+            });
 
         res.json({
             data: products
         });
+
+        // res.send('kdasjf')
     } catch (err) {
         next(err)
     }
