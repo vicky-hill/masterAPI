@@ -1,15 +1,16 @@
 const Category = require('./categories.model')
 const sendError = require('../../../utils/sendError')
 const validate = require('../utils/validation')
+const { getCategories, getCategory } = require ('./categories.utils')
 
 /**
  * Get categories
  * @returns { data: categories [] }
  */
-const getCategories = async (req, res, next) => {
+const getAllCategories = async (req, res, next) => {
     try {
-        const categories = await Category.find()
-    
+        const categories = await getCategories();
+
         res.json({
             data: categories
         });
@@ -23,18 +24,10 @@ const getCategories = async (req, res, next) => {
  * @param categoryID
  * @returns category {}
  */
-const getCategory = async (req, res, next) => {
+const getCategoryByID = async (req, res, next) => {
     try {
         const { categoryID } = req.params; 
-        const category = await Category.findById(categoryID);
-
-        if (!category) {
-            return res.status(404).json({ msg: "Category not found" });
-        }
-
-        if (!category) return sendError(next, 404, {
-            error: `Category not found`
-        });
+        const category = await getCategory(categoryID);
 
         res.status(200).json(category);
     } catch (err) {
@@ -53,7 +46,7 @@ const createCategory = async (req, res, next) => {
         await validate.createCategory(req.body);
 
         const newCategory = await Category.create(req.body);
-        const category = await Category.findById(newCategory._id);
+        const category = await getCategory(newCategory._id);
 
         res.status(201).json(category);
     } catch (err) {
@@ -79,7 +72,7 @@ const updateCategory = async (req, res, next) => {
             error: `Category not found`
         });
 
-        const category = await Category.findById(updateCategory._id);
+        const category = await getCategory(updateCategory._id);
 
         res.status(200).json(category);
     } catch (err) {
@@ -109,8 +102,8 @@ const deleteCategory = async (req, res, next) => {
 
 
 module.exports = {
-    getCategories,
-    getCategory,
+    getAllCategories,
+    getCategoryByID,
     createCategory,
     updateCategory,
     deleteCategory

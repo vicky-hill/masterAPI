@@ -10,7 +10,7 @@ const categoryCtrl = require('./categories.controller');
  */
 router
     .route('/')
-    .get(categoryCtrl.getCategories)
+    .get(categoryCtrl.getAllCategories)
     .post(categoryCtrl.createCategory)
 
 /**
@@ -21,7 +21,7 @@ router
  */
 router 
     .route('/:categoryID')
-    .get(categoryCtrl.getCategory)
+    .get(categoryCtrl.getCategoryByID)
     .put(categoryCtrl.updateCategory)
     .delete(categoryCtrl.deleteCategory)
 
