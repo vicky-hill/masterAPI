@@ -12,7 +12,7 @@ const getCategories = async () => {
 const getCategory = async (id) => {
     const category = await Category.findById(id).populate({
         path: 'products',
-        select: '_id name short_description price urlKey image'
+        select: '_id name short_description price urlKey image images'
     });
 
     checkResource(category, 'category');
