@@ -201,6 +201,8 @@ const sortProducts = async (req, res, next) => {
     try {
         const { products } = req.body;
 
+        await validate.sortProducts(req.body);
+
         const data = [];
 
         for (const product of products) {

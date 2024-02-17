@@ -36,9 +36,24 @@ const updateCategory = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
+const sortProducts = async (values) => {
+    console.log('values', values)
+    const schema = yup.object().shape({
+        products: yup.array().of(
+            yup.object().shape({
+                _id: yup.string().required(),
+                sort: yup.number().required()
+            })
+        ).required('req.body is missing the products array')
+    })
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 
 module.exports = {
     createProduct,
     createCategory,
     updateCategory,
+    sortProducts
 };
