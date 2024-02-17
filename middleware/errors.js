@@ -2,7 +2,7 @@ const Err = require('../utils/errorHandler')
 
 const onError = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
-
+    
     let error = { ...err };
     let validation = {}
 
@@ -36,7 +36,8 @@ const onError = (err, req, res, next) => {
         message: error.message,
         debug: error.debug,
         validation: error.validation,
-        status: error.statusCode
+        status: error.statusCode,
+        errorCode: error.errorCode
     }
 
     Object.keys(payload).forEach(key => {

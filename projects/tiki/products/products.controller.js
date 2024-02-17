@@ -1,7 +1,8 @@
-const sendError = require('../../../utils/sendError')
 const Product = require('./products.model')
 const validate = require('../utils/validation')
-const ImageKit = require('imagekit');
+const ImageKit = require('imagekit')
+const checkResource = require('../../../utils/checkResource')
+const utils = require('./products.utils')
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -43,8 +44,6 @@ const getProducts = async (req, res, next) => {
         res.json({
             data: products
         });
-
-        // res.send('kdasjf')
     } catch (err) {
         next(err)
     }
@@ -58,7 +57,8 @@ const getProducts = async (req, res, next) => {
 const getProductByID = async (req, res, next) => {
     try {
         const { productID } = req.params;
-        const product = await Product.getProductByID(productID);
+        const product = await utils.getProductByID(productID);
+             
         res.status(200).json(product);
     } catch (err) {
         next(err);
@@ -73,7 +73,7 @@ const getProductByID = async (req, res, next) => {
 const getProductByUrlKey = async (req, res, next) => {
     try {
         const { urlKey } = req.params;
-        const product = await Product.getProductByKey(urlKey);
+        const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
         next(err);
@@ -107,7 +107,7 @@ const saveProduct = async (req, res, next) => {
             images
         });
 
-        const product = await Product.getProductByID(newProduct._id);
+        const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
         next(err);
@@ -140,9 +140,9 @@ const updateProduct = async (req, res, next) => {
 
         const updateProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true });
 
-        checkResource(updateProduct, 'product');
+        checkResource(updateProduct, 'product', '00003');
 
-        const product = await Product.getProductByID(updateProduct._id);
+        const product = await utils.getProductByID(updateProduct._id);
 
         res.status(200).json(product);
     } catch (err) {
@@ -160,7 +160,7 @@ const deleteProduct = async (req, res, next) => {
         const { productID } = req.params;
         const product = await Product.findByIdAndDelete(productID);
 
-        checkResource(product, 'product');
+        checkResource(product, 'product', '00004');
 
         res.status(200).json(product)
     } catch (err) {
