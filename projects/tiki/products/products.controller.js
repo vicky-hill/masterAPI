@@ -45,7 +45,8 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        next(err)
+        err.errorCode = '0005'
+        next(err);
     }
 }
 
@@ -58,9 +59,10 @@ const getProductByID = async (req, res, next) => {
     try {
         const { productID } = req.params;
         const product = await utils.getProductByID(productID);
-             
+
         res.status(200).json(product);
     } catch (err) {
+        err.errorCode = '0006'
         next(err);
     }
 }
@@ -76,6 +78,7 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
+        err.errorCode = '0007'
         next(err);
     }
 }
@@ -110,6 +113,7 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
+        err.errorCode = '0008'
         next(err);
     }
 }
@@ -146,6 +150,7 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
+        err.errorCode = '0009'
         next(err);
     }
 }
@@ -164,7 +169,8 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        next(err)
+        err.errorCode = '0010'
+        next(err);
     }
 }
 
@@ -181,8 +187,32 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        console.log(err);
-        res.status(500)
+        err.errorCode = '0011'
+        next(err);
+    }
+}
+
+/**
+ * Sort products
+ * @property req.body.products [{ _id, sort }]
+ * @returns { data: [{ Product }] }
+ */
+const sortProducts = async (req, res, next) => {
+    try {
+        const { products } = req.body;
+
+        const data = [];
+
+        for (const product of products) {
+            const { _id, sort } = product;
+            const updatedProduct = await Product.findByIdAndUpdate(_id, { sort }, { new: true});
+            data.push(updatedProduct);
+        }
+
+        res.json({ data });
+    } catch (err) {
+        err.errorCode = '0012'
+        next(err);
     }
 }
 
@@ -195,8 +225,8 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        console.log(err);
-        res.status(500)
+        err.errorCode = '0013'
+        next(err);
     }
 }
 
@@ -208,5 +238,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     imageKitAuth,
-    checkURLKey
+    checkURLKey,
+    sortProducts
 }
