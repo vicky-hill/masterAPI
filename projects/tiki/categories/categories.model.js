@@ -11,6 +11,9 @@ const CategorySchema = new mongoose.Schema({
         enum: ['active', 'inactive'],
         default: 'inactive'
     },
+    sort: {
+        type: Number
+    },
 }, {
     timestamps: true,
     toJSON: {virtuals: true}, 

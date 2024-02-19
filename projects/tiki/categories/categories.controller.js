@@ -1,6 +1,6 @@
 const Category = require('./categories.model')
 const validate = require('../utils/validation')
-const { getCategories, getCategory } = require ('./categories.utils')
+const { getCategories, getCategory } = require('./categories.utils')
 const checkResource = require('../../../utils/checkResource')
 
 /**
@@ -15,6 +15,7 @@ const getAllCategories = async (req, res, next) => {
             data: categories
         });
     } catch (err) {
+        err.errorCode = '0014'
         next(err)
     }
 }
@@ -26,11 +27,12 @@ const getAllCategories = async (req, res, next) => {
  */
 const getCategoryByID = async (req, res, next) => {
     try {
-        const { categoryID } = req.params; 
+        const { categoryID } = req.params;
         const category = await getCategory(categoryID);
 
         res.status(200).json(category);
     } catch (err) {
+        err.errorCode = '0015'
         next(err);
     }
 }
@@ -50,6 +52,7 @@ const createCategory = async (req, res, next) => {
 
         res.status(201).json(category);
     } catch (err) {
+        err.errorCode = '0016'
         next(err);
     }
 }
@@ -64,7 +67,7 @@ const createCategory = async (req, res, next) => {
 const updateCategory = async (req, res, next) => {
     try {
         await validate.updateCategory(req.body);
-        
+
         const { categoryID } = req.params;
         const updateCategory = await Category.findByIdAndUpdate(categoryID, req.body, { new: true });
 
@@ -74,6 +77,7 @@ const updateCategory = async (req, res, next) => {
 
         res.status(200).json(category);
     } catch (err) {
+        err.errorCode = '0017'
         next(err);
     }
 }
@@ -92,7 +96,32 @@ const deleteCategory = async (req, res, next) => {
 
         res.status(200).json(category)
     } catch (err) {
+        err.errorCode = '0018'
         next(err)
+    }
+}
+
+/**
+ * Sort categories
+ * @property req.body [{ _id, sort }]
+ * @returns { data: [{ Category }] }
+ */
+const sortCategories = async (req, res, next) => {
+    try {
+        await validate.sortCategories(req.body);
+
+        const data = [];
+
+        for (const category of req.body) {
+            const { _id, sort } = category;
+            const updatedCategory = await Category.findByIdAndUpdate(_id, { sort }, { new: true });
+            data.push(updatedCategory);
+        }
+
+        res.json({ data });
+    } catch (err) {
+        err.errorCode = '0019'
+        next(err);
     }
 }
 
@@ -102,5 +131,6 @@ module.exports = {
     getCategoryByID,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    sortCategories
 }

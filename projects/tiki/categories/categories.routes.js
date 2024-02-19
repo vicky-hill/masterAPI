@@ -13,6 +13,8 @@ router
     .get(categoryCtrl.getAllCategories)
     .post(categoryCtrl.createCategory)
 
+router.put('/sort', categoryCtrl.sortCategories)
+
 /**
  * @route /api/tiki/categories/:categoryID
  * @get get one category

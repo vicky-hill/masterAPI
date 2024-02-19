@@ -2,11 +2,13 @@ const Category = require('./categories.model')
 const checkResource = require('../../../utils/checkResource')
 
 const getCategories = async () => {
-    const categories = await Category.find().populate({
-        path: 'products',
-        select: '_id name short_description price urlKey image sort',
-        options: { sort: { sort: 1 } }
-    });
+    const categories = await Category.find()
+        .sort({ sort: 1 })
+        .populate({
+            path: 'products',
+            select: '_id name short_description price urlKey image sort',
+            options: { sort: { sort: 1 } }
+        });
     return categories;
 }
 
