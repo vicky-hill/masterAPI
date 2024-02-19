@@ -37,14 +37,12 @@ const updateCategory = async (values) => {
 }
 
 const sortProducts = async (values) => {
-    const schema = yup.object().shape({
-        products: yup.array().of(
-            yup.object().shape({
-                _id: yup.string().required(),
-                sort: yup.number().required()
-            })
-        ).required('req.body is missing the products array')
-    })
+    const schema = yup.array().of(
+        yup.object().shape({
+            _id: yup.string().required(),
+            sort: yup.string().required()
+        })
+    ).required('req.body is missing the products array')
 
     await schema.validate(values, { abortEarly: false });
 }

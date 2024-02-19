@@ -194,18 +194,16 @@ const checkURLKey = async (req, res) => {
 
 /**
  * Sort products
- * @property req.body.products [{ _id, sort }]
+ * @property req.body [{ _id, sort }]
  * @returns { data: [{ Product }] }
  */
 const sortProducts = async (req, res, next) => {
     try {
-        const { products } = req.body;
-
         await validate.sortProducts(req.body);
 
         const data = [];
 
-        for (const product of products) {
+        for (const product of req.body) {
             const { _id, sort } = product;
             const updatedProduct = await Product.findByIdAndUpdate(_id, { sort }, { new: true});
             data.push(updatedProduct);
