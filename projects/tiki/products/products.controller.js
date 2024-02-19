@@ -45,7 +45,7 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        err.errorCode = '0005'
+        err.errorCode='0005'
         next(err);
     }
 }
@@ -62,7 +62,7 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '0006'
+        err.errorCode='0006'
         next(err);
     }
 }
@@ -78,7 +78,7 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '0007'
+        err.errorCode='0007'
         next(err);
     }
 }
@@ -113,7 +113,7 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        err.errorCode = '0008'
+        err.errorCode='0008'
         next(err);
     }
 }
@@ -150,7 +150,7 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '0009'
+        err.errorCode='0009'
         next(err);
     }
 }
@@ -169,7 +169,7 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        err.errorCode = '0010'
+        err.errorCode='0010'
         next(err);
     }
 }
@@ -187,7 +187,7 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        err.errorCode = '0011'
+        err.errorCode='0011'
         next(err);
     }
 }
@@ -213,7 +213,7 @@ const sortProducts = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = '0012'
+        err.errorCode='0012'
         next(err);
     }
 }
@@ -227,7 +227,7 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode = '0013'
+        err.errorCode='0013'
         next(err);
     }
 }

@@ -27,7 +27,7 @@ const onError = (err, req, res, next) => {
 
         err.inner.forEach(error => validation[error.path] = error.message);
 
-        error = new Err(message, errorMessage, 400, validation)
+        error = new Err(message, errorMessage, 400, validation, null, err.errorCode)
     }
 
     let payload = {

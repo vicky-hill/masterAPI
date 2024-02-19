@@ -37,7 +37,6 @@ const updateCategory = async (values) => {
 }
 
 const sortProducts = async (values) => {
-    console.log('values', values)
     const schema = yup.object().shape({
         products: yup.array().of(
             yup.object().shape({
