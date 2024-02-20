@@ -3,6 +3,7 @@ const validate = require('../utils/validation')
 const ImageKit = require('imagekit')
 const checkResource = require('../../../utils/checkResource')
 const utils = require('./products.utils')
+const Category = require('../categories/categories.model')
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -13,7 +14,8 @@ const imagekit = new ImageKit({
 
 /**
  * Get products
- * @param search
+ * @query search
+ * @query category
  * @returns { data: [{Product}]}
  */
 const getProducts = async (req, res, next) => {
@@ -45,8 +47,34 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        err.errorCode='0005'
+        err.errorCode='00005'
         next(err);
+    }
+}
+
+/**
+ * Get category products
+ * @param categoryName
+ * @returns { data: [{Product}]}
+ */
+const getCategoryProducts = async (req, res, next) => {
+    try {
+        const { categoryName } = req.params;
+        const name = categoryName
+        .split("-")
+        .map(word => `${word[0].toUpperCase()}${word.slice(1)}`)
+        .join(" ")
+
+        const category = await Category.findOne({ name });
+        
+        checkResource(category, 'category', '00021');
+        
+        const products = await Product.find({ category: category._id });
+
+        res.json({ data: products });
+    } catch (err) {
+        err.errorCode = '00020'
+        next(err)
     }
 }
 
@@ -62,7 +90,7 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='0006'
+        err.errorCode='00006'
         next(err);
     }
 }
@@ -78,7 +106,7 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='0007'
+        err.errorCode='00007'
         next(err);
     }
 }
@@ -113,7 +141,7 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        err.errorCode='0008'
+        err.errorCode='00008'
         next(err);
     }
 }
@@ -150,7 +178,7 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='0009'
+        err.errorCode='00009'
         next(err);
     }
 }
@@ -169,7 +197,7 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        err.errorCode='0010'
+        err.errorCode='00010'
         next(err);
     }
 }
@@ -187,7 +215,7 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        err.errorCode='0011'
+        err.errorCode='00011'
         next(err);
     }
 }
@@ -211,7 +239,7 @@ const sortProducts = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode='0012'
+        err.errorCode='00012'
         next(err);
     }
 }
@@ -225,7 +253,7 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode='0013'
+        err.errorCode='00013'
         next(err);
     }
 }
@@ -239,5 +267,6 @@ module.exports = {
     deleteProduct,
     imageKitAuth,
     checkURLKey,
-    sortProducts
+    sortProducts,
+    getCategoryProducts
 }

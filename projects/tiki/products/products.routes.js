@@ -20,6 +20,7 @@ router.route('/url-check/:urlKey').get(productCtrl.checkURLKey)
  * @get get one product by URL
  */
 router.route('/key/:urlKey').get(productCtrl.getProductByUrlKey)
+router.route('/category/:categoryName').get(productCtrl.getCategoryProducts)
 
 /**
  * @route /api/tiki/products/:productID
