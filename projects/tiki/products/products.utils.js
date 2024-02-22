@@ -24,7 +24,7 @@ const getProductByID = async function (productID) {
  * @returns <Promise> {Product}
  */
 const getProductByKey = async function (urlKey) {
-    const product = await this.findOne({ urlKey: urlKey })
+    const product = await Product.findOne({ urlKey: urlKey })
         .populate({
             path: 'category',
             select: 'name'

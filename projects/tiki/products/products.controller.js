@@ -69,7 +69,9 @@ const getCategoryProducts = async (req, res, next) => {
         
         checkResource(category, 'category', '00021');
         
-        const products = await Product.find({ category: category._id });
+        const products = await Product.find({ category: category._id })
+            .populate('image')
+            .sort({ sort: 1 });
 
         res.json({ data: products });
     } catch (err) {
