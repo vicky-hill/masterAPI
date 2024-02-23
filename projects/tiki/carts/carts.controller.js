@@ -1,5 +1,6 @@
 const Cart = require('./carts.model')
 const utils = require('./carts.utils')
+const validation = require('../utils/validation')
 
 /**
  * Add item to cart
@@ -11,6 +12,8 @@ const addItem = async (req, res, next) => {
     try {
         const item = req.body;
 
+        await validation.addToCart(item);
+
         let cart = await utils.getCart(req);
 
         if (!cart) return res.status(400).json({ msg: 'Cart with the provided cartID does not exist'})
@@ -19,6 +22,7 @@ const addItem = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
+        err.errorCode = '00021'
         next(err);
     }
 }

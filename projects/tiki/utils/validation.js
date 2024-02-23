@@ -58,11 +58,23 @@ const sortCategories = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
+const addToCart = async (values) => {
+    const schema = yup.object().shape({
+        productID: yup.string().required(),
+        quantity: yup.string().required()
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
+
+
 
 module.exports = {
     createProduct,
     createCategory,
     updateCategory,
     sortProducts,
-    sortCategories
+    sortCategories,
+    addToCart
 };

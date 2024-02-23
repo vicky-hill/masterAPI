@@ -47,7 +47,7 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        err.errorCode='00005'
+        err.errorCode = '00005'
         next(err);
     }
 }
@@ -61,14 +61,14 @@ const getCategoryProducts = async (req, res, next) => {
     try {
         const { categoryName } = req.params;
         const name = categoryName
-        .split("-")
-        .map(word => `${word[0].toUpperCase()}${word.slice(1)}`)
-        .join(" ")
+            .split("-")
+            .map(word => `${word[0].toUpperCase()}${word.slice(1)}`)
+            .join(" ")
 
         const category = await Category.findOne({ name });
-        
+
         checkResource(category, 'category', '00021');
-        
+
         const products = await Product.find({ category: category._id })
             .sort({ sort: 1 });
 
@@ -91,7 +91,7 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='00006'
+        err.errorCode = '00006'
         next(err);
     }
 }
@@ -107,7 +107,7 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='00007'
+        err.errorCode = '00007'
         next(err);
     }
 }
@@ -142,7 +142,7 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        err.errorCode='00008'
+        err.errorCode = '00008'
         next(err);
     }
 }
@@ -179,7 +179,7 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode='00009'
+        err.errorCode = '00009'
         next(err);
     }
 }
@@ -198,7 +198,7 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        err.errorCode='00010'
+        err.errorCode = '00010'
         next(err);
     }
 }
@@ -216,7 +216,7 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        err.errorCode='00011'
+        err.errorCode = '00011'
         next(err);
     }
 }
@@ -234,13 +234,13 @@ const sortProducts = async (req, res, next) => {
 
         for (const product of req.body) {
             const { _id, sort } = product;
-            const updatedProduct = await Product.findByIdAndUpdate(_id, { sort }, { new: true});
+            const updatedProduct = await Product.findByIdAndUpdate(_id, { sort }, { new: true });
             data.push(updatedProduct);
         }
 
         res.json({ data });
     } catch (err) {
-        err.errorCode='00012'
+        err.errorCode = '00012'
         next(err);
     }
 }
@@ -254,7 +254,7 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode='00013'
+        err.errorCode = '00013'
         next(err);
     }
 }
