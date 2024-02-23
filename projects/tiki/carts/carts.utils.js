@@ -88,7 +88,7 @@ const addMultipleItems = async (items, cart) => {
 const addOneItem = async (item, cart) => {
     try {
         const existingItem = cart.items && cart.items.find(existingItem =>
-            existingItem.product._id.toString() === item.productID
+           existingItem.product._id.toString() === item.productID
         );
 
         if (existingItem) {

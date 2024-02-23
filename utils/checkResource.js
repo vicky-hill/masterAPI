@@ -5,7 +5,6 @@ const checkResource = (resource, name, errorCode, message) => {
     
     if (!resource) {         
         const error = new Err(errorMessage, null, 404, null, null, errorCode);
-        console.log('error', error)
         throw error;
     }
 }
