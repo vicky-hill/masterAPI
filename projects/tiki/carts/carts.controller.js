@@ -9,8 +9,8 @@ const utils = require('./carts.utils')
  */
 const addItem = async (req, res, next) => {
     try {
-        const { item } = req.body;
-        
+        const item = req.body;
+
         let cart = await utils.getCart(req);
 
         if (!cart) return res.status(400).json({ msg: 'Cart with the provided cartID does not exist'})
