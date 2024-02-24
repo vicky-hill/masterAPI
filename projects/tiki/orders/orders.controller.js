@@ -3,6 +3,7 @@ const Cart = require('../carts/carts.model')
 const Order = require('../orders/orders.model')
 const { dollarToCents } = require('./orders.utils')
 const Stripe = require('stripe')
+const sendEmail = require('../../../utils/sendgrid')
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -147,7 +148,7 @@ const webhook = async (req, res, next) => {
                 //     await OrderModel.update({ paymentStatus: "succeeded" }, { where: { orderID: createdOrder.orderID } });
                 // }
 
-               
+
                 // Update product quantities
                 // const nonSageQuantityItems = cart.items.filter(item => !item.listing.connectSage);
 
@@ -192,9 +193,9 @@ const webhook = async (req, res, next) => {
 
 
 /**
- * Image Kit Auth
- * @get /products/imagekit
- * @returns { token, expire, signature }
+ * Create Order
+ * @post /orders
+ * @returns { Order }
  */
 const createOrder = async (req, res) => {
     try {
@@ -205,8 +206,39 @@ const createOrder = async (req, res) => {
     }
 }
 
+/**
+ * testing
+ * @get /orders/test
+ * @returns { Order }
+ */
+const test = async (req, res) => {
+    try {
+        const html = `
+        <div>
+        <strong>Subject: </strong>
+        <strong>Test email </strong>
+
+      
+        <p>Best regards,</p>
+        </div>`;
+
+        const response = await sendEmail({
+            to: 'pm@excersys.com',
+            html,
+            subject: "TESTING",
+        });
+        
+        res.json(response);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+
 module.exports = {
     checkout,
     webhook,
-    createOrder
+    createOrder,
+    test
 }

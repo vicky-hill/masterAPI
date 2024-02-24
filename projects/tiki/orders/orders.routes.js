@@ -9,6 +9,7 @@ router.route('/').post(ordersCtrl.createOrder)
  * @post /api/tiki/orders/checkout
  */
 router.route('/checkout').post(ordersCtrl.checkout)
+router.route('/test').get(ordersCtrl.test)
 
 
 
