@@ -8,11 +8,14 @@ require('./projects/reqdoc/utils/jsdoc')
 require('./projects/squirreled/utils/jsdoc')
 require('./projects/tiki/utils/jsdoc')
 const onError = require('./middleware/errors')
+const tikiOrdersCtrl = require('./projects/tiki/orders/orders.controller')
 
 const app = express();
 const PORT = 4000;
 
 connectDB();
+
+app.post('/api/tiki/orders/webhook', express.raw({ type: "*/*" }), tikiOrdersCtrl.webhook);
 
 app.use(express.json());
 app.use(logger("dev"));
