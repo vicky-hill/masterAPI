@@ -1,5 +1,5 @@
 const Product = require('./products.model')
-const checkResource = require('../../../utils/checkResource')
+const throwError = require('../../../utils/throwError')
 
 /**
  * Get product by ID
@@ -13,8 +13,8 @@ const getProductByID = async function (productID) {
             select: 'name'
         });
 
-    checkResource(product, 'product', '00001');
-
+    !product && throwError(`Could not find product by ID: ${productID}`);
+    
     return product;
 }
 
@@ -30,7 +30,7 @@ const getProductByKey = async function (urlKey) {
             select: 'name'
         });
 
-    checkResource(product, 'product', '00002');
+        !product && throwError(`Could not find product by url key: ${urlKey}`); 
 
     return product;
 };

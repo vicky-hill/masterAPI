@@ -1,27 +1,27 @@
 const Category = require('./categories.model')
 const validate = require('../utils/validation')
 const { getCategories, getCategory } = require('./categories.utils')
-const checkResource = require('../../../utils/checkResource')
+const throwError = require('../../../utils/throwError')
 
 /**
  * Get categories
+ * @get /categories
  * @returns { data: categories [] }
  */
 const getAllCategories = async (req, res, next) => {
     try {
         const categories = await getCategories();
 
-        res.json({
-            data: categories
-        });
+        res.json({ data: categories });
     } catch (err) {
-        err.errorCode = '0014'
+        err.errorCode = '00011'
         next(err)
     }
 }
 
 /**
  * Get one category
+ * @get /categories/:categoryID
  * @param categoryID
  * @returns category {}
  */
@@ -32,13 +32,14 @@ const getCategoryByID = async (req, res, next) => {
 
         res.status(200).json(category);
     } catch (err) {
-        err.errorCode = '0015'
+        err.errorCode = '00012'
         next(err);
     }
 }
 
 /**
  * Save category
+ * @post /categories
  * @property {string} req.body.name 
  * @property {string} req.body.status
  * @returns category {}
@@ -52,13 +53,14 @@ const createCategory = async (req, res, next) => {
 
         res.status(201).json(category);
     } catch (err) {
-        err.errorCode = '0016'
+        err.errorCode = '00013'
         next(err);
     }
 }
 
 /**
  * Update category
+ * @put /categories/:categoryID
  * @param categoryID
  * @property {string} req.body.name 
  * @property {string} req.body.status
@@ -71,19 +73,20 @@ const updateCategory = async (req, res, next) => {
         const { categoryID } = req.params;
         const updateCategory = await Category.findByIdAndUpdate(categoryID, req.body, { new: true });
 
-        checkResource(updateCategory, 'category');
+        !updateCategory && throwError(`Could not find category by ID: ${categoryID}`);
 
         const category = await getCategory(updateCategory._id);
 
         res.status(200).json(category);
     } catch (err) {
-        err.errorCode = '0017'
+        err.errorCode = '00014'
         next(err);
     }
 }
 
 /**
  * Delete category
+ * @delete /categories/:categoryID
  * @param categoryID
  * @returns category {}
  */
@@ -92,17 +95,18 @@ const deleteCategory = async (req, res, next) => {
         const { categoryID } = req.params;
         const category = await Category.findByIdAndDelete(categoryID);
 
-        checkResource(category, 'category');
+        !category && throwError(`Could not find category by ID: ${categoryID}`)
 
         res.status(200).json(category)
     } catch (err) {
-        err.errorCode = '0018'
+        err.errorCode = '00015'
         next(err)
     }
 }
 
 /**
  * Sort categories
+ * @put /categories/sort
  * @property req.body [{ _id, sort }]
  * @returns { data: [{ Category }] }
  */
@@ -120,7 +124,7 @@ const sortCategories = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = '0019'
+        err.errorCode = '00016'
         next(err);
     }
 }

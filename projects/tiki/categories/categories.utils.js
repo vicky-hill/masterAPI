@@ -1,5 +1,5 @@
 const Category = require('./categories.model')
-const checkResource = require('../../../utils/checkResource')
+const throwError = require('../../../utils/throwError')
 
 const getCategories = async () => {
     const categories = await Category.find()
@@ -19,7 +19,7 @@ const getCategory = async (id) => {
         options: { sort: { sort: 1 } }
     });
 
-    checkResource(category, 'category');
+    !category && throwError(`Could not find category by ID: ${id}`);
 
     return category;
 }

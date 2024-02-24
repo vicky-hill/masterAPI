@@ -1,7 +1,9 @@
 const Cart = require('./carts.model')
 const utils = require('./carts.utils')
 const validation = require('../utils/validation')
+const throwError = require('../../../utils/throwError')
 
+ 
 /**
  * Add item to cart
  * @param cartID
@@ -16,13 +18,13 @@ const addItem = async (req, res, next) => {
 
         let cart = await utils.getCart(req);
 
-        if (!cart) return res.status(400).json({ msg: 'Cart with the provided cartID does not exist'})
+        !cart && throwError('Cart with the provided Cart ID does not exist');
        
         cart = await utils.addOneItem(item, cart);
 
         res.status(200).json(cart);
     } catch (err) {
-        err.errorCode = '00021'
+        err.errorCode = '00017'
         next(err);
     }
 }
@@ -52,8 +54,8 @@ const convertCart = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
+        err.errorCode = '00018'
         next(err);
-        console.log(err)
     }
 }
 
@@ -68,6 +70,7 @@ const retrieveCart = async (req, res, next) => {
         const cart = await utils.getCart(req);
         res.status(200).json(cart);
     } catch (err) {
+        err.errorCode = '00019'
         next(err);
     }
 }
@@ -83,6 +86,7 @@ const getAllCarts = async (req, res, next) => {
             .populate(utils.product)
         res.status(200).json(carts);
     } catch (err) {
+        err.errorCode = '00020'
         next(err);
     }
 }
@@ -101,6 +105,7 @@ const updateQuantity = async (req, res, next) => {
   
         res.status(200).json(cart);
     } catch (err) {
+        err.errorCode = '00021'
         next(err);
     }
 }
@@ -125,6 +130,7 @@ const removeItem = async (req, res, next) => {
 
         res.status(200).json(updatedCart);
     } catch (err) {
+        err.errorCode = '00022'
         next(err);
     }
 }

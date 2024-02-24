@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, extractUser } = require('../middleware');
+const { extractUser } = require('../middleware');
 
 const cartCtrl = require('./carts.controller');
 

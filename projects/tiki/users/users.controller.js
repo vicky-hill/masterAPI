@@ -1,4 +1,4 @@
-const User = require('./users.model');
+const User = require('./users.model')
 const jwt_decode = require('jwt-decode')
 
 /**
@@ -15,6 +15,7 @@ const createUser = async (req, res, next) => {
 
         res.status(201).json(user);
     } catch (err) {
+        err.errorCode = '00023'
         next(err);
     }
 }
@@ -44,6 +45,7 @@ const getUser = async (req, res, next) => {
 
         res.json(user);
     } catch (err) {
+        err.errorCode = '00024'
         next(err);
     }
 }

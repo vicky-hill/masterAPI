@@ -1,9 +1,9 @@
 const Product = require('./products.model')
 const validate = require('../utils/validation')
 const ImageKit = require('imagekit')
-const checkResource = require('../../../utils/checkResource')
 const utils = require('./products.utils')
 const Category = require('../categories/categories.model')
+const throwError = require('../../../utils/throwError')
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -14,6 +14,7 @@ const imagekit = new ImageKit({
 
 /**
  * Get products
+ * @get /products
  * @query search
  * @query category
  * @returns { data: [{Product}]}
@@ -47,13 +48,14 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        err.errorCode = '00005'
+        err.errorCode = '00001'
         next(err);
     }
 }
 
 /**
  * Get category products
+ * @get /products/category/:categoryName
  * @param categoryName
  * @returns { data: [{Product}]}
  */
@@ -67,20 +69,21 @@ const getCategoryProducts = async (req, res, next) => {
 
         const category = await Category.findOne({ name });
 
-        checkResource(category, 'category', '00021');
+        !category && throwError(`Category not found: ${categoryName}`);
 
         const products = await Product.find({ category: category._id })
             .sort({ sort: 1 });
 
         res.json({ data: products });
     } catch (err) {
-        err.errorCode = '00020'
+        err.errorCode = '00002'
         next(err)
     }
 }
 
 /**
  * Get product by ID
+ * @get /products/:productID
  * @param productID
  * @returns {Product}
  */
@@ -91,13 +94,14 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00006'
+        err.errorCode = '00003'
         next(err);
     }
 }
 
 /**
  * Get product by url key
+ * @get products/key/:urlKey
  * @param urlKey
  * @returns {Product}
  */
@@ -107,13 +111,14 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00007'
+        err.errorCode = '00004'
         next(err);
     }
 }
 
 /**
  * Create product
+ * @post /products
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
  * @property {string} req.body.description
@@ -142,13 +147,14 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        err.errorCode = '00008'
+        err.errorCode = '00005'
         next(err);
     }
 }
 
 /**
  * Update product
+ * @put /products/:productID
  * @param productID
  * @property {string} req.body.name 
  * @property {string} req.body.shortDescription
@@ -173,19 +179,20 @@ const updateProduct = async (req, res, next) => {
 
         const updateProduct = await Product.findByIdAndUpdate(productID, req.body, { new: true });
 
-        checkResource(updateProduct, 'product', '00003');
+        !updateProduct && throwError(`Product not found: ${productID}`);
 
         const product = await utils.getProductByID(updateProduct._id);
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00009'
+        err.errorCode = '00006'
         next(err);
     }
 }
 
 /**
  * Delete product
+ * @delete /products/:productID
  * @param productID 
  * @returns {Product}
  */
@@ -194,17 +201,18 @@ const deleteProduct = async (req, res, next) => {
         const { productID } = req.params;
         const product = await Product.findByIdAndDelete(productID);
 
-        checkResource(product, 'product', '00004');
+        !product && throwError(`Product not found: ${productID}`);
 
         res.status(200).json(product)
     } catch (err) {
-        err.errorCode = '00010'
+        err.errorCode = '00007'
         next(err);
     }
 }
 
 /**
  * Check URL Key
+ * @get /products/url-check/:urlKey
  * @params urlKey
  * @returns { exists: Boolean }
  */
@@ -216,13 +224,14 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        err.errorCode = '00011'
+        err.errorCode = '00008'
         next(err);
     }
 }
 
 /**
  * Sort products
+ * @get /products/sort
  * @property req.body [{ _id, sort }]
  * @returns { data: [{ Product }] }
  */
@@ -240,13 +249,14 @@ const sortProducts = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = '00012'
+        err.errorCode = '00009'
         next(err);
     }
 }
 
 /**
  * Image Kit Auth
+ * @get /products/imagekit
  * @returns { token, expire, signature }
  */
 const imageKitAuth = async (req, res) => {
@@ -254,7 +264,7 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode = '00013'
+        err.errorCode = '00010'
         next(err);
     }
 }
