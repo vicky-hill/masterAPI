@@ -1,9 +1,9 @@
 const Product = require('../products/products.model')
 const Cart = require('../carts/carts.model')
 const Order = require('../orders/orders.model')
-const { dollarToCents } = require('./orders.utils')
+const { dollarToCents, sendConfirmationEmail } = require('./orders.utils')
 const Stripe = require('stripe')
-const sendEmail = require('../../../utils/sendgrid')
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -168,7 +168,7 @@ const webhook = async (req, res, next) => {
                 //     }));
                 // }
 
-                // await sendConfirmationToCustomer(user.email, order, cart.items);
+                await sendConfirmationEmail(email);
 
 
                 break;
@@ -213,21 +213,7 @@ const createOrder = async (req, res) => {
  */
 const test = async (req, res) => {
     try {
-        const html = `
-        <div>
-        <strong>Subject: </strong>
-        <strong>Test email </strong>
 
-      
-        <p>Best regards,</p>
-        </div>`;
-
-        const response = await sendEmail({
-            to: 'pm@excersys.com',
-            html,
-            subject: "TESTING",
-        });
-        
         res.json(response);
     } catch (err) {
         next(err);
