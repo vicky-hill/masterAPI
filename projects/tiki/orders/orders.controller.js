@@ -112,7 +112,7 @@ const webhook = async (req, res, next) => {
 
                 const cart = await Cart.findById(cartID).populate({
                     path: 'items.product',
-                    select: 'name price'
+                    select: 'name price quantity'
                 });
 
                 const payload = {
@@ -148,28 +148,16 @@ const webhook = async (req, res, next) => {
                 //     await OrderModel.update({ paymentStatus: "succeeded" }, { where: { orderID: createdOrder.orderID } });
                 // }
 
-
-                // Update product quantities
-                // const nonSageQuantityItems = cart.items.filter(item => !item.listing.connectSage);
-
-                // if (nonSageQuantityItems.length) {
-                //     await Promise.all(nonSageQuantityItems.map((item) => {
-                //         ListingModel.update({ quantity: item.listing.quantity - item.quantity }, {
-                //             where: { listingID: item.listingID }
-                //         });
-                //     }));
-
-                //     await Promise.all(nonSageQuantityItems.map((item) => {
-                //         client.update({
-                //             index: process.env.LISTING_INDEX,
-                //             id: item.listingID,
-                //             body: { doc: { quantity: item.listing.quantity - item.quantity } }
-                //         })
-                //     }));
-                // }
+                for (const item of order.items) {
+                    const { product, quantity } = item;
+                    await Product.findByIdAndUpdate(
+                        product,
+                        { $inc: { quantity: quantity * -1 } },
+                        { new: true }
+                    )
+                }
 
                 await sendConfirmationEmail(email);
-
 
                 break;
             case 'payment_method.attached':
