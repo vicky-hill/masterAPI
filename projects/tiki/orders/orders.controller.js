@@ -184,8 +184,8 @@ const webhook = async (req, res, next) => {
 /**
  * Get orders
  * @get /orders
+ * @query customerID
  * @query search
- * @query category
  * @returns { data: [{Product}]}
  */
 const getOrders = async (req, res, next) => {
@@ -196,9 +196,12 @@ const getOrders = async (req, res, next) => {
 
         if (search) {
             options.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
-                { short_description: { $regex: search, $options: 'i' } }
+                { email: { $regex: search, $options: 'i' } },
+                { 'shipTo.address1': { $regex: search, $options: 'i' } },
+                { 'shipTo.address2': { $regex: search, $options: 'i' } },
+                { 'shipTo.city': { $regex: search, $options: 'i' } },
+                { 'shipTo.state': { $regex: search, $options: 'i' } },
+                { 'shipTo.zip': { $regex: search, $options: 'i' } }
             ]
         }
 
@@ -217,6 +220,7 @@ const getOrders = async (req, res, next) => {
         next(err);
     }
 }
+
 
 
 /**
