@@ -66,8 +66,9 @@ const checkout = async (req, res, next) => {
             id: paymentIntent.id
         });
 
-    } catch (e) {
-        next(e);
+    } catch (err) {
+        err.errorCode = 'orders_001'
+        next(err);
     }
 }
 
@@ -143,7 +144,6 @@ const webhook = async (req, res, next) => {
 
                 const order = await Order.create(payload);
 
-
                 // if (paymentIntent.status !== "succeeded") {
                 //     await stripe.paymentIntents.capture(charge.payment_intent);
                 //     await OrderModel.update({ paymentStatus: "succeeded" }, { where: { orderID: createdOrder.orderID } });
@@ -175,8 +175,46 @@ const webhook = async (req, res, next) => {
         res.json({
             message: 'success'
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        err.errorCode = 'orders_002'
+        next(err);
+    }
+}
+
+/**
+ * Get orders
+ * @get /orders
+ * @query search
+ * @query category
+ * @returns { data: [{Product}]}
+ */
+const getOrders = async (req, res, next) => {
+    try {
+        const { customerID, search } = req.query;
+
+        const options = {};
+
+        if (search) {
+            options.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+                { short_description: { $regex: search, $options: 'i' } }
+            ]
+        }
+
+        if (customerID) {
+            options.customerID = customerID;
+        }
+
+        const orders = await Order.find(options)
+            .sort({ createdAt: -1 });
+
+        res.json({
+            data: orders
+        });
+    } catch (err) {
+        err.errorCode = 'orders_003'
+        next(err);
     }
 }
 
@@ -205,6 +243,7 @@ const test = async (req, res) => {
 
         res.json(response);
     } catch (err) {
+        err.errorCode = 'orders_004'
         next(err);
     }
 }
@@ -215,5 +254,6 @@ module.exports = {
     checkout,
     webhook,
     createOrder,
+    getOrders,
     test
 }

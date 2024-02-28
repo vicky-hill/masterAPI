@@ -3,6 +3,7 @@ const router = express.Router();
 
 const ordersCtrl = require('./orders.controller');
 
+router.route('/').get(ordersCtrl.getOrders)
 router.route('/').post(ordersCtrl.createOrder)
 
 /**

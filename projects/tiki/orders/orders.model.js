@@ -48,6 +48,11 @@ const OrderShipToSchema = new mongoose.Schema({
 })
 
 const OrderSchema = new mongoose.Schema({
+    customerID: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'TIKI_User',
+        required: false
+    },
     shipping: {
         type: Number,
         default: 0
@@ -75,7 +80,7 @@ const OrderSchema = new mongoose.Schema({
         required: true
     },
     items: [OrderItemSchema],
-    shipTo: OrderShipToSchema
+    shipTo: OrderShipToSchema 
 }, {
     timestamps: true
 });
