@@ -209,7 +209,7 @@ const getOrders = async (req, res, next) => {
             options.customerID = customerID;
         }
 
-        const orders = await Order.find(options)
+        const orders = await Order.find(options, 'createdAt total status payment_status')
             .sort({ createdAt: -1 });
 
         res.json({
