@@ -2,6 +2,7 @@ const Product = require('../products/products.model')
 const Cart = require('../carts/carts.model')
 const Order = require('../orders/orders.model')
 const { dollarToCents, sendConfirmationEmail } = require('./orders.utils')
+const throwError = require('../../../utils/throwError')
 const Stripe = require('stripe')
 
 
@@ -186,7 +187,7 @@ const webhook = async (req, res, next) => {
  * @get /orders
  * @query customerID
  * @query search
- * @returns { data: [{Product}]}
+ * @returns { data: [{Order}]}
  */
 const getOrders = async (req, res, next) => {
     try {
@@ -220,6 +221,26 @@ const getOrders = async (req, res, next) => {
         next(err);
     }
 }
+
+/**
+ * Get orders
+ * @get /orders/:orderID
+ * @returns { Order }
+ */
+const getOrderByID = async (req, res, next) => {
+    try {
+        const { orderID } = req.params;
+        const order = await Order.findById(orderID).populate('items.product');
+
+        if (!order) throwError(`Could not find order by ID: ${orderID}`);
+
+        res.json(order);
+    } catch (err) {
+        err.errorCode = 'orders_003'
+        next(err);
+    }
+}
+
 
 
 
@@ -259,5 +280,6 @@ module.exports = {
     webhook,
     createOrder,
     getOrders,
+    getOrderByID,
     test
 }
