@@ -31,6 +31,7 @@ app.use('/', routes);
 
 // error handler middleware.. catches all errors thrown
 app.use((err, req, res, next) => {
+        console.log(err);
         onError(err, req, res, next);
 });
 

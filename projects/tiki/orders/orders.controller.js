@@ -120,7 +120,7 @@ const webhook = async (req, res, next) => {
                     paymentIntentID: charge.payment_intent,
                     paymentMethodID: charge.payment_method,
                     chargeID: charge.id,
-                    paymentStatus: "uncaptured",
+                    payment_status: "uncaptured",
                     last4: charge.payment_method_details?.card?.last4,
                     status: "open",
                     cartID,
@@ -142,6 +142,7 @@ const webhook = async (req, res, next) => {
                 }
 
                 const order = await Order.create(payload);
+
 
                 // if (paymentIntent.status !== "succeeded") {
                 //     await stripe.paymentIntents.capture(charge.payment_intent);
