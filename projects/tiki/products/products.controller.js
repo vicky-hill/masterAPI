@@ -48,8 +48,7 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        err.errorCode = '00001'
-        next(err);
+        next({ ...err, errorCode: 'products_001' })
     }
 }
 
@@ -76,8 +75,7 @@ const getCategoryProducts = async (req, res, next) => {
 
         res.json({ data: products });
     } catch (err) {
-        err.errorCode = '00002'
-        next(err)
+        next({ ...err, errorCode: 'products_002' })
     }
 }
 
@@ -94,8 +92,7 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00003'
-        next(err);
+        next({ ...err, errorCode: 'products_003' })
     }
 }
 
@@ -111,8 +108,7 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00004'
-        next(err);
+        next({ ...err, errorCode: 'products_004' })
     }
 }
 
@@ -147,8 +143,7 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        err.errorCode = '00005'
-        next(err);
+        next({ ...err, errorCode: 'products_005' })
     }
 }
 
@@ -185,8 +180,7 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        err.errorCode = '00006'
-        next(err);
+        next({ ...err, errorCode: 'products_006' })
     }
 }
 
@@ -205,8 +199,7 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        err.errorCode = '00007'
-        next(err);
+        next({ ...err, errorCode: 'products_007' })
     }
 }
 
@@ -224,8 +217,7 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        err.errorCode = '00008'
-        next(err);
+        next({ ...err, errorCode: 'products_008' })
     }
 }
 
@@ -249,8 +241,7 @@ const sortProducts = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = '00009'
-        next(err);
+        next({ ...err, errorCode: 'products_009' })
     }
 }
 
@@ -264,8 +255,7 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode = '00010'
-        next(err);
+        next({ ...err, errorCode: 'products_010' })
     }
 }
 

@@ -68,8 +68,7 @@ const checkout = async (req, res, next) => {
         });
 
     } catch (err) {
-        err.errorCode = 'orders_001'
-        next(err);
+        next({ ...err, errorCode: 'orders_001' })
     }
 }
 
@@ -177,8 +176,7 @@ const webhook = async (req, res, next) => {
             message: 'success'
         });
     } catch (err) {
-        err.errorCode = 'orders_002'
-        next(err);
+        next({ ...err, errorCode: 'orders_002' })
     }
 }
 
@@ -217,8 +215,7 @@ const getOrders = async (req, res, next) => {
             data: orders
         });
     } catch (err) {
-        err.errorCode = 'orders_003'
-        next(err);
+        next({ ...err, errorCode: 'orders_003' })
     }
 }
 
@@ -236,8 +233,7 @@ const getOrderByID = async (req, res, next) => {
 
         res.json(order);
     } catch (err) {
-        err.errorCode = 'orders_003'
-        next(err);
+        next({ ...err, errorCode: 'orders_004' })
     }
 }
 
@@ -268,8 +264,7 @@ const test = async (req, res) => {
 
         res.json(response);
     } catch (err) {
-        err.errorCode = 'orders_004'
-        next(err);
+        next({ ...err, errorCode: 'orders_005' })
     }
 }
 

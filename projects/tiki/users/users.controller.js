@@ -15,8 +15,7 @@ const createUser = async (req, res, next) => {
 
         res.status(201).json(user);
     } catch (err) {
-        err.errorCode = '00023'
-        next(err);
+        next({ ...err, errorCode: 'users_001' })
     }
 }
 
@@ -45,7 +44,7 @@ const getUser = async (req, res, next) => {
 
         res.json(user);
     } catch (err) {
-        err.errorCode = '00024'
+        next({ ...err, errorCode: 'users_002' })
         next(err);
     }
 }

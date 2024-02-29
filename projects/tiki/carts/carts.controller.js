@@ -24,8 +24,7 @@ const addItem = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
-        err.errorCode = '00017'
-        next(err);
+        next({ ...err, errorCode: 'carts_001' })
     }
 }
 
@@ -54,8 +53,7 @@ const convertCart = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
-        err.errorCode = '00018'
-        next(err);
+        next({ ...err, errorCode: 'carts_002' })
     }
 }
 
@@ -70,8 +68,7 @@ const retrieveCart = async (req, res, next) => {
         const cart = await utils.getCart(req);
         res.status(200).json(cart);
     } catch (err) {
-        err.errorCode = '00019'
-        next(err);
+        next({ ...err, errorCode: 'carts_003' })
     }
 }
 
@@ -86,8 +83,7 @@ const getAllCarts = async (req, res, next) => {
             .populate(utils.product)
         res.status(200).json(carts);
     } catch (err) {
-        err.errorCode = '00020'
-        next(err);
+        next({ ...err, errorCode: 'carts_004' })
     }
 }
 
@@ -105,8 +101,7 @@ const updateQuantity = async (req, res, next) => {
   
         res.status(200).json(cart);
     } catch (err) {
-        err.errorCode = '00021'
-        next(err);
+        next({ ...err, errorCode: 'carts_005' })
     }
 }
 
@@ -130,8 +125,7 @@ const removeItem = async (req, res, next) => {
 
         res.status(200).json(updatedCart);
     } catch (err) {
-        err.errorCode = '00022'
-        next(err);
+        next({ ...err, errorCode: 'carts_006' })
     }
 }
 

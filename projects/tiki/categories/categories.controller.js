@@ -14,8 +14,7 @@ const getAllCategories = async (req, res, next) => {
 
         res.json({ data: categories });
     } catch (err) {
-        err.errorCode = '00011'
-        next(err)
+        next({ ...err, errorCode: 'categories_001' })
     }
 }
 
@@ -32,8 +31,7 @@ const getCategoryByID = async (req, res, next) => {
 
         res.status(200).json(category);
     } catch (err) {
-        err.errorCode = '00012'
-        next(err);
+        next({ ...err, errorCode: 'categories_002' })
     }
 }
 
@@ -53,8 +51,7 @@ const createCategory = async (req, res, next) => {
 
         res.status(201).json(category);
     } catch (err) {
-        err.errorCode = '00013'
-        next(err);
+        next({ ...err, errorCode: 'categories_003' })
     }
 }
 
@@ -79,8 +76,7 @@ const updateCategory = async (req, res, next) => {
 
         res.status(200).json(category);
     } catch (err) {
-        err.errorCode = '00014'
-        next(err);
+        next({ ...err, errorCode: 'categories_004' })
     }
 }
 
@@ -99,8 +95,7 @@ const deleteCategory = async (req, res, next) => {
 
         res.status(200).json(category)
     } catch (err) {
-        err.errorCode = '00015'
-        next(err)
+        next({ ...err, errorCode: 'categories_005' })
     }
 }
 
@@ -124,8 +119,7 @@ const sortCategories = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = '00016'
-        next(err);
+        next({ ...err, errorCode: 'categories_006' })
     }
 }
 
