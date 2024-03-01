@@ -19,7 +19,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const checkout = async (req, res, next) => {
     try {
         const productIDs = req.body.items.map(item => item.id);
-        const products = await Product.find({ _id: productIDs });
+        const products = await Product.find({ _id: { $in: productIDs } });
 
         const calculateSubTotal = (items) => {
             const itemsWithPrice = items.map(item => ({
