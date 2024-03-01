@@ -149,10 +149,9 @@ const webhook = async (req, res, next) => {
 
                 const order = await Order.create(payload);
 
-                // if (paymentIntent.status !== "succeeded") {
-                //     await stripe.paymentIntents.capture(charge.payment_intent);
-                //     await OrderModel.update({ paymentStatus: "succeeded" }, { where: { orderID: createdOrder.orderID } });
-                // }
+                if (paymentIntent.status !== "succeeded") {
+                    await stripe.paymentIntents.capture(charge.payment_intent);
+                }
 
                 for (const item of order.items) {
                     const { product, quantity } = item;
