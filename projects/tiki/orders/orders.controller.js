@@ -115,7 +115,7 @@ const webhook = async (req, res, next) => {
                 const cart = await Cart.findById(cartID).populate([{
                     path: 'items.product',
                     select: 'name price quantity'
-                },  {
+                }, {
                     path: 'user',
                     select: '_id email'
                 }]);
@@ -149,9 +149,7 @@ const webhook = async (req, res, next) => {
 
                 const order = await Order.create(payload);
 
-                if (paymentIntent.status !== "succeeded") {
-                    await stripe.paymentIntents.capture(charge.payment_intent);
-                }
+                await stripe.paymentIntents.capture(charge.payment_intent);
 
                 for (const item of order.items) {
                     const { product, quantity } = item;
