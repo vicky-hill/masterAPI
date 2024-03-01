@@ -14,7 +14,8 @@ const CartItemSchema = new mongoose.Schema({
 
 const CartSchema = new mongoose.Schema({
     user: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: 'TIKI_User',
         required: false
     },
     status: {

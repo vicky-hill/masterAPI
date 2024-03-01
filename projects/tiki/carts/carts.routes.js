@@ -4,6 +4,9 @@ const { extractUser } = require('../middleware');
 
 const cartCtrl = require('./carts.controller');
 
+// dev routes
+router.route('/delete-all').delete(cartCtrl.deleteAll)
+
 /** 
 * @get api/tiki/cart - Get all carts
 * @put api/tiki/cart/:cartID/add - Add item to cart

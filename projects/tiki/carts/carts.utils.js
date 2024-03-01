@@ -2,10 +2,13 @@ const Cart = require('./carts.model')
 const User = require('../users/users.model')
 const mongoose = require('mongoose')
 
-const product = {
+const product = [{
     path: 'items.product',
     select: 'name image price images'
-}
+}, {
+    path: 'user',
+    select: 'email'
+}]
 
 const getCart = async (req) => {
     try {
@@ -21,10 +24,10 @@ const getCart = async (req) => {
             // User exists
         } else if (user) {
 
-            const userCart = await Cart.findOne({ userID: user._id }).populate(product);
+            const userCart = await Cart.findOne({ user: user._id }).populate(product);
 
             if (!userCart) {
-                cart = await Cart.create({ userID: user._id });
+                cart = await Cart.create({ user: user._id });
                 await User.findByIdAndUpdate(user._id, { cart: cart._id });
             } else {
                 cart = userCart;

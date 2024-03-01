@@ -135,6 +135,15 @@ const removeItem = async (req, res, next) => {
     }
 }
 
+const deleteAll = async (req, res, next) => {
+    try {    
+        await Cart.deleteMany({});
+        res.send('All carts deleted');
+    } catch (err) {
+        err.errorCode = 'carts_007';
+        next(err);
+    }
+}
 
 module.exports = {
     addItem,
@@ -142,6 +151,7 @@ module.exports = {
     updateQuantity,
     getAllCarts,
     convertCart,
-    retrieveCart
+    retrieveCart,
+    deleteAll
 }
 

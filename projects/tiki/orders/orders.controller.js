@@ -112,10 +112,13 @@ const webhook = async (req, res, next) => {
 
                 await Cart.findByIdAndUpdate(cartID, { status: 'closed' })
 
-                const cart = await Cart.findById(cartID).populate({
+                const cart = await Cart.findById(cartID).populate([{
                     path: 'items.product',
                     select: 'name price quantity'
-                });
+                },  {
+                    path: 'user',
+                    select: '_id email'
+                }]);
 
                 const payload = {
                     total: charge.amount / 100,
@@ -126,7 +129,8 @@ const webhook = async (req, res, next) => {
                     last4: charge.payment_method_details?.card?.last4,
                     status: "open",
                     cartID,
-                    email,
+                    customer: cart.user?._id,
+                    email: cart.user?.email || email,
                     items: cart.items.map(item => ({
                         product: item.product._id,
                         quantity: item.quantity,
@@ -240,8 +244,6 @@ const getOrderByID = async (req, res, next) => {
         next(err);
     }
 }
-
-
 
 
 /**

@@ -48,7 +48,7 @@ const OrderShipToSchema = new mongoose.Schema({
 })
 
 const OrderSchema = new mongoose.Schema({
-    customerID: {
+    customer: {
         type: mongoose.Schema.ObjectId,
         ref: 'TIKI_User',
         required: false
