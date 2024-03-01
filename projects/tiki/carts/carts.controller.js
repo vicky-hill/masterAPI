@@ -24,7 +24,8 @@ const addItem = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_001' })
+        err.errorCode = 'carts_001';
+        next(err);
     }
 }
 
@@ -53,7 +54,8 @@ const convertCart = async (req, res, next) => {
 
         res.status(200).json(cart);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_002' })
+        err.errorCode = 'carts_002';
+        next(err);
     }
 }
 
@@ -68,7 +70,8 @@ const retrieveCart = async (req, res, next) => {
         const cart = await utils.getCart(req);
         res.status(200).json(cart);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_003' })
+        err.errorCode = 'carts_003';
+        next(err);
     }
 }
 
@@ -83,7 +86,8 @@ const getAllCarts = async (req, res, next) => {
             .populate(utils.product)
         res.status(200).json(carts);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_004' })
+        err.errorCode = 'carts_004';
+        next(err);
     }
 }
 
@@ -101,7 +105,8 @@ const updateQuantity = async (req, res, next) => {
   
         res.status(200).json(cart);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_005' })
+        err.errorCode = 'carts_005';
+        next(err);
     }
 }
 
@@ -125,7 +130,8 @@ const removeItem = async (req, res, next) => {
 
         res.status(200).json(updatedCart);
     } catch (err) {
-        next({ ...err, errorCode: 'carts_006' })
+        err.errorCode = 'carts_006';
+        next(err);
     }
 }
 

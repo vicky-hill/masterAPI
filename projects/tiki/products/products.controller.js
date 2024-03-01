@@ -48,7 +48,8 @@ const getProducts = async (req, res, next) => {
             data: products
         });
     } catch (err) {
-        next({ ...err, errorCode: 'products_001' })
+        err.errorCode = 'products_001';
+        next(err);
     }
 }
 
@@ -75,7 +76,8 @@ const getCategoryProducts = async (req, res, next) => {
 
         res.json({ data: products });
     } catch (err) {
-        next({ ...err, errorCode: 'products_002' })
+        err.errorCode = 'products_002';
+        next(err);
     }
 }
 
@@ -92,7 +94,8 @@ const getProductByID = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        next({ ...err, errorCode: 'products_003' })
+        err.errorCode = 'products_003';
+        next(err);
     }
 }
 
@@ -108,7 +111,8 @@ const getProductByUrlKey = async (req, res, next) => {
         const product = await utils.getProductByKey(urlKey);
         res.status(200).json(product);
     } catch (err) {
-        next({ ...err, errorCode: 'products_004' })
+        err.errorCode = 'products_004';
+        next(err);
     }
 }
 
@@ -143,7 +147,8 @@ const saveProduct = async (req, res, next) => {
         const product = await utils.getProductByID(newProduct._id);
         res.status(201).json(product);
     } catch (err) {
-        next({ ...err, errorCode: 'products_005' })
+        err.errorCode = 'products_005';
+        next(err);
     }
 }
 
@@ -180,7 +185,8 @@ const updateProduct = async (req, res, next) => {
 
         res.status(200).json(product);
     } catch (err) {
-        next({ ...err, errorCode: 'products_006' })
+        err.errorCode = 'products_006';
+        next(err);
     }
 }
 
@@ -199,7 +205,8 @@ const deleteProduct = async (req, res, next) => {
 
         res.status(200).json(product)
     } catch (err) {
-        next({ ...err, errorCode: 'products_007' })
+        err.errorCode = 'products_007';
+        next(err);
     }
 }
 
@@ -217,7 +224,8 @@ const checkURLKey = async (req, res) => {
 
         res.json({ exists: product ? true : false });
     } catch (err) {
-        next({ ...err, errorCode: 'products_008' })
+        err.errorCode = 'products_008';
+        next(err);
     }
 }
 
@@ -241,7 +249,8 @@ const sortProducts = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        next({ ...err, errorCode: 'products_009' })
+        err.errorCode = 'products_009';
+        next(err);
     }
 }
 
@@ -255,7 +264,8 @@ const imageKitAuth = async (req, res) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        next({ ...err, errorCode: 'products_010' })
+        err.errorCode = 'products_010';
+        next(err);
     }
 }
 
