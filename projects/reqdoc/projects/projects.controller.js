@@ -1,5 +1,6 @@
 const Project = require('./projects.model')
 const validate = require('../utils/validation')
+const throwError = require('../../../utils/throwError')
 
 /**
  * Get projects
@@ -8,9 +9,10 @@ const validate = require('../utils/validation')
 const getProjects = async (req, res) => {
     try {
         const projects = await Project.find();
-        res.json(projects);
+        res.json({ data: projects });
     } catch (err) {
-        console.log(err);
+        err.errorCode = 'projects_001';
+        next(err);
     }
 }
 
@@ -32,14 +34,12 @@ const getProject = async (req, res) => {
                 }
             })
 
-        if (!project) return sendError(next, 404, {
-          error: `Project nof found`,
-        });
+        if (!project) throwError('Project not found');
 
         res.json(project);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        err.errorCode = 'projects_002';
+        next(err);
     }
 }
 
@@ -58,8 +58,8 @@ const createProject = async (req, res) => {
 
         res.json(project);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        err.errorCode = 'projects_003';
+        next(err);
     }
 }
 

@@ -42,5 +42,12 @@ ReqSchema.virtual('history', {
     justOne: false
 });
 
+ReqSchema.virtual('steps', {
+    ref: 'REQDOC_Step',
+    localField: '_id',
+    foreignField: 'req',
+    justOne: false
+});
+
 
 module.exports = mongoose.model('REQDOC_Req', ReqSchema);

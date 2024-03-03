@@ -1,22 +1,24 @@
 const Feature = require('./features.model')
 const validate = require('../utils/validation')
+const throwError = require('../../../utils/throwError')
 
 /**
  * Get features
  * @param {objectId} projectID
  * @returns {array<Feature>}
  */
-const getFeatures = async (req, res) => {
+const getFeatures = async (req, res, next) => {
     try {
         const { projectID } = req.param;
 
         const features = await Feature
             .find({ project: projectID })
-            .sort({ sort: 1 });
+            .sort({ sort: 1 })
 
-        res.json(features);
+        res.json({ data: features });
     } catch (err) {
-        console.log(err);
+        err.errorCode = 'features_001';
+        next(err);
     }
 }
 
@@ -25,7 +27,7 @@ const getFeatures = async (req, res) => {
  * @param {objectId} featureID 
  * @returns {Feature}  
  */
-const getFeature = async (req, res) => {
+const getFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
 
@@ -35,16 +37,16 @@ const getFeature = async (req, res) => {
                 path: 'sub_features'
             }, {
                 path: 'reqs',
-                match: { changed_req: { $exists: false } }
+                match: { changed_req: { $exists: false } },
+                populate: { path: 'steps', select: 'text',  options: { sort: { createdAt: 'asc' } }  }
             }]);
 
-        if (!feature) return sendError(next, 404, {
-          error: `Feature not found`,
-        });
-        
+        if (!feature) throwError('Feature not found');
+
         res.json(feature);
     } catch (err) {
-        console.log(err);
+        err.errorCode = 'features_002';
+        next(err);
     }
 }
 
@@ -54,17 +56,15 @@ const getFeature = async (req, res) => {
  * @property {String} req.body.project 
  * @returns {Feature}
  */
-const createFeature = async (req, res) => {
+const createFeature = async (req, res, next) => {
     try {
         const projectID = req.body.project;
 
         await validate.createFeature(req.body);
-        
+
         const features = await Feature.find({ project: req.body.project });
 
-        if (!features) return sendError(next, 404, {
-          error: `Features with the project _id ${projectID} could not be found`
-        });
+        if (!features) throwError(`Features with the project _id ${projectID} not be found`);
 
         const feature = await Feature.create({
             ...req.body,
@@ -73,7 +73,8 @@ const createFeature = async (req, res) => {
 
         res.json(feature);
     } catch (err) {
-        console.log(err);
+        err.errorCode = 'features_003';
+        next(err);
     }
 }
 
@@ -89,14 +90,13 @@ const updateFeature = async (req, res, next) => {
 
         const updatedFeature = await Feature.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-        if (!updatedFeature) {
-            return res.status(404).json({ msg: "Feature not found" });
-        }
+        if (!updatedFeature) throwError(`Feature not found`);
 
         const feature = await Feature.findById(updatedFeature._id);
 
         res.status(200).json(feature);
     } catch (err) {
+        err.errorCode = 'features_004';
         next(err);
     }
 }
@@ -107,7 +107,7 @@ const updateFeature = async (req, res, next) => {
  * @property {String} req.body.name 
  * @returns location {}   
  */
-const createSubFeature = async (req, res) => {
+const createSubFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
 
@@ -115,9 +115,7 @@ const createSubFeature = async (req, res) => {
 
         const feature = await Feature.findById(featureID).populate('sub_features');
 
-        if (!feature) return sendError(next, 404, {
-          error: `Feature not found`
-        });
+        if (!feature) throwError('Feature not found')
 
         const subFeature = await Feature.create({
             ...req.body,
@@ -128,7 +126,8 @@ const createSubFeature = async (req, res) => {
 
         res.json(subFeature);
     } catch (err) {
-        console.log(err);
+        err.errorCode = 'features_005';
+        next(err);
     }
 }
 

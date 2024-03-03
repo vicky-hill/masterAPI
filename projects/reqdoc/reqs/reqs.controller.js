@@ -1,6 +1,6 @@
 const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
-const sendError = require('../../../utils/sendError')
+const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 
 /**
@@ -13,20 +13,23 @@ const getReqs = async (req, res, next) => {
         const { featureID } = req.params;
         const feature = await Feature.findById(featureID);
 
-        if (!feature) return sendError(next, 404, {
-            error: `Feature not found`
-        });
+        if (!feature) throwError('Feature not found');
 
         const reqs = await Req
             .find({ feature: featureID, changed_req: { $exists: false } })
-            .populate({
+            .populate([{
                 path: 'history',
                 options: { sort: { createdAt: 'desc' } }
-            })
+            }, {
+                path: 'steps',
+                select: 'text',
+                options: { sort: { createdAt: 'asc' } }
+            }])
             .sort({ sort: 1 });
 
-        res.json(reqs);
+            res.json({ data: reqs });
     } catch (err) {
+        err.errorCode = 'reqs_001';
         next(err);
     }
 }
@@ -36,18 +39,16 @@ const getReqs = async (req, res, next) => {
  * @param  {objectId} reqID
  * @returns {Req}
  */
-const getReq = async (req, res) => {
+const getReq = async (req, res, next) => {
     try {
         const requirement = await Req.findById(req.params.reqID).populate('history');
 
-        if (!requirement) return sendError(next, 404, {
-            error: `Req not found`
-        });
+        if (!requirement) throwError('Requirement not found');
 
         res.json(requirement);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        err.errorCode = 'reqs_002';
+        next(err);
     }
 }
 
@@ -68,9 +69,7 @@ const createReq = async (req, res, next) => {
 
         const feature = await Feature.findById(featureID);
 
-        if (!feature) return sendError(next, 404, {
-            error: `Feature with _id ${featureID} does not exist, can't create req for non existing feature`
-        });
+        if (!feature) throwError(`Feature with _id ${featureID} does not exist, can't create req for non existing feature`);
 
         const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
         const keyNumber = allProjectReqs.length + 1;
@@ -84,6 +83,7 @@ const createReq = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
+        err.errorCode = 'reqs_003';
         next(err);
     }
 }
@@ -103,14 +103,13 @@ const updateReq = async (req, res, next) => {
 
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
-        if (!updatedReq) return sendError(next, 404, {
-            error: `Req not found`
-        });
+        if (!updatedReq) throwError(`Feature not found`);
 
         const requirement = await Req.findById(updatedReq._id).populate('history');
 
         res.status(200).json(requirement);
     } catch (err) {
+        err.errorCode = 'reqs_004';
         next(err);
     }
 }
@@ -122,7 +121,7 @@ const updateReq = async (req, res, next) => {
  * @property {String} text 
  * @returns Req 
  */
-const changeReq = async (req, res) => {
+const changeReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { title, text } = req.body;
@@ -131,9 +130,7 @@ const changeReq = async (req, res) => {
 
         const changedReq = await Req.findById(reqID);
 
-        if (!changeReq) return sendError(next, 404, {
-            error: `Req not found`
-        });
+        if (!changeReq) throwError('Req not found');
 
         const newReq = {
             key: changedReq.key,
@@ -153,8 +150,8 @@ const changeReq = async (req, res) => {
 
         res.json(latestReq);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        err.errorCode = 'reqs_005';
+        next(err);
     }
 }
 

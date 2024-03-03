@@ -15,6 +15,7 @@ const createUser = async (req, res, next) => {
 
         res.status(201).json(user);
     } catch (err) {
+        err.errorCode = 'users_001';
         next(err);
     }
 }
@@ -38,6 +39,7 @@ const getUser = async (req, res, next) => {
         
         res.json(user);
     } catch (err) {
+        err.errorCode = 'users_002';
         next(err);
     }
 }
