@@ -2,6 +2,7 @@ const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
+const { getReqByID } = require('./reqs.utils')
 
 /**
  * Get reqs
@@ -27,7 +28,7 @@ const getReqs = async (req, res, next) => {
             }])
             .sort({ sort: 1 });
 
-            res.json({ data: reqs });
+        res.json({ data: reqs });
     } catch (err) {
         err.errorCode = 'reqs_001';
         next(err);
@@ -105,7 +106,7 @@ const updateReq = async (req, res, next) => {
 
         if (!updatedReq) throwError(`Feature not found`);
 
-        const requirement = await Req.findById(updatedReq._id).populate('history');
+        const requirement = await getReqByID(updatedReq._id);
 
         res.status(200).json(requirement);
     } catch (err) {
@@ -146,8 +147,8 @@ const changeReq = async (req, res, next) => {
 
         const latestReq = await Req.create(newReq);
 
-        await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true });
-
+        await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true })
+        
         res.json(latestReq);
     } catch (err) {
         err.errorCode = 'reqs_005';

@@ -23,6 +23,10 @@ const ReqSchema = new mongoose.Schema({
         ref: 'REQDOC_Feature',
         required: true
     },
+    status: {
+        type: String,
+        enum: ['passed', 'failed']
+    },
     changed_req: {
         type: String
     },
