@@ -91,7 +91,7 @@ const createReq = async (req, res, next) => {
 
 /**
  * Update req
- * @params id
+ * @params reqID
  * @property {String} req.body.title 
  * @property {String} req.body.text 
  * @returns Req
@@ -104,13 +104,35 @@ const updateReq = async (req, res, next) => {
 
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
-        if (!updatedReq) throwError(`Feature not found`);
+        if (!updatedReq) throwError(`Req not found`);
 
         const requirement = await getReqByID(updatedReq._id);
 
         res.status(200).json(requirement);
     } catch (err) {
         err.errorCode = 'reqs_004';
+        next(err);
+    }
+}
+
+/**
+ * Update req
+ * @params reqID
+ * @returns Req
+ */
+const deleteReq = async (req, res, next) => {
+    try {
+        const reqID = req.params.reqID;
+
+        const deletedReq = await Req.findByIdAndDelete(reqID);
+
+        // Todo :: also delete all changed reqs & steps
+
+        if (!deletedReq) throwError(`Req not found`);
+
+        res.status(200).json(deletedReq);
+    } catch (err) {
+        err.errorCode = 'reqs_007';
         next(err);
     }
 }
@@ -187,5 +209,6 @@ module.exports = {
     createReq,
     updateReq,
     changeReq,
-    sortReqs
+    sortReqs,
+    deleteReq
 }
