@@ -41,23 +41,23 @@ const getFeature = async (req, res, next) => {
                     match: { changed_req: { $exists: false } },
                     populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } },
                     options: { sort: { sort: 'asc' } }
-                }, {
-                    path: 'main_feature',
-                    select: 'name'
                 }],
             }, {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
                 populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } }
+            }, {
+                path: 'main_feature',
+                select: 'name'
             }]);
 
         if (!feature) throwError('Feature not found');
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
-        
+
         feature.reqs = JSON.parse(JSON.stringify([...feature.reqs, ...subFeatureReqs]))
-        feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify({...sub_feature, reqs: null })))
-        
+        feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify({ ...sub_feature, reqs: null })))
+
         res.json(feature);
     } catch (err) {
         err.errorCode = 'features_002';
