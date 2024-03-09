@@ -156,10 +156,36 @@ const changeReq = async (req, res, next) => {
     }
 }
 
+/**
+ * Sort products
+ * @get /reqs/sort
+ * @property req.body [{ _id, sort }]
+ * @returns { data: [{ Req }] }
+ */
+const sortReqs = async (req, res, next) => {
+    try {
+        await validate.sort(req.body);
+
+        const data = [];
+
+        for (const requirement of req.body) {
+            const { _id, sort } = requirement;
+            const updatedReq = await Req.findByIdAndUpdate(_id, { sort }, { new: true });
+            data.push(updatedReq);
+        }
+
+        res.json({ data });
+    } catch (err) {
+        err.errorCode = 'reqs_006';
+        next(err);
+    }
+}
+
 module.exports = {
     getReqs,
     getReq,
     createReq,
     updateReq,
-    changeReq
+    changeReq,
+    sortReqs
 }

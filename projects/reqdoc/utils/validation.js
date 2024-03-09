@@ -52,11 +52,23 @@ const createStep = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
+const sort = async (values) => {
+    const schema = yup.array().of(
+        yup.object().shape({
+            _id: yup.string().required(),
+            sort: yup.string().required()
+        })
+    ).required('req.body is missing the products array')
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 module.exports = {
     createReq,
     updateReq,
     createProject,
     createFeature,
     updateFeature,
-    createStep
+    createStep,
+    sort
 };

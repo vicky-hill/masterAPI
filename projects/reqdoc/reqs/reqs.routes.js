@@ -22,10 +22,10 @@ router.route('/:reqID/retrieve').get(reqCtrl.getReq)
 
 /**
  * @get api/reqdoc/reqs/:id - get location by id
+ * @put api/reqdoc/reqs/sort - sort reqs
  */
-router
-    .route('/:featureID')
-    .get(reqCtrl.getReqs)
+router.route('/:featureID').get(reqCtrl.getReqs)
+router.route('/sort').put(reqCtrl.sortReqs)
 
 
 
