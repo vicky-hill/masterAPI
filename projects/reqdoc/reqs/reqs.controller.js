@@ -4,6 +4,20 @@ const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 
+const populateReqs = [
+    {
+        path: 'history',
+        options: { sort: { createdAt: 'desc' } }
+    }, {
+        path: 'steps',
+        select: 'text',
+        options: { sort: { createdAt: 'asc' } }
+    }, {
+        path: 'feature',
+        select: 'sort'
+    }
+]
+
 /**
  * Get reqs
  * @param {objectId} featureID 
@@ -18,17 +32,19 @@ const getReqs = async (req, res, next) => {
 
         const reqs = await Req
             .find({ feature: featureID, changed_req: { $exists: false } })
-            .populate([{
-                path: 'history',
-                options: { sort: { createdAt: 'desc' } }
-            }, {
-                path: 'steps',
-                select: 'text',
-                options: { sort: { createdAt: 'asc' } }
-            }])
+            .populate(populateReqs)
             .sort({ sort: 1 });
 
-        res.json({ data: reqs });
+        let subFeatureReqs = [];
+
+        if (!feature.main_feature) {
+            subFeatureReqs = await Req
+                .find({ main_feature: featureID, changed_req: { $exists: false }})
+                .populate(populateReqs)
+                .sort({ 'feature.sort': 1, 'sort': 1 })
+        }
+
+        res.json({ data: [...reqs, ...subFeatureReqs] });
     } catch (err) {
         err.errorCode = 'reqs_001';
         next(err);

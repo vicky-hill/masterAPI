@@ -1,4 +1,5 @@
 const Feature = require('./features.model')
+const Req = require('../reqs/reqs.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 
@@ -34,15 +35,26 @@ const getFeature = async (req, res, next) => {
         const feature = await Feature
             .findById(featureID)
             .populate([{
-                path: 'sub_features'
+                path: 'sub_features',
+                populate: {
+                    path: 'reqs',
+                    match: { changed_req: { $exists: false } },
+                    populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } },
+                    options: { sort: { sort: 'asc' } }
+                },
             }, {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
-                populate: { path: 'steps', select: 'text',  options: { sort: { createdAt: 'asc' } }  }
+                populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } }
             }]);
 
         if (!feature) throwError('Feature not found');
 
+        const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
+        
+        feature.reqs = JSON.parse(JSON.stringify([...feature.reqs, ...subFeatureReqs]))
+        feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify({...sub_feature, reqs: null })))
+        
         res.json(feature);
     } catch (err) {
         err.errorCode = 'features_002';
