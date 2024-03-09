@@ -36,12 +36,15 @@ const getFeature = async (req, res, next) => {
             .findById(featureID)
             .populate([{
                 path: 'sub_features',
-                populate: {
+                populate: [{
                     path: 'reqs',
                     match: { changed_req: { $exists: false } },
                     populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } },
                     options: { sort: { sort: 'asc' } }
-                },
+                }, {
+                    path: 'main_feature',
+                    select: 'name'
+                }],
             }, {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
