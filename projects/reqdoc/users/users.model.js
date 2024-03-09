@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+    },
+    type: {
+        type: String,
+        default: 'user',
+        enum: ['admin', 'user']
     }
 }, {
     timestamps: true
