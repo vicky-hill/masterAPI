@@ -17,6 +17,7 @@
  * @property {string} name
  * @property {string} key
  * @property {number} sort 
+ * @property {objectId} [main_feature]
  * @property {array<Feature>} sub_features
  * @property {array<Req>} reqs
  */
@@ -28,6 +29,7 @@
  * @property {objectId} feature
  * @property {string} key
  * @property {string} text
+ * @property {'passed' | 'failed' | null } state
  * @property {number} sort
  * @property {date} createdAt
  * @property {date} updatedAt
