@@ -146,11 +146,37 @@ const createSubFeature = async (req, res, next) => {
     }
 }
 
+/**
+ * Sort features
+ * @get /features/sort
+ * @property req.body [{ _id, sort }]
+ * @returns { data: [{ Feature }] }
+ */
+const sortFeatures = async (req, res, next) => {
+    try {
+        await validate.sort(req.body);
+
+        const data = [];
+
+        for (const feature of req.body) {
+            const { _id, sort } = feature;
+            const updatedFeature = await Feature.findByIdAndUpdate(_id, { sort }, { new: true });
+            data.push(updatedFeature);
+        }
+
+        res.json({ data });
+    } catch (err) {
+        err.errorCode = 'features_006';
+        next(err);
+    }
+}
+
 
 module.exports = {
     getFeatures,
     getFeature,
     createFeature,
     updateFeature,
-    createSubFeature
+    createSubFeature,
+    sortFeatures
 }

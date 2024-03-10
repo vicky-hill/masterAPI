@@ -30,8 +30,10 @@ const getProject = async (req, res) => {
                 path: 'features',
                 match: { main_feature: { $exists: false } },
                 populate: {
-                    path: 'sub_features'
-                }
+                    path: 'sub_features',
+                    options: { sort: { sort: 'asc' }}
+                },
+                options: { sort: { sort: 'asc' }}
             })
 
         if (!project) throwError('Project not found');
