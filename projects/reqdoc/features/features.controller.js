@@ -42,6 +42,7 @@ const getFeature = async (req, res, next) => {
                     populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } },
                     options: { sort: { sort: 'asc' } }
                 }],
+                options: { sort: { sort: 'asc' } }
             }, {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
