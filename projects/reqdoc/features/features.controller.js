@@ -39,14 +39,15 @@ const getFeature = async (req, res, next) => {
                 populate: [{
                     path: 'reqs',
                     match: { changed_req: { $exists: false } },
-                    populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } },
-                    options: { sort: { sort: 'asc' } }
+                    populate: { path: 'steps', select: 'text', 
+                    options: { sort: { sort: 'asc' } }}
                 }],
                 options: { sort: { sort: 'asc' } }
             }, {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
-                populate: { path: 'steps', select: 'text', options: { sort: { createdAt: 'asc' } } }
+                populate: { path: 'steps', select: 'text', 
+                options: { sort: { sort: 'desc' } } }
             }, {
                 path: 'main_feature',
                 select: 'name'
@@ -56,7 +57,7 @@ const getFeature = async (req, res, next) => {
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
 
-        feature.reqs = JSON.parse(JSON.stringify([...feature.reqs, ...subFeatureReqs]))
+        feature.reqs = JSON.parse(JSON.stringify([...feature.reqs.sort((a, b) => a.sort - b.sort), ...subFeatureReqs]))
         feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify({ ...sub_feature, reqs: null })))
 
         res.json(feature);
