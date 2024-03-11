@@ -96,23 +96,44 @@ const createFeature = async (req, res, next) => {
 
 /**
  * Update feature
- * @params id
+ * @params featureID
  * @property {String} req.body.name 
  * @returns feature {}   
  */
 const updateFeature = async (req, res, next) => {
     try {
+        const { featureID } = req.params;
         await validate.updateFeature(req.body);
 
-        const updatedFeature = await Feature.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedFeature = await Feature.findByIdAndUpdate(featureID, req.body, { new: true });
 
-        if (!updatedFeature) throwError(`Feature not found`);
+        if (!updatedFeature) throwError(`Feature to update not found`);
 
         const feature = await Feature.findById(updatedFeature._id);
 
         res.status(200).json(feature);
     } catch (err) {
         err.errorCode = 'features_004';
+        next(err);
+    }
+}
+
+/**
+ * Delete feature
+ * @params featureID
+ * @property {String} req.body.name 
+ * @returns feature {}   
+ */
+const deteleteFeature = async (req, res, next) => {
+    try {
+        const { featureID } = req.params;
+        const deletedFeature = await Feature.findByIdAndDelete(featureID)
+
+        if (!deletedFeature) throwError(`Feature to delete not found`);
+
+        res.status(200).json(deletedFeature);
+    } catch (err) {
+        err.errorCode = 'features_005';
         next(err);
     }
 }
@@ -142,7 +163,7 @@ const createSubFeature = async (req, res, next) => {
 
         res.json(subFeature);
     } catch (err) {
-        err.errorCode = 'features_005';
+        err.errorCode = 'features_006';
         next(err);
     }
 }
@@ -167,7 +188,7 @@ const sortFeatures = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = 'features_006';
+        err.errorCode = 'features_007';
         next(err);
     }
 }
@@ -178,6 +199,7 @@ module.exports = {
     getFeature,
     createFeature,
     updateFeature,
+    deteleteFeature,
     createSubFeature,
     sortFeatures
 }

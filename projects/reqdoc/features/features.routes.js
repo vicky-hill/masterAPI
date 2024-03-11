@@ -11,9 +11,13 @@ router.route('/sort').put(featureCtrl.sortFeatures)
 router.route('/:featureID/sub').post(featureCtrl.createSubFeature)
 
 /**
- * @get api/reqdoc/features/:id - get feature by id
+ * @get api/reqdoc/features/:featureID 
+ * @get api/reqdoc/features/:featureID
+ * @get api/reqdoc/features/:featureID 
  */
 router.route('/:featureID').get(featureCtrl.getFeature)
+router.route('/:featureID').put(featureCtrl.updateFeature)
+router.route('/:featureID').delete(featureCtrl.deteleteFeature)
 
 /**
 * @get api/reqdoc/features - get all features

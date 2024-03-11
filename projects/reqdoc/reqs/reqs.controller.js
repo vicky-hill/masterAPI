@@ -148,7 +148,7 @@ const deleteReq = async (req, res, next) => {
 
         res.status(200).json(deletedReq);
     } catch (err) {
-        err.errorCode = 'reqs_007';
+        err.errorCode = 'reqs_005';
         next(err);
     }
 }
@@ -189,7 +189,7 @@ const changeReq = async (req, res, next) => {
         
         res.json(latestReq);
     } catch (err) {
-        err.errorCode = 'reqs_005';
+        err.errorCode = 'reqs_006';
         next(err);
     }
 }
@@ -214,7 +214,7 @@ const sortReqs = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = 'reqs_006';
+        err.errorCode = 'reqs_007';
         next(err);
     }
 }

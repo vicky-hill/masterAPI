@@ -36,7 +36,14 @@
  * @property {string} [title]
  * @property {string} [changed_req]
  * @property {array<Req>} [history]
+ * @property {array<Step>} [steps]
  */
 
-
+/**
+ * @typedef {object} Step
+ * @property {objectId} _id
+ * @property {objectId} req
+ * @property {string} text
+ * @property {number} sort
+ */
 

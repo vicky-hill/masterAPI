@@ -21,7 +21,7 @@ const createStep = async (req, res, next) => {
 
         res.json(step);
     } catch (err) {
-        err.errorCode = 'steps_003';
+        err.errorCode = 'steps_001';
         next(err);
     }
 }
@@ -46,7 +46,7 @@ const deleteStep = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'steps_003';
+        err.errorCode = 'steps_002';
         next(err);
     }
 }
