@@ -47,7 +47,7 @@ const getFeature = async (req, res, next) => {
                 path: 'reqs',
                 match: { changed_req: { $exists: false } },
                 populate: { path: 'steps', select: 'text', 
-                options: { sort: { sort: 'desc' } } }
+                options: { sort: { sort: 'asc' } } }
             }, {
                 path: 'main_feature',
                 select: 'name'
@@ -85,7 +85,7 @@ const createFeature = async (req, res, next) => {
 
         const feature = await Feature.create({
             ...req.body,
-            sort: features.length
+            sort: features.length + 1
         });
 
         res.json(feature);
