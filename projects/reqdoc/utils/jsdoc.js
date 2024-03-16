@@ -7,6 +7,7 @@
  * @property {objectId} _id
  * @property {string} name
  * @property {string} key
+ * @property {objectId} first_feature
  * @property {array<Feature>} [features]
  */
 

@@ -8,8 +8,16 @@ const throwError = require('../../../utils/throwError')
  */
 const getProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
-        res.json({ data: projects });
+        const projects = await Project.find()
+            .populate({ path: 'features', select: '_id', options: { sort: { sort: 'asc' }} });
+
+        const response = {
+            data: projects.map(({ _id, name, key, first_feature }) => ({
+                _id, name, key, first_feature
+            }))
+        }
+
+        res.json(response);
     } catch (err) {
         err.errorCode = 'projects_001';
         next(err);
@@ -31,9 +39,9 @@ const getProject = async (req, res) => {
                 match: { main_feature: { $exists: false } },
                 populate: {
                     path: 'sub_features',
-                    options: { sort: { sort: 'asc' }}
+                    options: { sort: { sort: 'asc' } }
                 },
-                options: { sort: { sort: 'asc' }}
+                options: { sort: { sort: 'asc' } }
             })
 
         if (!project) throwError('Project not found');

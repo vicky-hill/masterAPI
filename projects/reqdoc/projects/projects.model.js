@@ -25,5 +25,14 @@ ProjectSchema.virtual('features', {
     justOne: false
 });
 
+ProjectSchema.virtual('first_feature').get(function () {
+    if (this.features && this.features.length > 0) {
+        return this.features[0]._id
+    }
+
+    return null;
+});
+
+
 
 module.exports = mongoose.model('REQDOC_Project', ProjectSchema);
