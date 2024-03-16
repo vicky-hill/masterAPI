@@ -8,14 +8,14 @@ const ProjectSchema = new mongoose.Schema({
     key: {
         type: String,
         required: true
-    }
-}, {
-    toObject: {
-        virtuals: true
     },
-    toJSON: {
-        virtuals: true
-    }
+    team: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'REQDOC_Team'
+    },
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 });
 
 ProjectSchema.virtual('features', {

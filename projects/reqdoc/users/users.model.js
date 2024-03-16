@@ -13,10 +13,6 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     teams: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Team'
-    }],
-    roles: [{
         team: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'REQDOC_TEAM'

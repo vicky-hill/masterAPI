@@ -10,6 +10,7 @@ const teamCtrl = require('./teams.controller');
 router
     .route('/')
     .post(teamCtrl.createTeam)
+    .get(teamCtrl.getAllTeams)
 
 
 

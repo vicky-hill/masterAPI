@@ -2,7 +2,9 @@ const jwt_decode = require('jwt-decode')
 const User = require('../users/users.model')
 
 // Protect all routes 
-exports.protect = async (req, res, next) => {
+exports.protect = (resource) => async (req, res, next) => {
+
+    console.log('resource', resource)
 
     // Get token in the header
     const token = req.header('x-auth-token');
@@ -28,5 +30,4 @@ exports.protect = async (req, res, next) => {
     } catch (err) {
         res.status(401).json({ msg: 'Token is not valid' });
     }
-
 };

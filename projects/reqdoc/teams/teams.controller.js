@@ -17,7 +17,7 @@ const createTeam = async (req, res, next) => {
             { $push: { users: req.body.user } },
             { new: true }
         )
-        
+
         res.status(201).json(updatedTeam);
     } catch (err) {
         err.errorCode = 'teams_001';
@@ -25,8 +25,21 @@ const createTeam = async (req, res, next) => {
     }
 }
 
-
+/**
+ * Get all teams
+ * @returns {array<User>}
+ */
+const getAllTeams = async (req, res, next) => {
+    try {
+        const teams = await Team.find();
+        res.json(teams);
+    } catch (err) {
+        err.errorCode = 'teams_002';
+        next(err);
+    }
+}
 
 module.exports = {
- createTeam
+    createTeam,
+    getAllTeams
 }

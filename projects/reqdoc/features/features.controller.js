@@ -26,34 +26,49 @@ const getFeatures = async (req, res, next) => {
 /**
  * Get feature by ID
  * @param {objectId} featureID 
- * @returns {Feature}  
+ * @returns {Feature}   
  */
 const getFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
+        const { _id: userID } = req.user;
 
         const feature = await Feature
             .findById(featureID)
-            .populate([{
-                path: 'sub_features',
-                populate: [{
+            .populate([
+                {
+                    path: 'sub_features',
+                    populate: [{
+                        path: 'reqs',
+                        match: { changed_req: { $exists: false } },
+                        populate: {
+                            path: 'steps', select: 'text',
+                            options: { sort: { sort: 'asc' } }
+                        }
+                    }],
+                    options: { sort: { sort: 'asc' } }
+                }, {
                     path: 'reqs',
                     match: { changed_req: { $exists: false } },
-                    populate: { path: 'steps', select: 'text', 
-                    options: { sort: { sort: 'asc' } }}
-                }],
-                options: { sort: { sort: 'asc' } }
-            }, {
-                path: 'reqs',
-                match: { changed_req: { $exists: false } },
-                populate: { path: 'steps', select: 'text', 
-                options: { sort: { sort: 'asc' } } }
-            }, {
-                path: 'main_feature',
-                select: 'name'
-            }]);
+                    populate: {
+                        path: 'steps', select: 'text',
+                        options: { sort: { sort: 'asc' } }
+                    }
+                }, {
+                    path: 'main_feature',
+                    select: 'name'
+                }, {
+                    path: 'project',
+                    select: 'name',
+                    populate: {
+                        path: 'team', select: 'users'
+                    }
+                }
+            ]);
+
 
         if (!feature) throwError('Feature not found');
+        if (!feature.project.team.users.includes(userID)) throwError('User is not part of this team');
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
 
