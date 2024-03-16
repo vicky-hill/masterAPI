@@ -2,6 +2,20 @@ const User = require('./users.model');
 const jwt_decode = require('jwt-decode')
 
 /**
+ * Get all users
+ * @returns {array<User>}
+ */
+const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        err.errorCode = 'users_001';
+        next(err);
+    }
+}
+
+/**
  * Save a new user
  * @property {string} req.body._id 
  * @property {string} req.body.email
@@ -15,7 +29,7 @@ const createUser = async (req, res, next) => {
 
         res.status(201).json(user);
     } catch (err) {
-        err.errorCode = 'users_001';
+        err.errorCode = 'users_002';
         next(err);
     }
 }
@@ -45,13 +59,14 @@ const getUser = async (req, res, next) => {
 
         res.json(user);
     } catch (err) {
-        next({ ...err, errorCode: 'users_002' })
+        next({ ...err, errorCode: 'users_003' })
         next(err);
     }
 }
 
 
 module.exports = {
- createUser,
- getUser
+    getAllUsers,
+    createUser,
+    getUser
 }
