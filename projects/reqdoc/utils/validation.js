@@ -63,6 +63,14 @@ const sort = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
+const createTeam = async (values) => {
+    const schema = yup.object().shape({
+        user: yup.string("No user was provided to add to team")
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 module.exports = {
     createReq,
     updateReq,
@@ -70,5 +78,6 @@ module.exports = {
     createFeature,
     updateFeature,
     createStep,
+    createTeam,
     sort
 };

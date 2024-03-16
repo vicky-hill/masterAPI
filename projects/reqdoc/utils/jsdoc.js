@@ -3,10 +3,28 @@
  */
 
 /**
+ * @typedef {object} User
+ * @property {objectId} _id
+ * @property {string} firebaseID
+ * @property {string} email
+ * @property {string} name
+ * @property {array<Team />} teams
+ */
+
+/**
+ * @typedef {object} Team
+ * @property {objectId} _id
+ * @property {string} name
+ * @property {array<User />} users
+ * @property {array<Project />} project
+ */
+
+/**
  * @typedef {object} Project
  * @property {objectId} _id
  * @property {string} name
  * @property {string} key
+ * @property {objectId} team
  * @property {objectId} first_feature
  * @property {array<Feature>} [features]
  */

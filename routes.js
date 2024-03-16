@@ -25,6 +25,7 @@ const reqdoc_featuresRoutes = require('./projects/reqdoc/features/features.route
 const reqdoc_reqsRoutes = require('./projects/reqdoc/reqs/reqs.routes')
 const reqdoc_stepRoutes = require('./projects/reqdoc/steps/steps.routes')
 const reqdoc_users = require('./projects/reqdoc/users/users.routes')
+const reqdoc_teams = require('./projects/reqdoc/teams/teams.routes')
 
 const tiki_userRoutes = require('./projects/tiki/users/users.routes')
 const tiki_productRoutes = require('./projects/tiki/products/products.routes')
@@ -79,6 +80,7 @@ router.use('/api/reqdoc/features', reqdoc_featuresRoutes)
 router.use('/api/reqdoc/reqs', reqdoc_reqsRoutes)
 router.use('/api/reqdoc/steps', reqdoc_stepRoutes)
 router.use('/api/reqdoc/user', reqdoc_users)
+router.use('/api/reqdoc/teams', reqdoc_teams)
 
 
 /* ===================================
