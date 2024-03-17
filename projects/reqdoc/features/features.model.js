@@ -16,7 +16,11 @@ const FeatureSchema = new mongoose.Schema({
     },
     sort: {
         type: Number
-    }
+    },
+    deleted: {
+        type: Boolean,
+        required: false
+    },
 }, {
     toObject: {
         virtuals: true

@@ -19,7 +19,7 @@ const createStep = async (req, res, next) => {
 
         await validate.createStep(req.body);
 
-        const steps = await Step.find({ req: reqID });
+        const steps = await Step.find({ req: reqID, deleted: { $exists: false } });
 
         const step = await Step.create({ text, req: reqID, sort: steps.length + 1 })
 
@@ -42,7 +42,7 @@ const deleteStep = async (req, res, next) => {
 
         await checkStepAccess(stepID, userID);
 
-        const step = await Step.findByIdAndDelete(stepID);
+        const step = await Step.findByIdAndUpdate(stepID, { deleted: true });
 
         const requirement = await Req.findById(step.req)
             .populate({

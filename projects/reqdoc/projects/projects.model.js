@@ -13,6 +13,10 @@ const ProjectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'REQDOC_Team'
     },
+    deleted: {
+        type: Boolean,
+        required: false
+    }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

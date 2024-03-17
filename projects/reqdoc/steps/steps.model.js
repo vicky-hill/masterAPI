@@ -14,6 +14,10 @@ const StepSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    deleted: {
+        type: Boolean,
+        required: false
+    }
 }, {
     timestamps: true
 });

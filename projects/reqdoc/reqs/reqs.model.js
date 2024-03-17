@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+const Step = require('../steps/steps.model')
 
 const ReqSchema = new mongoose.Schema({
     key: {
@@ -30,6 +31,10 @@ const ReqSchema = new mongoose.Schema({
     changed_req: {
         type: String
     },
+    deleted: {
+        type: Boolean,
+        required: false
+    },
     sort: {
         type: Number
     }
@@ -52,6 +57,5 @@ ReqSchema.virtual('steps', {
     foreignField: 'req',
     justOne: false
 });
-
 
 module.exports = mongoose.model('REQDOC_Req', ReqSchema);

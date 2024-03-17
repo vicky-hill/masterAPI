@@ -1,4 +1,5 @@
 const Req = require('./reqs.model')
+const Step = require('../steps/steps.model')
 const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
@@ -12,6 +13,7 @@ const populateReqs = [
     }, {
         path: 'steps',
         select: 'text',
+        match: { changed_req: { $exists: false }, deleted: { $exists: false } },
         options: { sort: { createdAt: 'asc' } }
     }, {
         path: 'feature',
@@ -65,7 +67,7 @@ const getReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { _id: userID } = req.user;
-        
+
         await checkReqAccess(reqID, userID);
 
         const requirement = await Req.findById(reqID).populate('history');
@@ -159,7 +161,9 @@ const deleteReq = async (req, res, next) => {
 
         await checkReqAccess(reqID, userID);
 
-        const deletedReq = await Req.findByIdAndDelete(reqID);
+        const deletedReq = await Req.findByIdAndUpdate(reqID, { deleted: true });
+
+        await Step.updateMany({ req: reqID }, { $set: { deleted: true } })
 
         if (!deletedReq) throwError(`Req not found`);
 

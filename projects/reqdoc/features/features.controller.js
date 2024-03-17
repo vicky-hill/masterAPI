@@ -42,7 +42,7 @@ const getFeature = async (req, res, next) => {
                     path: 'sub_features',
                     populate: [{
                         path: 'reqs',
-                        match: { changed_req: { $exists: false } },
+                        match: { changed_req: { $exists: false }, deleted: { $exists: false } },
                         populate: {
                             path: 'steps', select: 'text',
                             options: { sort: { sort: 'asc' } }
@@ -51,7 +51,7 @@ const getFeature = async (req, res, next) => {
                     options: { sort: { sort: 'asc' } }
                 }, {
                     path: 'reqs',
-                    match: { changed_req: { $exists: false } },
+                    match: { changed_req: { $exists: false }, deleted: { $exists: false }  },
                     populate: {
                         path: 'steps', select: 'text',
                         options: { sort: { sort: 'asc' } }
