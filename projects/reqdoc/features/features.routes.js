@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const featureCtrl = require('./features.controller');
-const { protect } = require('../utils/middleware');
+const featureCtrl = require('./features.controller')
+const { protect } = require('../utils/middleware')
 
 router.route('/sort').put(protect, featureCtrl.sortFeatures)
 

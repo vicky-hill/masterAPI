@@ -1,19 +1,22 @@
 const Project = require('./projects.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
+const { checkProjectAccess } = require('../utils/access')
 
 /**
  * Get projects
  * @returns {array<Project>}
  */
-const getProjects = async (req, res) => {
+const getProjects = async (req, res, next) => {
     try {
-        const projects = await Project.find()
+        const { team } = req.user;
+
+        const projects = await Project.find({ team })
             .populate({ path: 'features', select: '_id', options: { sort: { sort: 'asc' }} });
 
         const response = {
-            data: projects.map(({ _id, name, key, first_feature }) => ({
-                _id, name, key, first_feature
+            data: projects.map(({ _id, name, key, first_feature, team }) => ({
+                _id, name, key, team, first_feature
             }))
         }
 
@@ -29,9 +32,12 @@ const getProjects = async (req, res) => {
  * @param  {objectId} projectID
  * @returns {Project}
  */
-const getProject = async (req, res) => {
+const getProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkProjectAccess(projectID, userID);
 
         const project = await Project.findById(projectID)
             .populate({
@@ -58,13 +64,36 @@ const getProject = async (req, res) => {
  * @property {String} req.body.name 
  * @returns {Project}
  */
-const createProject = async (req, res) => {
+const createProject = async (req, res, next) => {
     try {
-        await validate.createProject(req.body);
+        const { team } = req.user;
+
+        await validate.createProject({ ...req.body, team });
 
         const project = await Project.create({
-            ...req.body,
+            ...req.body, team
         });
+
+        res.json(project);
+    } catch (err) {
+        err.errorCode = 'projects_003';
+        next(err);
+    }
+}
+
+/**
+ * Delete project
+ * @param projectID
+ * @returns {Project}
+ */
+const deleteProject = async (req, res, next) => {
+    try {
+        const { projectID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkProjectAccess(projectID, userID);
+
+        const project = await Project.findByIdAndDelete(projectID);
 
         res.json(project);
     } catch (err) {
@@ -76,5 +105,6 @@ const createProject = async (req, res) => {
 module.exports = {
     getProjects,
     getProject,
+    deleteProject,
     createProject
 }

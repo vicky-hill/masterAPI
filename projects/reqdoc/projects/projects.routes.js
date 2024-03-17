@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-
-const projectCtrl = require('./projects.controller');
+const { protect } = require('../utils/middleware')
+const projectCtrl = require('./projects.controller')
 
 /**
  * @get api/reqdoc/projects - get all projects
@@ -9,15 +9,15 @@ const projectCtrl = require('./projects.controller');
  */
 router
     .route('/')
-    .get(projectCtrl.getProjects)
-    .post(projectCtrl.createProject)
+    .get(protect, projectCtrl.getProjects)
+    .post(protect, projectCtrl.createProject)
 
 /**
- * @get api/reqdoc/projects/:id - get location by id
+ * @get api/reqdoc/projects/:projectID - get project by id
+ * @delete api/reqdoc/projects/:projectID - delete project
  */
-router
-    .route('/:projectID')
-    .get(projectCtrl.getProject)
+router.route('/:projectID').get(protect, projectCtrl.getProject)
+router.route('/:projectID').delete(protect, projectCtrl.deleteProject)
    
 
 

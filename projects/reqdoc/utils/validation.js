@@ -22,6 +22,7 @@ const updateReq = async (values) => {
 const createProject = async (values) => {
     const schema = yup.object().shape({
         name: yup.string("No name was provided"),
+        team: yup.string("No team was provided")
     });
 
     await schema.validate(values, { abortEarly: false });
