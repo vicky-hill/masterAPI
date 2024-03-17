@@ -12,8 +12,6 @@ router
     .get(protect, projectCtrl.getProjects)
     .post(protect, projectCtrl.createProject)
 
-router.route('/delete-all').delete(projectCtrl.deleteFlagged);
-
 /**
  * @get api/reqdoc/projects/:projectID - get project by id
  * @delete api/reqdoc/projects/:projectID - delete project
@@ -21,8 +19,6 @@ router.route('/delete-all').delete(projectCtrl.deleteFlagged);
 router.route('/:projectID').get(protect, projectCtrl.getProject)
 router.route('/:projectID').delete(protect, projectCtrl.deleteProject)
    
-
-
 
 
 module.exports = router; 

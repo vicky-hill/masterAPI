@@ -108,26 +108,9 @@ const deleteProject = async (req, res, next) => {
     }
 }
 
-/**
- * Delete project
- * @param projectID
- * @returns {Project}
- */
-const deleteFlagged = async (req, res, next) => {
-    try {
-        await deleteAll();
-        
-        res.json({ msg: 'All flagged resources deleted'});
-    } catch (err) {
-        err.errorCode = 'projects_003';
-        next(err);
-    }
-}
-
 module.exports = {
     getProjects,
     getProject,
     deleteProject,
-    createProject,
-    deleteFlagged
+    createProject
 }

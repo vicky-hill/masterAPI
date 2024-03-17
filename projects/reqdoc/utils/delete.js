@@ -40,17 +40,8 @@ const cascadeDeleteProject = async (projectID) => {
     return deletedProject;
 }
 
-const deleteAll = async () => {
-    await Project.deleteMany({ deleted: true });
-    await Req.deleteMany({ deleted: true });
-    await Feature.deleteMany({ deleted: true });
-    await Step.deleteMany({ deleted: true });
-}
-
-
 module.exports = {
     cascadeDeleteReq,
     cascadeDeleteFeature,
-    cascadeDeleteProject,
-    deleteAll
+    cascadeDeleteProject
 }
