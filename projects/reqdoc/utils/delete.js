@@ -25,7 +25,32 @@ const cascadeDeleteFeature = async (featureID) => {
     return deletedFeature;
 }
 
+const cascadeDeleteProject = async (projectID) => {
+    const deletedProject = await Project.findByIdAndUpdate(projectID, { deleted: true });
+    const deletedReqs = await Feature.find({ project: projectID });
+    
+    await Req.updateMany({ project: projectID }, { deleted: true });
+    await Feature.updateMany({ project: projectID }, { deleted: true });
+
+    for (const req of deletedReqs) {
+        const { _id } = req;
+        await Step.updateMany({ req: _id }, { $set: { deleted: true } });
+    }
+    
+    return deletedProject;
+}
+
+const deleteAll = async () => {
+    await Project.deleteMany({ deleted: true });
+    await Req.deleteMany({ deleted: true });
+    await Feature.deleteMany({ deleted: true });
+    await Step.deleteMany({ deleted: true });
+}
+
+
 module.exports = {
     cascadeDeleteReq,
-    cascadeDeleteFeature
+    cascadeDeleteFeature,
+    cascadeDeleteProject,
+    deleteAll
 }

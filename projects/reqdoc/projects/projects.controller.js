@@ -2,6 +2,7 @@ const Project = require('./projects.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkProjectAccess } = require('../utils/access')
+const { cascadeDeleteProject, deleteAll } = require('../utils/delete')
 
 /**
  * Get projects
@@ -98,9 +99,25 @@ const deleteProject = async (req, res, next) => {
 
         await checkProjectAccess(projectID, userID);
 
-        const project = await Project.findByIdAndDelete(projectID);
+        const project = await cascadeDeleteProject(projectID);
 
         res.json(project);
+    } catch (err) {
+        err.errorCode = 'projects_003';
+        next(err);
+    }
+}
+
+/**
+ * Delete project
+ * @param projectID
+ * @returns {Project}
+ */
+const deleteFlagged = async (req, res, next) => {
+    try {
+        await deleteAll();
+        
+        res.json({ msg: 'All flagged resources deleted'});
     } catch (err) {
         err.errorCode = 'projects_003';
         next(err);
@@ -111,5 +128,6 @@ module.exports = {
     getProjects,
     getProject,
     deleteProject,
-    createProject
+    createProject,
+    deleteFlagged
 }
