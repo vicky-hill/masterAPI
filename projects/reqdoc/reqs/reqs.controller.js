@@ -3,7 +3,7 @@ const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
-const { checkFeatureAccess, checkProjectAccess, checkReqAccess } = require('../utils/access')
+const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
 
 const populateReqs = [
     {

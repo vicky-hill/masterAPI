@@ -1,6 +1,7 @@
 const Step = require('./steps.model')
 const Req = require('../reqs/reqs.model')
 const validate = require('../utils/validation')
+const { checkReqAccess, checkStepAccess } = require('../utils/access')
 
 /**
  * Create a step
@@ -12,6 +13,9 @@ const createStep = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { text } = req.body;
+        const { _id: userID } = req.user;
+
+        await checkReqAccess(reqID, userID);
 
         await validate.createStep(req.body);
 
@@ -34,6 +38,9 @@ const createStep = async (req, res, next) => {
 const deleteStep = async (req, res, next) => {
     try {
         const { stepID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkStepAccess(stepID, userID);
 
         const step = await Step.findByIdAndDelete(stepID);
 
