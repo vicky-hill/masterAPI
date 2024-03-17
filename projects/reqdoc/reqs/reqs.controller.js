@@ -5,6 +5,7 @@ const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
+const { cascadeDeleteReq } = require('../utils/delete')
 
 const populateReqs = [
     {
@@ -17,6 +18,7 @@ const populateReqs = [
         options: { sort: { createdAt: 'asc' } }
     }, {
         path: 'feature',
+        match: { deleted: { $exists: false } },
         select: 'sort'
     }
 ]
@@ -161,11 +163,7 @@ const deleteReq = async (req, res, next) => {
 
         await checkReqAccess(reqID, userID);
 
-        const deletedReq = await Req.findByIdAndUpdate(reqID, { deleted: true });
-
-        await Step.updateMany({ req: reqID }, { $set: { deleted: true } })
-
-        if (!deletedReq) throwError(`Req not found`);
+        const deletedReq = await cascadeDeleteReq(reqID);
 
         res.status(200).json(deletedReq);
     } catch (err) {

@@ -2,6 +2,7 @@ const Feature = require('./features.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkFeatureAccess, checkProjectAccess } = require('../utils/access')
+const { cascadeDeleteFeature } = require('../utils/delete')
 
 /**
  * Get features
@@ -13,6 +14,7 @@ const getFeatures = async (req, res, next) => {
         const { projectID } = req.param;
 
         const features = await Feature
+            .match({ deleted: { $exists: false } })
             .find({ project: projectID })
             .sort({ sort: 1 })
 
@@ -61,8 +63,6 @@ const getFeature = async (req, res, next) => {
                     select: 'name'
                 }
             ]);
-
-       
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
 
@@ -141,16 +141,14 @@ const updateFeature = async (req, res, next) => {
  * @property {String} req.body.name 
  * @returns feature {}   
  */
-const deteleteFeature = async (req, res, next) => {
+const deleteFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
         const { _id: userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
-        const deletedFeature = await Feature.findByIdAndDelete(featureID)
-
-        if (!deletedFeature) throwError(`Feature to delete not found`);
+        const deletedFeature = await cascadeDeleteFeature(featureID);
 
         res.status(200).json(deletedFeature);
     } catch (err) {
@@ -226,7 +224,7 @@ module.exports = {
     getFeature,
     createFeature,
     updateFeature,
-    deteleteFeature,
+    deleteFeature,
     createSubFeature,
     sortFeatures
 }

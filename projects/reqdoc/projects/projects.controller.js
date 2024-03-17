@@ -12,7 +12,12 @@ const getProjects = async (req, res, next) => {
         const { team } = req.user;
 
         const projects = await Project.find({ team })
-            .populate({ path: 'features', select: '_id', options: { sort: { sort: 'asc' }} });
+            .populate({ 
+                path: 'features', 
+                select: '_id', 
+                match: { deleted: { $exists: false } },
+                options: { sort: { sort: 'asc' }} 
+            });
 
         const response = {
             data: projects.map(({ _id, name, key, first_feature, team }) => ({

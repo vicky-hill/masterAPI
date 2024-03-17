@@ -18,7 +18,7 @@ router.route('/:featureID/sub').post(protect, featureCtrl.createSubFeature)
  */
 router.route('/:featureID').get(protect, featureCtrl.getFeature)
 router.route('/:featureID').put(protect, featureCtrl.updateFeature)
-router.route('/:featureID').delete(protect, featureCtrl.deteleteFeature)
+router.route('/:featureID').delete(protect, featureCtrl.deleteFeature)
 
 /**
 * @get api/reqdoc/features/:projectID - get all features by project
