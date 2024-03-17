@@ -3,6 +3,7 @@ const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
+const { checkFeatureAccess, checkProjectAccess, checkReqAccess } = require('../utils/access')
 
 const populateReqs = [
     {
@@ -26,23 +27,27 @@ const populateReqs = [
 const getReqs = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const feature = await Feature.findById(featureID);
+        const { _id: userID } = req.user;
 
-        if (!feature) throwError('Feature not found');
+        await checkFeatureAccess(featureID, userID);
+
+        const feature = await Feature.findById(featureID)
+            .populate({
+                path: 'sub_features',
+                match: { changed_req: { $exists: false } },
+                options: { sort: { createdAt: 'asc' } },
+                populate: {
+                    path: 'reqs',
+                    populate: populateReqs
+                }
+            })
 
         const reqs = await Req
             .find({ feature: featureID, changed_req: { $exists: false } })
             .populate(populateReqs)
             .sort({ sort: 1 });
 
-        let subFeatureReqs = [];
-
-        if (!feature.main_feature) {
-            subFeatureReqs = await Req
-                .find({ main_feature: featureID, changed_req: { $exists: false }})
-                .populate(populateReqs)
-                .sort({ 'feature.sort': 1, 'sort': 1 })
-        }
+        const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
 
         res.json({ data: [...reqs, ...subFeatureReqs] });
     } catch (err) {
@@ -58,7 +63,12 @@ const getReqs = async (req, res, next) => {
  */
 const getReq = async (req, res, next) => {
     try {
-        const requirement = await Req.findById(req.params.reqID).populate('history');
+        const { reqID } = req.params;
+        const { _id: userID } = req.user;
+        
+        await checkReqAccess(reqID, userID);
+
+        const requirement = await Req.findById(reqID).populate('history');
 
         if (!requirement) throwError('Requirement not found');
 
@@ -79,6 +89,9 @@ const getReq = async (req, res, next) => {
 const createReq = async (req, res, next) => {
     try {
         const featureID = req.body.feature;
+        const { _id: userID } = req.user;
+
+        await checkFeatureAccess(featureID, userID);
 
         await validate.createReq(req.body);
 
@@ -114,7 +127,10 @@ const createReq = async (req, res, next) => {
  */
 const updateReq = async (req, res, next) => {
     try {
-        const reqID = req.params.reqID;
+        const { reqID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkReqAccess(reqID, userID);
 
         await validate.updateReq(req.body);
 
@@ -132,17 +148,18 @@ const updateReq = async (req, res, next) => {
 }
 
 /**
- * Update req
+ * Delete req
  * @params reqID
  * @returns Req
  */
 const deleteReq = async (req, res, next) => {
     try {
         const reqID = req.params.reqID;
+        const { _id: userID } = req.user;
+
+        await checkReqAccess(reqID, userID);
 
         const deletedReq = await Req.findByIdAndDelete(reqID);
-
-        // Todo :: also delete all changed reqs & steps
 
         if (!deletedReq) throwError(`Req not found`);
 
@@ -164,6 +181,9 @@ const changeReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { title, text } = req.body;
+        const { _id: userID } = req.user;
+
+        await checkReqAccess(reqID, userID);
 
         await validate.updateReq(req.body);
 
@@ -186,7 +206,7 @@ const changeReq = async (req, res, next) => {
         const latestReq = await Req.create(newReq);
 
         await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true })
-        
+
         res.json(latestReq);
     } catch (err) {
         err.errorCode = 'reqs_006';
@@ -203,6 +223,9 @@ const changeReq = async (req, res, next) => {
 const sortReqs = async (req, res, next) => {
     try {
         await validate.sort(req.body);
+        const { _id: userID } = req.user;
+
+        await checkReqAccess(req.body[0]._id, userID);
 
         const data = [];
 
