@@ -2,9 +2,7 @@ const jwt_decode = require('jwt-decode')
 const User = require('../users/users.model')
 
 // Protect all routes 
-exports.protect = (resource) => async (req, res, next) => {
-
-    console.log('resource', resource)
+exports.protect = async (req, res, next) => {
 
     // Get token in the header
     const token = req.header('x-auth-token');

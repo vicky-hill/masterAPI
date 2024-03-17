@@ -1,7 +1,7 @@
 const Feature = require('./features.model')
-const Req = require('../reqs/reqs.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
+const { checkFeatureAccess, checkProjectAccess } = require('../utils/access')
 
 /**
  * Get features
@@ -33,6 +33,8 @@ const getFeature = async (req, res, next) => {
         const { featureID } = req.params;
         const { _id: userID } = req.user;
 
+        await checkFeatureAccess(featureID, userID);
+
         const feature = await Feature
             .findById(featureID)
             .populate([
@@ -57,18 +59,10 @@ const getFeature = async (req, res, next) => {
                 }, {
                     path: 'main_feature',
                     select: 'name'
-                }, {
-                    path: 'project',
-                    select: 'name',
-                    populate: {
-                        path: 'team', select: 'users'
-                    }
                 }
             ]);
 
-
-        if (!feature) throwError('Feature not found');
-        if (!feature.project.team.users.includes(userID)) throwError('User is not part of this team');
+       
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
 
@@ -91,6 +85,9 @@ const getFeature = async (req, res, next) => {
 const createFeature = async (req, res, next) => {
     try {
         const projectID = req.body.project;
+        const userID = req.user._id;
+
+        await checkProjectAccess(projectID, userID);
 
         await validate.createFeature(req.body);
 
@@ -119,6 +116,10 @@ const createFeature = async (req, res, next) => {
 const updateFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkFeatureAccess(featureID, userID);
+
         await validate.updateFeature(req.body);
 
         const updatedFeature = await Feature.findByIdAndUpdate(featureID, req.body, { new: true });
@@ -143,6 +144,10 @@ const updateFeature = async (req, res, next) => {
 const deteleteFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkFeatureAccess(featureID, userID);
+
         const deletedFeature = await Feature.findByIdAndDelete(featureID)
 
         if (!deletedFeature) throwError(`Feature to delete not found`);
@@ -163,6 +168,9 @@ const deteleteFeature = async (req, res, next) => {
 const createSubFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
+        const { _id: userID } = req.user;
+
+        await checkFeatureAccess(featureID, userID);
 
         await validate.updateFeature(req.body);
 
@@ -193,6 +201,9 @@ const createSubFeature = async (req, res, next) => {
 const sortFeatures = async (req, res, next) => {
     try {
         await validate.sort(req.body);
+        const { _id: userID } = req.user;
+
+        await checkFeatureAccess(req.body[0]._id, userID);
 
         const data = [];
 

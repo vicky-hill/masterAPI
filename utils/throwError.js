@@ -13,13 +13,12 @@ class Err extends Error {
 /**
  * Throw Error
  * @param {string} message - Message, should be end user friendly
- * @param {string} errorCode - Unique error code to identify error
  * @param {object} options - More options for customized errror
  * @param {property} options.status - status code
  * @param {property} options.error - Message, for further information on error
  * @param {property} options.debug - Debug information
  */
-const throwError = (message, errorCode, options) => {
+const throwError = (message, options) => {
     const notFoundStrings = ['not found', 'not find', 'cannot be found', 'does not exist'];
 
     let statusCode = options && options.status || 500;
@@ -29,7 +28,7 @@ const throwError = (message, errorCode, options) => {
         statusCode = 404;
     }
 
-    const newError = new Err(message, options?.error, statusCode, null, options?.debug, errorCode);
+    const newError = new Err(message, options?.error, statusCode, null, options?.debug);
     throw newError;
 }
 
