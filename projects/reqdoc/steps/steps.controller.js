@@ -19,9 +19,16 @@ const createStep = async (req, res, next) => {
 
         await validate.createStep(req.body);
 
+        const requirement = await Req.findById(reqID).select('feature project');
         const steps = await Step.find({ req: reqID, deleted: { $exists: false } });
 
-        const step = await Step.create({ text, req: reqID, sort: steps.length + 1 })
+        const step = await Step.create({ 
+            text, 
+            req: reqID, 
+            feature: requirement.feature,
+            project: requirement.project,
+            sort: steps.length + 1 
+        })
 
         res.json(step);
     } catch (err) {

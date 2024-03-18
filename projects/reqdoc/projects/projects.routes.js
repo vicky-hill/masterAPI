@@ -14,10 +14,12 @@ router
 
 /**
  * @get api/reqdoc/projects/:projectID - get project by id
+ * @put api/reqdoc/projects/:projectID - update project
  * @delete api/reqdoc/projects/:projectID - delete project
  */
 router.route('/:projectID').get(protect, projectCtrl.getProject)
 router.route('/:projectID').delete(protect, projectCtrl.deleteProject)
+router.route('/:projectID').put(protect, projectCtrl.updateProject)
    
 
 

@@ -6,6 +6,16 @@ const StepSchema = new mongoose.Schema({
         ref: 'REQDOC_Req',
         required: true
     },
+    feature: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'REQDOC_Feature',
+        required: true
+    },
+    project: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'REQDOC_Project',
+        required: true
+    },
     text: {
         type: String,
         required: true

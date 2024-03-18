@@ -28,6 +28,14 @@ const createProject = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
+const updateProject = async (values) => {
+    const schema = yup.object().shape({
+        name: yup.string("No name was provided")
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
 const createFeature = async (values) => {
     const schema = yup.object().shape({
         name: yup.string("No name was provided"),
@@ -76,6 +84,7 @@ module.exports = {
     createReq,
     updateReq,
     createProject,
+    updateProject,
     createFeature,
     updateFeature,
     createStep,

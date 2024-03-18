@@ -2,7 +2,7 @@ const Project = require('./projects.model')
 const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkProjectAccess } = require('../utils/access')
-const { cascadeDeleteProject, deleteAll } = require('../utils/delete')
+const { cascadeDeleteProject } = require('../utils/delete')
 
 /**
  * Get projects
@@ -12,7 +12,7 @@ const getProjects = async (req, res, next) => {
     try {
         const { team } = req.user;
 
-        const projects = await Project.find({ team })
+        const projects = await Project.find({ team, deleted: { $exists: false } })
             .populate({ 
                 path: 'features', 
                 select: '_id', 
@@ -108,9 +108,34 @@ const deleteProject = async (req, res, next) => {
     }
 }
 
+/**
+ * Update project
+ * @param projectID
+ * @property req.body.name
+ * @returns {Project}
+ */
+const updateProject = async (req, res, next) => {
+    try {
+        const { projectID } = req.params;
+        const { _id: userID } = req.user;
+
+        await validate.updateProject(req.body);
+
+        await checkProjectAccess(projectID, userID);
+
+        const project = await Project.findByIdAndUpdate(projectID, req.body, { new: true});
+
+        res.json(project);
+    } catch (err) {
+        err.errorCode = 'projects_003';
+        next(err);
+    }
+}
+
 module.exports = {
     getProjects,
     getProject,
     deleteProject,
-    createProject
+    createProject,
+    updateProject
 }
