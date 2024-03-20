@@ -1,4 +1,5 @@
 const Team = require('./teams.model')
+const User = require('../users/users.model')
 const validate = require('../utils/validation')
 
 /**
@@ -52,15 +53,48 @@ const getUserTeams = async (req, res, next) => {
             select: 'email',
         })
 
-        res.json(teams)
+        res.json({ data: teams })
     } catch (err) {
         err.errorCode = 'teams_002';
         next(err);
     }
 }
 
+/**
+ * Get all teams
+ * @param teamID
+ * @returns {array<User>}
+ */
+const switchUserTeam = async (req, res, next) => {
+    try {
+        const { teamID } = req.params;
+        const { _id: userID } = req.user;
+
+        const team = await Team.findById(teamID).populate({
+            path: 'users.user',
+            select: 'email',
+        })
+
+        const teamUser = team.users.find(user =>
+            user.user._id.toString() === userID.toString()
+        )
+
+        const user = await User.findByIdAndUpdate(userID,
+            { role: teamUser.role, team: team._id },
+            { new: true }
+        );
+
+        res.json(user)
+    } catch (err) {
+        err.errorCode = 'teams_002';
+        next(err);
+    }
+}
+
+
 module.exports = {
     createTeam,
     getAllTeams,
-    getUserTeams
+    getUserTeams,
+    switchUserTeam
 }
