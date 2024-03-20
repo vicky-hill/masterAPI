@@ -6,13 +6,19 @@ const TeamSchema = new mongoose.Schema({
         default: "Team"
     },
     users: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_User'
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'REQDOC_User'
+        },
+        role: {
+            type: String,
+            enum: ['admin', 'user']
+        },
     }]
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
-})
+});
 
 TeamSchema.virtual('projects', {
     ref: 'REQDOC_Project',

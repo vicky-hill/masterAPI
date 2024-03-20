@@ -46,7 +46,7 @@ const getProject = async (req, res, next) => {
         await checkProjectAccess(projectID, userID);
 
         const project = await Project.findById(projectID)
-            .populate({
+            .populate([{
                 path: 'features',
                 match: { main_feature: { $exists: false } },
                 populate: {
@@ -54,7 +54,10 @@ const getProject = async (req, res, next) => {
                     options: { sort: { sort: 'asc' } }
                 },
                 options: { sort: { sort: 'asc' } }
-            })
+            }, {
+                path: 'team',
+                populate: 'users.user'
+            }])
 
         if (!project) throwError('Project not found');
 

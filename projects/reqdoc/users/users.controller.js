@@ -9,10 +9,6 @@ const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find()
             .select('-firebaseID -createdAt -updatedAt -__v')
-            .populate({
-                path: 'teams',
-                select: 'name'
-            });
         res.json(users);
     } catch (err) {
         err.errorCode = 'users_001';
@@ -56,7 +52,7 @@ const getUser = async (req, res, next) => {
 
         const decodedToken = jwt_decode(token);
         const user = await User.findOne({ firebaseID: decodedToken.user_id })
-            .select('-firebaseID -createdAt -updatedAt -__v -teams');
+            .select('-firebaseID -createdAt -updatedAt -__v');
 
         if (!user) {
             res.json(null);
@@ -69,7 +65,6 @@ const getUser = async (req, res, next) => {
         next(err);
     }
 }
-
 
 // Todo :: create endpoint to select team & role
 

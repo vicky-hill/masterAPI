@@ -39,7 +39,28 @@ const getAllTeams = async (req, res, next) => {
     }
 }
 
+/**
+ * Get all teams
+ * @returns {array<User>}
+ */
+const getUserTeams = async (req, res, next) => {
+    try {
+        const { _id: userID } = req.user;
+
+        const teams = await Team.find({ 'users.user': userID }).populate({
+            path: 'users.user',
+            select: 'email',
+        })
+
+        res.json(teams)
+    } catch (err) {
+        err.errorCode = 'teams_002';
+        next(err);
+    }
+}
+
 module.exports = {
     createTeam,
-    getAllTeams
+    getAllTeams,
+    getUserTeams
 }

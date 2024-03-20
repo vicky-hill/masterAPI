@@ -12,16 +12,6 @@ const UserSchema = new mongoose.Schema({
     name: {
         type: String
     },
-    teams: [{
-        team: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'REQDOC_TEAM'
-        },
-        role: {
-            type: String,
-            enum: ['admin', 'user']
-        },
-    }],
     team: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'REQDOC_TEAM'
