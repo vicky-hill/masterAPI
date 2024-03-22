@@ -41,6 +41,29 @@ const getAllTeams = async (req, res, next) => {
 }
 
 /**
+ * Update Team
+ * @param teamID
+ * @property req.body.name
+ * @returns {<Team />}
+ */
+const updateTeam = async (req, res, next) => {
+    try {
+        const { teamID } = req.params;
+
+        const team = await Team.findByIdAndUpdate(teamID, req.body, { new: true })
+            .populate({
+                path: 'users.user',
+                select: 'email',
+            })
+
+        res.json(team);
+    } catch (err) {
+        err.errorCode = 'teams_003';
+        next(err);
+    }
+}
+
+/**
  * Get all teams
  * @returns {array<User>}
  */
@@ -55,7 +78,7 @@ const getUserTeams = async (req, res, next) => {
 
         res.json({ data: teams })
     } catch (err) {
-        err.errorCode = 'teams_002';
+        err.errorCode = 'teams_004';
         next(err);
     }
 }
@@ -86,7 +109,7 @@ const switchUserTeam = async (req, res, next) => {
 
         res.json(user)
     } catch (err) {
-        err.errorCode = 'teams_002';
+        err.errorCode = 'teams_005';
         next(err);
     }
 }
@@ -96,5 +119,6 @@ module.exports = {
     createTeam,
     getAllTeams,
     getUserTeams,
-    switchUserTeam
+    switchUserTeam,
+    updateTeam
 }

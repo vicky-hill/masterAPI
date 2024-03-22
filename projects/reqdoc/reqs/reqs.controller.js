@@ -205,9 +205,16 @@ const changeReq = async (req, res, next) => {
         if (title) newReq.text = title;
         if (text) newReq.text = text;
 
-        const latestReq = await Req.create(newReq);
+        const { _id } = await Req.create(newReq)
 
         await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true })
+
+        const latestReq = await Req.findById(_id)
+            .populate({
+                path: 'history',
+                select: 'title text createdAt',
+                options: { sort: { createdAt: -1 } }
+            });
 
         res.json(latestReq);
     } catch (err) {

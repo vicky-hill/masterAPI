@@ -47,7 +47,7 @@ const checkReqAccess = async (reqID, userID) => {
 
     if (!requirement) throwError('Req not found');
     if (requirement.deleted) throwError('Requirement was deleted');
-    if (!requirement.feature.project.team.map(user => user.user.toString()).includes(userID.toString())) throwError('User is not part of this team', { status: 401 });
+    if (!requirement.feature.project.team.users.map(user => user.user.toString()).includes(userID.toString())) throwError('User is not part of this team', { status: 401 });
 }
 
 const checkStepAccess = async (stepID, userID) => {

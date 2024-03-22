@@ -7,6 +7,7 @@ const teamCtrl = require('./teams.controller');
 /** @get /api/reqdoc/teams/user */
 router.route('/user').get(protect, teamCtrl.getUserTeams);
 router.route('/switch/:teamID').put(protect, teamCtrl.switchUserTeam);
+router.route('/:teamID').put(protect, teamCtrl.updateTeam);
 
 /**
  * @route /api/reqdoc/teams

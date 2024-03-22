@@ -45,19 +45,27 @@ const getFeature = async (req, res, next) => {
                     populate: [{
                         path: 'reqs',
                         match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-                        populate: {
+                        populate: [{
                             path: 'steps', select: 'text',
                             options: { sort: { sort: 'asc' } }
-                        }
+                        }, {
+                            path: 'history',
+                            select: 'title text createdAt',
+                            options:  { sort: { createdAt: -1 } }
+                        }]
                     }],
                     options: { sort: { sort: 'asc' } }
                 }, {
                     path: 'reqs',
                     match: { changed_req: { $exists: false }, deleted: { $exists: false }  },
-                    populate: {
+                    populate: [{
                         path: 'steps', select: 'text',
                         options: { sort: { sort: 'asc' } }
-                    }
+                    }, {
+                        path: 'history',
+                        select: 'title text createdAt',
+                        options:  { sort: { createdAt: -1 } }
+                    }]
                 }, {
                     path: 'main_feature',
                     select: 'name'
