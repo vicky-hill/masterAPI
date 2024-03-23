@@ -12,11 +12,13 @@ router
 
 /** 
 * @put api/reqdoc/reqs/sort - sort reqs
+* @get api/reqdoc/reqs/search?term - search reqs
 * @post api/reqdoc/reqs/:reqID/change - change a req
 * @post api/reqdoc/reqs/:reqID/update - update a req
 * @post api/reqdoc/reqs/:reqID/retrieve - get a single req
 */
 router.route('/sort').put(protect, reqCtrl.sortReqs)
+router.route('/search').get(protect, reqCtrl.searchReqs)
 router.route('/:reqID/change').put(protect, reqCtrl.changeReq)
 router.route('/:reqID/update').put(protect, reqCtrl.updateReq)
 router.route('/:reqID/retrieve').get(protect, reqCtrl.getReq)

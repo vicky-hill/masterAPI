@@ -251,6 +251,51 @@ const sortReqs = async (req, res, next) => {
     }
 }
 
+/**
+ * Search reqs
+ * @get /reqs/search
+ * @query term
+ * @returns {}
+ */
+const searchReqs = async (req, res, next) => {
+    try {
+        const { term } = req.query;
+
+        const reqs = await Req.find({
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: term, $options: 'i' } },
+                        { text: { $regex: term, $options: 'i' } }
+                    ]
+                },
+                { changed_req: { $exists: false } }
+            ]
+        })
+
+        const history = await Req.find({
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: term, $options: 'i' } },
+                        { text: { $regex: term, $options: 'i' } }
+                    ]
+                },
+                { changed_req: { $exists: true } }
+            ]
+        })
+
+        const steps = await Step.find({
+            text: { $regex: term, $options: 'i' }
+        })
+
+        res.json({ data: { reqs, history, steps }});
+    } catch (err) {
+        err.errorCode = 'reqs_008';
+        next(err);
+    }
+}
+
 module.exports = {
     getReqs,
     getReq,
@@ -258,5 +303,6 @@ module.exports = {
     updateReq,
     changeReq,
     sortReqs,
-    deleteReq
+    deleteReq,
+    searchReqs
 }
