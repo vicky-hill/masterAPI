@@ -47,7 +47,8 @@ const getFeature = async (req, res, next) => {
                         match: { changed_req: { $exists: false }, deleted: { $exists: false } },
                         populate: [{
                             path: 'steps', select: 'text',
-                            options: { sort: { sort: 'asc' } }
+                            options: { sort: { sort: 'asc' } },
+                            match: { deleted: { $exists: false }}
                         }, {
                             path: 'history',
                             select: 'title text createdAt',
@@ -59,8 +60,9 @@ const getFeature = async (req, res, next) => {
                     path: 'reqs',
                     match: { changed_req: { $exists: false }, deleted: { $exists: false }  },
                     populate: [{
-                        path: 'steps', select: 'text',
-                        options: { sort: { sort: 'asc' } }
+                        path: 'steps', select: 'text deleted',
+                        options: { sort: { sort: 'asc' }, deleted: { $exists: false } },
+                        match: { deleted: { $exists: false }}
                     }, {
                         path: 'history',
                         select: 'title text createdAt',

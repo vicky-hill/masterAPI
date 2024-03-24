@@ -19,18 +19,27 @@ const createStep = async (req, res, next) => {
 
         await validate.createStep(req.body);
 
-        const requirement = await Req.findById(reqID).select('feature project');
+        const requirement = await Req.findById(reqID)
+            .populate({
+                path: 'steps',
+                select: 'text',
+                options: { sort: { createdAt: 'asc' } },
+                match: { deleted: { $exists: false }}
+            })
+
         const steps = await Step.find({ req: reqID, deleted: { $exists: false } });
 
-        const step = await Step.create({ 
-            text, 
-            req: reqID, 
+        const step = await Step.create({
+            text,
+            req: reqID,
             feature: requirement.feature,
             project: requirement.project,
-            sort: steps.length + 1 
-        })
+            sort: steps.length + 1
+        });
 
-        res.json(step);
+        requirement.steps = [...requirement.steps, step]
+
+        res.json(requirement);
     } catch (err) {
         err.errorCode = 'steps_001';
         next(err);
@@ -55,7 +64,8 @@ const deleteStep = async (req, res, next) => {
             .populate({
                 path: 'steps',
                 select: 'text',
-                options: { sort: { createdAt: 'asc' } }
+                options: { sort: { createdAt: 'asc' } },
+                match: { deleted: { $exists: false }}
             })
 
         res.json(requirement);
