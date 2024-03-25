@@ -31,6 +31,11 @@ const ReqSchema = new mongoose.Schema({
     changed_req: {
         type: String
     },
+    latest_req: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'REQDOC_Req',
+        required: false
+    },
     deleted: {
         type: Boolean,
         required: false

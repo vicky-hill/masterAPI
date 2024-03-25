@@ -209,12 +209,19 @@ const changeReq = async (req, res, next) => {
 
         await Req.findByIdAndUpdate(reqID, { changed_req: changedReq.key }, { new: true })
 
+        await Req.updateMany(
+            { key: changedReq.key, changed_req: { $exists: true } },
+            { latest_req: _id },
+            { new: true }
+        );
+
         const latestReq = await Req.findById(_id)
             .populate({
                 path: 'history',
-                select: 'title text createdAt',
+                select: 'title text latest_req createdAt',
                 options: { sort: { createdAt: -1 } }
             });
+
 
         res.json(latestReq);
     } catch (err) {
@@ -271,6 +278,9 @@ const searchReqs = async (req, res, next) => {
                 },
                 { changed_req: { $exists: false } }
             ]
+        }).populate({
+            path: 'project',
+            select: 'key'
         })
 
         const history = await Req.find({
@@ -283,13 +293,23 @@ const searchReqs = async (req, res, next) => {
                 },
                 { changed_req: { $exists: true } }
             ]
+        }).populate({
+            path: 'project',
+            select: 'key'
         })
 
         const steps = await Step.find({
             text: { $regex: term, $options: 'i' }
+        }).populate({
+            path: 'req',
+            select: 'title feature',
+            populate: {
+                path: 'project',
+                select: 'key'
+            }
         })
 
-        res.json({ data: { reqs, history, steps }});
+        res.json({ data: { reqs, history, steps } });
     } catch (err) {
         err.errorCode = 'reqs_008';
         next(err);

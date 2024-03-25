@@ -4,7 +4,7 @@ const throwError = require('../../../utils/throwError')
 const getReqByID = async function (reqID) {
     const product = await Req.findById(reqID)
         .populate([{
-            path: 'history',
+            path: 'history'
         }, {
             path: 'steps',
             select: 'text',

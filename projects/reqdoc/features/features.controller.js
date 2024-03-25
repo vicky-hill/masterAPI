@@ -51,7 +51,7 @@ const getFeature = async (req, res, next) => {
                             match: { deleted: { $exists: false }}
                         }, {
                             path: 'history',
-                            select: 'title text createdAt',
+                            select: 'title text latest_req createdAt',
                             options:  { sort: { createdAt: -1 } }
                         }]
                     }],
@@ -65,7 +65,7 @@ const getFeature = async (req, res, next) => {
                         match: { deleted: { $exists: false }}
                     }, {
                         path: 'history',
-                        select: 'title text createdAt',
+                        select: 'title text latest_req createdAt',
                         options:  { sort: { createdAt: -1 } }
                     }]
                 }, {
