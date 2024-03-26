@@ -5,7 +5,8 @@ const Step = require('../steps/steps.model')
 
 
 const cascadeDeleteReq = async (reqID) => {
-    const deletedReq = await Req.findByIdAndUpdate(reqID, { deleted: true });
+    const deletedReq = await Req.findByIdAndUpdate(reqID, { deleted: true }, { new: true});
+    await Req.updateMany({ changed_req: deletedReq.key, project: deletedReq.project }, { $set: { deleted: true }})
     await Step.updateMany({ req: reqID }, { $set: { deleted: true } });
 
     return deletedReq;
@@ -16,13 +17,6 @@ const cascadeDeleteFeature = async (featureID) => {
     await Step.updateMany({ feature: featureID }, { $set: { deleted: true } });
     await Req.updateMany({ feature: featureID }, { deleted: true });
 
-    // const deletedReqs = await Req.find({ feature: featureID })
-    
-    // for (const req of deletedReqs) {
-    //     const { _id } = req;
-    //     await Step.updateMany({ req: _id }, { $set: { deleted: true } });
-    // }
-
     return deletedFeature;
 }
 
@@ -31,13 +25,6 @@ const cascadeDeleteProject = async (projectID) => {
     await Feature.updateMany({ project: projectID }, { deleted: true });
     await Req.updateMany({ project: projectID }, { deleted: true });
     await Step.updateMany({ project: projectID }, { $set: { deleted: true } });
-
-    // const deletedReqs = await Feature.find({ project: projectID }); 
-
-    // for (const req of deletedReqs) {
-    //     const { _id } = req;
-    //     await Step.updateMany({ req: _id }, { $set: { deleted: true } });
-    // }
     
     return deletedProject;
 }
