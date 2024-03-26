@@ -6,7 +6,7 @@ const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
-const { steps, history, features, subFeatures } = require('../utils/populate')
+const { steps, history, features, subFeatures, project } = require('../utils/populate')
 
 /**
  * Get reqs
@@ -245,12 +245,14 @@ const sortReqs = async (req, res, next) => {
 /**
  * Search reqs
  * @get /reqs/search
+ * @param projectID
  * @query term
  * @returns {}
  */
 const searchReqs = async (req, res, next) => {
     try {
         const { term } = req.query;
+        const { projectID } = req.params;
 
         const reqs = await Req.find({
             $and: [
@@ -260,6 +262,8 @@ const searchReqs = async (req, res, next) => {
                         { text: { $regex: term, $options: 'i' } }
                     ]
                 },
+                { project: projectID },
+                { deleted: { $exists: false } },
                 { changed_req: { $exists: false } }
             ]
         }).populate(project)
@@ -272,12 +276,18 @@ const searchReqs = async (req, res, next) => {
                         { text: { $regex: term, $options: 'i' } }
                     ]
                 },
+                { project: projectID },
+                { deleted: { $exists: false } },
                 { changed_req: { $exists: true } }
             ]
         }).populate(project)
 
         const steps = await Step.find({
-            text: { $regex: term, $options: 'i' }
+            $and: [
+                { project: projectID },
+                { deleted: { $exists: false } },
+                { text: { $regex: term, $options: 'i' }}
+            ]
         }).populate({
             path: 'req',
             select: 'title feature',

@@ -26,6 +26,20 @@ const deleteFlagged = async (req, res, next) => {
     }
 }
 
+const getAllSteps = async (req, res, next) => {
+    try {
+
+        if (req.user.email !== 'pm@excersys.com') throwError('Not authorized, dev route only');
+
+        const steps = await Step.find();
+        res.json(steps);
+    } catch (err) {
+        err.errorCode = 'projects_003';
+        next(err);
+    }
+}
+
 module.exports = {
-    deleteFlagged
+    deleteFlagged,
+    getAllSteps
 }
