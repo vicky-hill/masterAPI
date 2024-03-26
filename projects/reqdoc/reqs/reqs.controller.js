@@ -205,7 +205,7 @@ const changeReq = async (req, res, next) => {
         )
 
         const latestReq = await Req.findById(_id)
-            .populate(history);
+            .populate([history, steps]);
 
         res.json(latestReq);
     } catch (err) {
