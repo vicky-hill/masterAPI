@@ -3,6 +3,7 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteProject } = require('../utils/delete')
+const { features, subFeatures, team } = require('../utils/populate')
 
 /**
  * Get projects
@@ -13,12 +14,7 @@ const getProjects = async (req, res, next) => {
         const { team } = req.user;
 
         const projects = await Project.find({ team, deleted: { $exists: false } })
-            .populate({ 
-                path: 'features', 
-                select: '_id', 
-                match: { deleted: { $exists: false } },
-                options: { sort: { sort: 'asc' }} 
-            });
+            .populate(features);
 
         const response = {
             data: projects.map(({ _id, name, key, first_feature, team }) => ({
@@ -47,17 +43,9 @@ const getProject = async (req, res, next) => {
 
         const project = await Project.findById(projectID)
             .populate([{
-                path: 'features',
-                match: { main_feature: { $exists: false } },
-                populate: {
-                    path: 'sub_features',
-                    options: { sort: { sort: 'asc' } }
-                },
-                options: { sort: { sort: 'asc' } }
-            }, {
-                path: 'team',
-                populate: 'users.user'
-            }])
+                ...features,
+                populate: subFeatures
+            }, team])
 
         if (!project) throwError('Project not found');
 

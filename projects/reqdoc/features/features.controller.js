@@ -3,6 +3,7 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkFeatureAccess, checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteFeature } = require('../utils/delete')
+const { steps, history, reqs } = require('../utils/populate')
 
 /**
  * Get features
@@ -42,32 +43,16 @@ const getFeature = async (req, res, next) => {
             .populate([
                 {
                     path: 'sub_features',
+                    options: { sort: { sort: 'asc' } },
                     populate: [{
                         path: 'reqs',
                         match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-                        populate: [{
-                            path: 'steps', select: 'text',
-                            options: { sort: { sort: 'asc' } },
-                            match: { deleted: { $exists: false }}
-                        }, {
-                            path: 'history',
-                            select: 'title text latest_req createdAt',
-                            options:  { sort: { createdAt: -1 } }
-                        }]
+                        populate: [steps, history]
                     }],
-                    options: { sort: { sort: 'asc' } }
                 }, {
                     path: 'reqs',
                     match: { changed_req: { $exists: false }, deleted: { $exists: false }  },
-                    populate: [{
-                        path: 'steps', select: 'text deleted',
-                        options: { sort: { sort: 'asc' }, deleted: { $exists: false } },
-                        match: { deleted: { $exists: false }}
-                    }, {
-                        path: 'history',
-                        select: 'title text latest_req createdAt',
-                        options:  { sort: { createdAt: -1 } }
-                    }]
+                    populate: [steps, history]
                 }, {
                     path: 'main_feature',
                     select: 'name'

@@ -6,22 +6,7 @@ const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
-
-const populateReqs = [
-    {
-        path: 'history',
-        options: { sort: { createdAt: 'desc' } }
-    }, {
-        path: 'steps',
-        select: 'text',
-        match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-        options: { sort: { createdAt: 'asc' } }
-    }, {
-        path: 'feature',
-        match: { deleted: { $exists: false } },
-        select: 'sort'
-    }
-]
+const { steps, history, features, subFeatures } = require('../utils/populate')
 
 /**
  * Get reqs
@@ -37,18 +22,16 @@ const getReqs = async (req, res, next) => {
 
         const feature = await Feature.findById(featureID)
             .populate({
-                path: 'sub_features',
-                match: { changed_req: { $exists: false } },
-                options: { sort: { createdAt: 'asc' } },
+                ...subFeatures,
                 populate: {
                     path: 'reqs',
-                    populate: populateReqs
+                    populate: [history, steps, features]
                 }
             })
 
         const reqs = await Req
             .find({ feature: featureID, changed_req: { $exists: false } })
-            .populate(populateReqs)
+            .populate([history, steps, features])
             .sort({ sort: 1 });
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
@@ -215,13 +198,14 @@ const changeReq = async (req, res, next) => {
             { new: true }
         );
 
-        const latestReq = await Req.findById(_id)
-            .populate({
-                path: 'history',
-                select: 'title text latest_req createdAt',
-                options: { sort: { createdAt: -1 } }
-            });
+        await Step.updateMany(
+            { req: reqID },
+            { req: _id },
+            { new: true }
+        )
 
+        const latestReq = await Req.findById(_id)
+            .populate(history);
 
         res.json(latestReq);
     } catch (err) {
@@ -278,10 +262,7 @@ const searchReqs = async (req, res, next) => {
                 },
                 { changed_req: { $exists: false } }
             ]
-        }).populate({
-            path: 'project',
-            select: 'key'
-        })
+        }).populate(project)
 
         const history = await Req.find({
             $and: [
@@ -293,20 +274,14 @@ const searchReqs = async (req, res, next) => {
                 },
                 { changed_req: { $exists: true } }
             ]
-        }).populate({
-            path: 'project',
-            select: 'key'
-        })
+        }).populate(project)
 
         const steps = await Step.find({
             text: { $regex: term, $options: 'i' }
         }).populate({
             path: 'req',
             select: 'title feature',
-            populate: {
-                path: 'project',
-                select: 'key'
-            }
+            populate: project
         })
 
         res.json({ data: { reqs, history, steps } });

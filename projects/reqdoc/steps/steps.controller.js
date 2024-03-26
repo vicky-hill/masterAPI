@@ -2,6 +2,7 @@ const Step = require('./steps.model')
 const Req = require('../reqs/reqs.model')
 const validate = require('../utils/validation')
 const { checkReqAccess, checkStepAccess } = require('../utils/access')
+const { steps } = require('../utils/populate');
 
 /**
  * Create a step
@@ -20,12 +21,7 @@ const createStep = async (req, res, next) => {
         await validate.createStep(req.body);
 
         const requirement = await Req.findById(reqID)
-            .populate({
-                path: 'steps',
-                select: 'text',
-                options: { sort: { createdAt: 'asc' } },
-                match: { deleted: { $exists: false }}
-            })
+            .populate(steps)
 
         const steps = await Step.find({ req: reqID, deleted: { $exists: false } });
 
@@ -61,12 +57,7 @@ const deleteStep = async (req, res, next) => {
         const step = await Step.findByIdAndUpdate(stepID, { deleted: true });
 
         const requirement = await Req.findById(step.req)
-            .populate({
-                path: 'steps',
-                select: 'text',
-                options: { sort: { createdAt: 'asc' } },
-                match: { deleted: { $exists: false }}
-            })
+            .populate(steps)
 
         res.json(requirement);
     } catch (err) {

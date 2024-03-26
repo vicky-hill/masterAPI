@@ -3,13 +3,7 @@ const throwError = require('../../../utils/throwError')
 
 const getReqByID = async function (reqID) {
     const product = await Req.findById(reqID)
-        .populate([{
-            path: 'history'
-        }, {
-            path: 'steps',
-            select: 'text',
-            options: { sort: { createdAt: 'asc' } }
-        }]);
+        .populate([history, steps]);
 
     !product && throwError(`Could not find req by ID: ${reqID}`);
 
