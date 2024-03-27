@@ -6,7 +6,7 @@ const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
-const { steps, history, features, subFeatures, project } = require('../utils/populate')
+const { steps, history, features, subFeatures, project, comments } = require('../utils/populate')
 
 /**
  * Get reqs
@@ -286,7 +286,7 @@ const searchReqs = async (req, res, next) => {
             $and: [
                 { project: projectID },
                 { deleted: { $exists: false } },
-                { text: { $regex: term, $options: 'i' }}
+                { text: { $regex: term, $options: 'i' } }
             ]
         }).populate({
             path: 'req',
@@ -301,6 +301,32 @@ const searchReqs = async (req, res, next) => {
     }
 }
 
+/**
+ * Add Comment
+ * @param reqID
+ * @property req.body.text
+ * @returns {Comment}
+ */
+const addComment = async (req, res, next) => {
+    try {
+        const { _id: user } = req.user;
+        const { reqID } = req.params;
+        const { text } = req.body;
+
+        const comment = { user, text };
+
+        const updatedReq = await Req.findByIdAndUpdate(
+            reqID,
+            { $push: { comments: comment } },
+            { new: true }
+        ).populate([history, steps, comments]);
+
+        res.json(updatedReq)
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     getReqs,
     getReq,
@@ -309,5 +335,6 @@ module.exports = {
     changeReq,
     sortReqs,
     deleteReq,
-    searchReqs
+    searchReqs,
+    addComment
 }

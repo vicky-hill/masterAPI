@@ -3,13 +3,6 @@ const router = express.Router()
 const reqCtrl = require('./reqs.controller')
 const { protect } = require('../utils/middleware')
 
-/**
- * @post api/reqdoc/reqs - create new req
- */
-router
-    .route('/')
-    .post(protect, reqCtrl.createReq)
-
 /** 
 * @put api/reqdoc/reqs/sort - sort reqs
 * @get api/reqdoc/reqs/search?term - search reqs
@@ -24,10 +17,24 @@ router.route('/:reqID/update').put(protect, reqCtrl.updateReq)
 router.route('/:reqID/retrieve').get(protect, reqCtrl.getReq)
 router.route('/:reqID/delete').delete(protect, reqCtrl.deleteReq)
 
+
+/**
+ * @post api/reqdoc/reqs/:reqID/comment - add a comment
+ */
+router.route('/:reqID/comment').post(protect, reqCtrl.addComment)
+
 /**
  * @get api/reqdoc/reqs/:featureID - get reqs by feature
  */
 router.route('/:featureID').get(protect, reqCtrl.getReqs)
+
+
+/**
+ * @post api/reqdoc/reqs - create new req
+ */
+router
+    .route('/')
+    .post(protect, reqCtrl.createReq)
 
 
 

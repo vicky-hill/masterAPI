@@ -1,5 +1,20 @@
 const mongoose = require('mongoose')
-const Step = require('../steps/steps.model')
+
+const ReqCommentSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'REQDOC_User',
+        required: true
+    },
+    text: {
+        type: String,
+        required: true
+    }
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
 
 const ReqSchema = new mongoose.Schema({
     key: {
@@ -42,7 +57,8 @@ const ReqSchema = new mongoose.Schema({
     },
     sort: {
         type: Number
-    }
+    },
+    comments: [ReqCommentSchema]
 }, {
     timestamps: true,
     toJSON: { virtuals: true },

@@ -24,6 +24,17 @@ const history = {
     options: { sort: { createdAt: -1 } }
 }
 
+const comments = {
+    path: 'comments',
+    select: 'user text createdAt',
+    options: { sort: { createdAt: -1 } },
+    match: { deleted: { $exists: false } },
+    populate: {
+        path: 'user',
+        select: 'name email'
+    }
+}
+
 const team = {
     path: 'team',
     populate: 'users.user'
@@ -48,5 +59,6 @@ module.exports = {
     features,
     features,
     project,
-    subFeatures
+    subFeatures,
+    comments
 }
