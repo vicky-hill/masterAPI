@@ -23,14 +23,14 @@ const createStep = async (req, res, next) => {
         const requirement = await Req.findById(reqID)
             .populate(steps)
 
-        const steps = await Step.find({ req: reqID, deleted: { $exists: false } });
+        const existingSteps = await Step.find({ req: reqID, deleted: { $exists: false } });
 
         const step = await Step.create({
             text,
             req: reqID,
             feature: requirement.feature,
             project: requirement.project,
-            sort: steps.length + 1
+            sort: existingSteps.length + 1
         });
 
         requirement.steps = [...requirement.steps, step]

@@ -185,7 +185,7 @@ const changeReq = async (req, res, next) => {
             sort: changedReq.sort
         };
 
-        if (title) newReq.text = title;
+        if (title) newReq.title = title;
         if (text) newReq.text = text;
 
         const { _id } = await Req.create(newReq)
