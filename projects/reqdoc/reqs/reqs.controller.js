@@ -4,7 +4,7 @@ const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
-const { checkFeatureAccess, checkReqAccess } = require('../utils/access')
+const { checkFeatureAccess, checkReqAccess, checkCommentAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
 const { steps, history, features, subFeatures, project, comments } = require('../utils/populate')
 
@@ -305,7 +305,7 @@ const searchReqs = async (req, res, next) => {
  * Add Comment
  * @param reqID
  * @property req.body.text
- * @returns {Comment}
+ * @returns {Req}
  */
 const addComment = async (req, res, next) => {
     try {
@@ -315,6 +315,10 @@ const addComment = async (req, res, next) => {
 
         const comment = { user, text };
 
+        await checkReqAccess(reqID, user);
+
+        await validate.addComment(comment);
+
         const updatedReq = await Req.findByIdAndUpdate(
             reqID,
             { $push: { comments: comment } },
@@ -322,6 +326,32 @@ const addComment = async (req, res, next) => {
         ).populate([history, steps, comments]);
 
         res.json(updatedReq)
+    } catch (err) {
+        next(err);
+    }
+}
+
+/**
+ * Edit Comment
+ * @param commentID
+ * @property req.body.text
+ * @returns {Req}
+ */
+const editComment = async (req, res, next) => {
+    try {
+        const { _id: user } = req.user;
+        const { commentID } = req.params;
+        const { text } = req.body;
+
+        await checkCommentAccess(commentID, user);
+
+        await validate.editComment(req.body);
+
+        const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
+            { "$set": { "comments.$.text": text, "comments.$.edit": true } }, { new: true })
+            .populate([history, steps, comments]);
+
+        res.json(updatedReq);
     } catch (err) {
         next(err);
     }
@@ -336,5 +366,6 @@ module.exports = {
     sortReqs,
     deleteReq,
     searchReqs,
-    addComment
+    addComment,
+    editComment
 }

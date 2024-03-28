@@ -74,9 +74,18 @@ const checkStepAccess = async (stepID, userID) => {
     if (!step.req.feature.project.team.users.map(user => user.user.toString()).includes(userID.toString())) throwError('User is not part of this team', { status: 401 });
 }
 
+const checkCommentAccess = async (commentID, userID) => {
+    const requirement = await Req.findOne({ "comments._id": commentID });
+    const comment = requirement.comments.find(comment => comment._id.toString() === commentID);
+
+    if (comment.user.toString() !== userID.toString()) throwError('User is not authorized to edit or delete this comment');
+}
+
+
 module.exports = {
     checkFeatureAccess,
     checkProjectAccess,
     checkReqAccess,
-    checkStepAccess
+    checkStepAccess,
+    checkCommentAccess
 }
