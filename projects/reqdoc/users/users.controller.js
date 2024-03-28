@@ -25,7 +25,9 @@ const getAllUsers = async (req, res, next) => {
  */
 const createUser = async (req, res, next) => {
     try {
-        const newUser = await User.create(req.body);
+        const name = req.body.email.split('@')[0];
+
+        const newUser = await User.create({ ...req.body, name});
         const user = await User.findById(newUser._id);
 
         res.status(201).json(user);
