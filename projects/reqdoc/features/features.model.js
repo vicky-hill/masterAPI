@@ -18,7 +18,7 @@ const FeatureSchema = new mongoose.Schema({
         type: Number
     },
     deleted: {
-        type: Boolean,
+        type: Date,
         required: false
     },
 }, {

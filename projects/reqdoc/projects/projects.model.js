@@ -14,7 +14,7 @@ const ProjectSchema = new mongoose.Schema({
         ref: 'REQDOC_Team'
     },
     deleted: {
-        type: Boolean,
+        type: Date,
         required: false
     }
 }, {

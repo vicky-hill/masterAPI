@@ -25,7 +25,7 @@ const StepSchema = new mongoose.Schema({
         required: false
     },
     deleted: {
-        type: Boolean,
+        type: Date,
         required: false
     }
 }, {
