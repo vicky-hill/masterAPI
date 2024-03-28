@@ -357,6 +357,28 @@ const editComment = async (req, res, next) => {
     }
 }
 
+/**
+ * Delete Comment
+ * @param commentID
+ * @returns {Req}
+ */
+const deleteComment = async (req, res, next) => {
+    try {
+        const { _id: user } = req.user;
+        const { commentID } = req.params;
+ 
+        await checkCommentAccess(commentID, user);
+
+        const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
+            { "$set": { "comments.$.deleted": new Date(), "comments.$.edit": true } }, { new: true })
+            .populate([history, steps, comments]);
+
+        res.json(updatedReq);
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     getReqs,
     getReq,
@@ -367,5 +389,6 @@ module.exports = {
     deleteReq,
     searchReqs,
     addComment,
-    editComment
+    editComment,
+    deleteComment
 }

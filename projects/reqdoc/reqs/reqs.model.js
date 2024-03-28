@@ -13,7 +13,11 @@ const ReqCommentSchema = new mongoose.Schema({
     edit: {
         type: Boolean,
         required: false
-    }
+    },
+    deleted: {
+        type: Date,
+        required: false
+    },
 }, {
     timestamps: true,
     toJSON: { virtuals: true },

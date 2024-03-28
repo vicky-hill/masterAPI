@@ -20,9 +20,12 @@ router.route('/:reqID/delete').delete(protect, reqCtrl.deleteReq)
 
 /**
  * @post api/reqdoc/reqs/:reqID/comment - add a comment
+ * @put api/reqdoc/reqs/:commentID/comment - edit a comment
+ * @delete api/reqdoc/reqs/:commentID/comment - delete a comment
  */
 router.route('/:reqID/comment').post(protect, reqCtrl.addComment)
 router.route('/:commentID/comment').put(protect, reqCtrl.editComment)
+router.route('/:commentID/comment').delete(protect, reqCtrl.deleteComment)
 
 /**
  * @get api/reqdoc/reqs/:featureID - get reqs by feature

@@ -78,6 +78,7 @@ const checkCommentAccess = async (commentID, userID) => {
     const requirement = await Req.findOne({ "comments._id": commentID });
     const comment = requirement.comments.find(comment => comment._id.toString() === commentID);
 
+    if (comment.deleted) throwError('Comment was deleted');
     if (comment.user.toString() !== userID.toString()) throwError('User is not authorized to edit or delete this comment');
 }
 
