@@ -82,8 +82,8 @@ const createTeam = async (values) => {
 
 const addComment = async (values) => {
     const schema = yup.object().shape({
-        user: yup.string("No user was provided to add to team"),
-        text: yup.string("No user was provided to add to team"),
+        user: yup.string("No user was provided to add comment"),
+        text: yup.string("No text was provided to add comment"),
     });
 
     await schema.validate(values, { abortEarly: false });
@@ -91,7 +91,24 @@ const addComment = async (values) => {
 
 const editComment = async (values) => {
     const schema = yup.object().shape({
-        text: yup.string("No user was provided to add to team"),
+        text: yup.string("No text was provided to edit comment"),
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
+const createUser = async (values) => {
+    const schema = yup.object().shape({
+        firebaseID: yup.string("No firebaseID was provided to create user"),
+        email: yup.string("No email was provided to create user"),
+    });
+
+    await schema.validate(values, { abortEarly: false });
+}
+
+const updateUser = async (values) => {
+    const schema = yup.object().shape({
+        name: yup.string("No name was provided to update user"),
     });
 
     await schema.validate(values, { abortEarly: false });
@@ -108,5 +125,7 @@ module.exports = {
     createTeam,
     addComment,
     editComment,
+    createUser,
+    updateUser,
     sort
 };

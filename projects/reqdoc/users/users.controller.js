@@ -1,5 +1,6 @@
-const User = require('./users.model');
+const User = require('./users.model')
 const jwt_decode = require('jwt-decode')
+const validate = require('../utils/validation')
 
 /**
  * Get all users
@@ -18,7 +19,6 @@ const getAllUsers = async (req, res, next) => {
 
 /**
  * Save a new user
- * @property {string} req.body._id 
  * @property {string} req.body.email
  * @property {string} req.body.firebaseID
  * @returns user { _id, firebaseID, email, createdAt }
@@ -26,11 +26,34 @@ const getAllUsers = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     try {
         const name = req.body.email.split('@')[0];
+        const body = { ...req.body, name }
 
-        const newUser = await User.create({ ...req.body, name});
+        await validate.createUser(body);
+
+        const newUser = await User.create(body);
         const user = await User.findById(newUser._id);
 
         res.status(201).json(user);
+    } catch (err) {
+        err.errorCode = 'users_002';
+        next(err);
+    }
+}
+
+/**
+ * Update user
+ * @property {string} req.body.name
+ * @returns user { _id, firebaseID, email, createdAt }
+ */
+const updateUser = async (req, res, next) => {
+    try {
+        const { _id: userID } = req.user;
+
+        await validate.updateUser(req.body);
+
+        const updatedUser = await User.findByIdAndUpdate(userID, req.body, { new: true });
+
+        res.status(200).json(updatedUser);
     } catch (err) {
         err.errorCode = 'users_002';
         next(err);
@@ -73,5 +96,6 @@ const getUser = async (req, res, next) => {
 module.exports = {
     getAllUsers,
     createUser,
+    updateUser,
     getUser
 }
