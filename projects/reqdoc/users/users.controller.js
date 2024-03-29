@@ -31,7 +31,8 @@ const createUser = async (req, res, next) => {
         await validate.createUser(body);
 
         const newUser = await User.create(body);
-        const user = await User.findById(newUser._id);
+        const user = await User.findById(newUser._id)
+            .select('-firebaseID -createdAt -updatedAt -__v');
 
         res.status(201).json(user);
     } catch (err) {
@@ -43,15 +44,16 @@ const createUser = async (req, res, next) => {
 /**
  * Update user
  * @property {string} req.body.name
- * @returns user { _id, firebaseID, email, createdAt }
+ * @returns {User}
  */
 const updateUser = async (req, res, next) => {
     try {
-        const { _id: userID } = req.user;
+        const { userID } = req.user;
 
         await validate.updateUser(req.body);
 
-        const updatedUser = await User.findByIdAndUpdate(userID, req.body, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(userID, req.body, { new: true })
+            .select('-firebaseID -createdAt -updatedAt -__v');
 
         res.status(200).json(updatedUser);
     } catch (err) {

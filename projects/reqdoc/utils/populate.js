@@ -1,4 +1,3 @@
-
 const features = {
     path: 'features',
     match: { main_feature: { $exists: false }, deleted: { $exists: false } },
@@ -48,7 +47,7 @@ const project = {
 const reqs = {
     path: 'reqs',
     match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-    populate: [steps, history]
+    populate: [steps, history, comments]
 }
 
 module.exports = {

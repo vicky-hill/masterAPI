@@ -34,26 +34,20 @@ const getFeatures = async (req, res, next) => {
 const getFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
         const feature = await Feature
             .findById(featureID)
             .populate([
+                reqs, 
                 {
                     path: 'sub_features',
                     options: { sort: { sort: 'asc' } },
-                    populate: [{
-                        path: 'reqs',
-                        match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-                        populate: [steps, history]
-                    }],
-                }, {
-                    path: 'reqs',
-                    match: { changed_req: { $exists: false }, deleted: { $exists: false }  },
-                    populate: [steps, history]
-                }, {
+                    populate: reqs,
+                }, 
+                {
                     path: 'main_feature',
                     select: 'name'
                 }
@@ -111,7 +105,7 @@ const createFeature = async (req, res, next) => {
 const updateFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -139,7 +133,7 @@ const updateFeature = async (req, res, next) => {
 const deleteFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -161,7 +155,7 @@ const deleteFeature = async (req, res, next) => {
 const createSubFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -194,7 +188,7 @@ const createSubFeature = async (req, res, next) => {
 const sortFeatures = async (req, res, next) => {
     try {
         await validate.sort(req.body);
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(req.body[0]._id, userID);
 

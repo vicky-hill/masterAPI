@@ -16,17 +16,14 @@ const { steps, history, features, subFeatures, project, comments } = require('..
 const getReqs = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
         const feature = await Feature.findById(featureID)
             .populate({
                 ...subFeatures,
-                populate: {
-                    path: 'reqs',
-                    populate: [history, steps, features]
-                }
+                populate: reqs
             })
 
         const reqs = await Req
@@ -51,7 +48,7 @@ const getReqs = async (req, res, next) => {
 const getReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
-        const { _id: userID } = req.user;
+        const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
 
@@ -76,10 +73,9 @@ const getReq = async (req, res, next) => {
 const createReq = async (req, res, next) => {
     try {
         const featureID = req.body.feature;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
-
         await validate.createReq(req.body);
 
         const reqs = await Req.find({ feature: featureID, changed_req: { $exists: false } });
@@ -115,10 +111,9 @@ const createReq = async (req, res, next) => {
 const updateReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
-
         await validate.updateReq(req.body);
 
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
@@ -142,7 +137,7 @@ const updateReq = async (req, res, next) => {
 const deleteReq = async (req, res, next) => {
     try {
         const reqID = req.params.reqID;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
 
@@ -166,15 +161,12 @@ const changeReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { title, text } = req.body;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
-
         await validate.updateReq(req.body);
 
         const changedReq = await Req.findById(reqID);
-
-        if (!changeReq) throwError('Req not found');
 
         const newReq = {
             key: changedReq.key,
@@ -223,7 +215,7 @@ const changeReq = async (req, res, next) => {
 const sortReqs = async (req, res, next) => {
     try {
         await validate.sort(req.body);
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkReqAccess(req.body[0]._id, userID);
 

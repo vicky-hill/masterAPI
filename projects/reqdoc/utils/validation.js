@@ -1,62 +1,20 @@
 const yup = require('yup');
 
-const createReq = async (values) => {
-    const schema = yup.object().shape({
-        title: yup.string(),
-        text: yup.string().required("No text was provided"),
-        feature: yup.string().required("No feature was provided"),
-    });
+const validateStrings = async (values, string) => {
+    const fields = string.split(" ");
+    const schemaObject = {};
 
-    await schema.validate(values, { abortEarly: false });
-}
+    fields.forEach(field => {
+        const isOptional = field.startsWith('~');
 
-const updateReq = async (values) => {
-    const schema = yup.object().shape({
-        title: yup.string(),
-        text: yup.string(),
-    });
+        if (isOptional) {
+            schemaObject[field.slice(1)] = yup.string()
+        } else {
+            schemaObject[field] = yup.string().required(`No ${field} was provided`)
+        }
+    })
 
-    await schema.validate(values, { abortEarly: false });
-}
-
-const createProject = async (values) => {
-    const schema = yup.object().shape({
-        name: yup.string("No name was provided"),
-        team: yup.string("No team was provided")
-    });
-
-    await schema.validate(values, { abortEarly: false });
-}
-
-const updateProject = async (values) => {
-    const schema = yup.object().shape({
-        name: yup.string("No name was provided")
-    });
-
-    await schema.validate(values, { abortEarly: false });
-}
-
-const createFeature = async (values) => {
-    const schema = yup.object().shape({
-        name: yup.string("No name was provided"),
-        project: yup.string("No project ID was provided")
-    });
-
-    await schema.validate(values, { abortEarly: false });
-}
-
-const updateFeature = async (values) => {
-    const schema = yup.object().shape({
-        name: yup.string("No name was provided"),
-    });
-
-    await schema.validate(values, { abortEarly: false });
-}
-
-const createStep = async (values) => {
-    const schema = yup.object().shape({
-        text: yup.string("No text was provided")
-    });
+    const schema = yup.object().shape(schemaObject);
 
     await schema.validate(values, { abortEarly: false });
 }
@@ -72,49 +30,56 @@ const sort = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
-const createTeam = async (values) => {
-    const schema = yup.object().shape({
-        user: yup.string("No user was provided to add to team")
-    });
+const createReq = async (values) => {
+    await validateStrings(values, "~title text feature");
+}
 
-    await schema.validate(values, { abortEarly: false });
+const updateReq = async (values) => {
+    await validateStrings(values, "~title ~text");
+}
+
+const createProject = async (values) => {
+    await validateStrings(values, "name team");
+}
+
+const updateProject = async (values) => {
+    await validateStrings(values, "name");
+}
+
+const createFeature = async (values) => {
+    await validateStrings(values, "name project");
+}
+
+const updateFeature = async (values) => {
+    await validateStrings(values, "name");
+}
+
+const createStep = async (values) => {
+    await validateStrings(values, "text");
+}
+
+const createTeam = async (values) => {
+    await validateStrings(values, "user");
 }
 
 const addComment = async (values) => {
-    const schema = yup.object().shape({
-        user: yup.string("No user was provided to add comment"),
-        text: yup.string("No text was provided to add comment"),
-    });
-
-    await schema.validate(values, { abortEarly: false });
+    await validateStrings(values, "user text");
 }
 
 const editComment = async (values) => {
-    const schema = yup.object().shape({
-        text: yup.string("No text was provided to edit comment"),
-    });
-
-    await schema.validate(values, { abortEarly: false });
+    await validateStrings(values, "text");
 }
 
 const createUser = async (values) => {
-    const schema = yup.object().shape({
-        firebaseID: yup.string("No firebaseID was provided to create user"),
-        email: yup.string("No email was provided to create user"),
-    });
-
-    await schema.validate(values, { abortEarly: false });
+    await validateStrings(values, "firebaseID email");
 }
 
 const updateUser = async (values) => {
-    const schema = yup.object().shape({
-        name: yup.string("No name was provided to update user"),
-    });
-
-    await schema.validate(values, { abortEarly: false });
+    await validateStrings(values, "name");
 }
 
 module.exports = {
+    validateStrings,
     createReq,
     updateReq,
     createProject,

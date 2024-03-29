@@ -69,7 +69,7 @@ const updateTeam = async (req, res, next) => {
  */
 const getUserTeams = async (req, res, next) => {
     try {
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         const teams = await Team.find({ 'users.user': userID }).populate({
             path: 'users.user',
@@ -91,7 +91,7 @@ const getUserTeams = async (req, res, next) => {
 const switchUserTeam = async (req, res, next) => {
     try {
         const { teamID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         const team = await Team.findById(teamID).populate({
             path: 'users.user',

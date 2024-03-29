@@ -23,6 +23,7 @@ exports.protect = async (req, res, next) => {
         }
 
         req.user = user;
+        req.user.userID = user._id;
 
         next();
     } catch (err) {

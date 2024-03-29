@@ -14,7 +14,11 @@ const TeamSchema = new mongoose.Schema({
             type: String,
             enum: ['admin', 'user']
         },
-    }]
+    }],
+    deleted: {
+        type: Date,
+        required: false
+    }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

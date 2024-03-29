@@ -14,7 +14,7 @@ const createStep = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { text } = req.body;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
 
@@ -50,7 +50,7 @@ const createStep = async (req, res, next) => {
 const deleteStep = async (req, res, next) => {
     try {
         const { stepID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkStepAccess(stepID, userID);
 

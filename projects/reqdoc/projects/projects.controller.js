@@ -37,7 +37,7 @@ const getProjects = async (req, res, next) => {
 const getProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkProjectAccess(projectID, userID);
 
@@ -86,7 +86,7 @@ const createProject = async (req, res, next) => {
 const deleteProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await checkProjectAccess(projectID, userID);
 
@@ -108,7 +108,7 @@ const deleteProject = async (req, res, next) => {
 const updateProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-        const { _id: userID } = req.user;
+       const { userID } = req.user;
 
         await validate.updateProject(req.body);
 
