@@ -17,7 +17,7 @@ const ReqCommentSchema = new mongoose.Schema({
     deleted: {
         type: Date,
         required: false
-    },
+    }
 }, {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -66,6 +66,10 @@ const ReqSchema = new mongoose.Schema({
     sort: {
         type: Number
     },
+    details: {
+        type: String,
+        required: false
+    },
     comments: [ReqCommentSchema]
 }, {
     timestamps: true,
@@ -77,13 +81,6 @@ ReqSchema.virtual('history', {
     ref: 'REQDOC_Req',
     localField: 'key',
     foreignField: 'changed_req',
-    justOne: false
-});
-
-ReqSchema.virtual('steps', {
-    ref: 'REQDOC_Step',
-    localField: '_id',
-    foreignField: 'req',
     justOne: false
 });
 

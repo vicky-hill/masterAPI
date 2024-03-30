@@ -3,7 +3,7 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkFeatureAccess, checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteFeature } = require('../utils/delete')
-const { steps, history, reqs } = require('../utils/populate')
+const { history, reqs } = require('../utils/populate')
 
 /**
  * Get features

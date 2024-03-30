@@ -1,7 +1,6 @@
 const Feature = require('../features/features.model')
 const Project = require('../projects/projects.model')
 const Req = require('../reqs/reqs.model')
-const Step = require('../steps/steps.model')
 const throwError = require('../../../utils/throwError')
 
 
@@ -17,7 +16,6 @@ const deleteFlagged = async (req, res, next) => {
         await Project.deleteMany({ deleted: true });
         await Req.deleteMany({ deleted: true });
         await Feature.deleteMany({ deleted: true });
-        await Step.deleteMany({ deleted: true });
         
         res.json({ msg: 'All flagged resources deleted'});
     } catch (err) {
@@ -26,20 +24,6 @@ const deleteFlagged = async (req, res, next) => {
     }
 }
 
-const getAllSteps = async (req, res, next) => {
-    try {
-
-        if (req.user.email !== 'pm@excersys.com') throwError('Not authorized, dev route only');
-
-        const steps = await Step.find();
-        res.json(steps);
-    } catch (err) {
-        err.errorCode = 'projects_003';
-        next(err);
-    }
-}
-
 module.exports = {
-    deleteFlagged,
-    getAllSteps
+    deleteFlagged
 }

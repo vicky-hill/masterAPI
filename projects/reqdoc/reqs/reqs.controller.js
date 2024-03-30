@@ -1,12 +1,11 @@
 const Req = require('./reqs.model')
-const Step = require('../steps/steps.model')
 const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
-const { steps, history, features, subFeatures, project, comments } = require('../utils/populate')
+const { history, features, subFeatures, project, comments } = require('../utils/populate')
 
 /**
  * Get reqs
@@ -28,7 +27,7 @@ const getReqs = async (req, res, next) => {
 
         const reqs = await Req
             .find({ feature: featureID, changed_req: { $exists: false } })
-            .populate([history, steps, features])
+            .populate([history, features])
             .sort({ sort: 1 });
 
         const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
@@ -52,7 +51,7 @@ const getReq = async (req, res, next) => {
 
         await checkReqAccess(reqID, userID);
 
-        const requirement = await Req.findById(reqID).populate('history');
+        const requirement = await Req.findById(reqID).populate([history]);
 
         if (!requirement) throwError('Requirement not found');
 
@@ -106,6 +105,7 @@ const createReq = async (req, res, next) => {
  * @params reqID
  * @property {String} req.body.title 
  * @property {String} req.body.text 
+ * @property {String} req.body.details 
  * @returns Req
  */
 const updateReq = async (req, res, next) => {
@@ -190,14 +190,8 @@ const changeReq = async (req, res, next) => {
             { new: true }
         );
 
-        await Step.updateMany(
-            { req: reqID },
-            { req: _id },
-            { new: true }
-        )
-
         const latestReq = await Req.findById(_id)
-            .populate([history, steps]);
+            .populate([history]);
 
         res.json(latestReq);
     } catch (err) {
@@ -274,19 +268,19 @@ const searchReqs = async (req, res, next) => {
             ]
         }).populate(project)
 
-        const steps = await Step.find({
-            $and: [
-                { project: projectID },
-                { deleted: { $exists: false } },
-                { text: { $regex: term, $options: 'i' } }
-            ]
-        }).populate({
-            path: 'req',
-            select: 'title feature',
-            populate: project
-        })
+        // const steps = await Step.find({
+        //     $and: [
+        //         { project: projectID },
+        //         { deleted: { $exists: false } },
+        //         { text: { $regex: term, $options: 'i' } }
+        //     ]
+        // }).populate({
+        //     path: 'req',
+        //     select: 'title feature',
+        //     populate: project
+        // })
 
-        res.json({ data: { reqs, history, steps } });
+        res.json({ data: { reqs, history, steps: [] } });
     } catch (err) {
         err.errorCode = 'reqs_008';
         next(err);
@@ -315,7 +309,7 @@ const addComment = async (req, res, next) => {
             reqID,
             { $push: { comments: comment } },
             { new: true }
-        ).populate([history, steps, comments]);
+        ).populate([history, comments]);
 
         res.json(updatedReq)
     } catch (err) {
@@ -341,7 +335,7 @@ const editComment = async (req, res, next) => {
 
         const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
             { "$set": { "comments.$.text": text, "comments.$.edit": true } }, { new: true })
-            .populate([history, steps, comments]);
+            .populate([history, comments]);
 
         res.json(updatedReq);
     } catch (err) {
@@ -363,7 +357,7 @@ const deleteComment = async (req, res, next) => {
 
         const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
             { "$set": { "comments.$.deleted": new Date(), "comments.$.edit": true } }, { new: true })
-            .populate([history, steps, comments]);
+            .populate([history, comments]);
 
         res.json(updatedReq);
     } catch (err) {

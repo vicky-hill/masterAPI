@@ -10,13 +10,6 @@ const subFeatures = {
     options: { sort: { sort: 'asc' } }
 }
 
-const steps = {
-    path: 'steps',
-    select: 'text',
-    options: { sort: { sort: 'asc' } },
-    match: { deleted: { $exists: false } }
-}
-
 const history = {
     path: 'history',
     select: 'title text latest_req createdAt',
@@ -47,12 +40,11 @@ const project = {
 const reqs = {
     path: 'reqs',
     match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-    populate: [steps, history, comments]
+    populate: [history, comments]
 }
 
 module.exports = {
     history,
-    steps,
     team,
     reqs,
     features,

@@ -35,7 +35,7 @@ const createReq = async (values) => {
 }
 
 const updateReq = async (values) => {
-    await validateStrings(values, "~title ~text");
+    await validateStrings(values, "~title ~text ~details");
 }
 
 const createProject = async (values) => {
@@ -52,10 +52,6 @@ const createFeature = async (values) => {
 
 const updateFeature = async (values) => {
     await validateStrings(values, "name");
-}
-
-const createStep = async (values) => {
-    await validateStrings(values, "text");
 }
 
 const createTeam = async (values) => {
@@ -86,7 +82,6 @@ module.exports = {
     updateProject,
     createFeature,
     updateFeature,
-    createStep,
     createTeam,
     addComment,
     editComment,
