@@ -15,7 +15,7 @@ const { history, features, subFeatures, project, comments } = require('../utils/
 const getReqs = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -72,7 +72,7 @@ const getReq = async (req, res, next) => {
 const createReq = async (req, res, next) => {
     try {
         const featureID = req.body.feature;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
         await validate.createReq(req.body);
@@ -111,7 +111,7 @@ const createReq = async (req, res, next) => {
 const updateReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
         await validate.updateReq(req.body);
@@ -137,7 +137,7 @@ const updateReq = async (req, res, next) => {
 const deleteReq = async (req, res, next) => {
     try {
         const reqID = req.params.reqID;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
 
@@ -161,7 +161,7 @@ const changeReq = async (req, res, next) => {
     try {
         const { reqID } = req.params;
         const { title, text } = req.body;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkReqAccess(reqID, userID);
         await validate.updateReq(req.body);
@@ -209,7 +209,7 @@ const changeReq = async (req, res, next) => {
 const sortReqs = async (req, res, next) => {
     try {
         await validate.sort(req.body);
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkReqAccess(req.body[0]._id, userID);
 
@@ -245,7 +245,7 @@ const searchReqs = async (req, res, next) => {
                 {
                     $or: [
                         { title: { $regex: term, $options: 'i' } },
-                        { text: { $regex: term, $options: 'i' } }
+                        { text: { $regex: term, $options: 'i' } },
                     ]
                 },
                 { project: projectID },
@@ -266,21 +266,9 @@ const searchReqs = async (req, res, next) => {
                 { deleted: { $exists: false } },
                 { changed_req: { $exists: true } }
             ]
-        }).populate(project)
+        }).populate(project);
 
-        // const steps = await Step.find({
-        //     $and: [
-        //         { project: projectID },
-        //         { deleted: { $exists: false } },
-        //         { text: { $regex: term, $options: 'i' } }
-        //     ]
-        // }).populate({
-        //     path: 'req',
-        //     select: 'title feature',
-        //     populate: project
-        // })
-
-        res.json({ data: { reqs, history, steps: [] } });
+        res.json({ data: { reqs, history } });
     } catch (err) {
         err.errorCode = 'reqs_008';
         next(err);
@@ -352,7 +340,7 @@ const deleteComment = async (req, res, next) => {
     try {
         const { _id: user } = req.user;
         const { commentID } = req.params;
- 
+
         await checkCommentAccess(commentID, user);
 
         const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
