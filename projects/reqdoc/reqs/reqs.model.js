@@ -10,7 +10,7 @@ const ReqCommentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    edit: {
+    edited: {
         type: Boolean,
         required: false
     },

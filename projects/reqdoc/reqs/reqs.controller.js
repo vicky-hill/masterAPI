@@ -2,6 +2,7 @@ const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
+const mongoose = require('mongoose')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
@@ -41,21 +42,40 @@ const getReqs = async (req, res, next) => {
 
 /**
  * Get req by ID
- * @param  {objectId} reqID
+ * @param  {objectId} reqID - can be either the _id or key
  * @returns {Req}
  */
 const getReq = async (req, res, next) => {
     try {
-        const { reqID } = req.params;
-        const { userID } = req.user;
+        const { userID, team } = req.user;
 
-        await checkReqAccess(reqID, userID);
+        const isObjectID = mongoose.Types.ObjectId.isValid(req.params.reqID);
 
-        const requirement = await Req.findById(reqID).populate([history]);
+        const reqID = isObjectID && req.params.reqID;
+        const reqKey = !isObjectID && req.params.reqID;
 
-        if (!requirement) throwError('Requirement not found');
+        if (reqKey) {
+            const requirement = await Req
+                .findOne({ team, changed_req: { $exists: false }, key: { $regex: new RegExp(reqKey, 'i') } })
+                .populate([history, comments]);
 
-        res.json(requirement);
+            if (!requirement) throwError('Requirement not found');
+
+            await checkReqAccess(requirement._id, userID);
+
+            res.json(requirement);
+        }
+
+        if (reqID) {
+            await checkReqAccess(reqID, userID);
+            const requirement = await Req
+                .findById(reqID)
+                .populate([history, comments]);
+
+            res.json(requirement);
+        }
+
+        throwError("No valid reqKey or reqID");
     } catch (err) {
         err.errorCode = 'reqs_002';
         next(err);
@@ -322,7 +342,7 @@ const editComment = async (req, res, next) => {
         await validate.editComment(req.body);
 
         const updatedReq = await Req.findOneAndUpdate({ "comments._id": commentID },
-            { "$set": { "comments.$.text": text, "comments.$.edit": true } }, { new: true })
+            { "$set": { "comments.$.text": text, "comments.$.edited": true } }, { new: true })
             .populate([history, comments]);
 
         res.json(updatedReq);
