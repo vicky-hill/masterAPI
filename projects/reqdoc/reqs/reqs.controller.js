@@ -7,6 +7,7 @@ const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
 const { history, features, subFeatures, project, comments } = require('../utils/populate')
+const Project = require('../projects/projects.model')
 
 /**
  * Get reqs
@@ -42,40 +43,53 @@ const getReqs = async (req, res, next) => {
 
 /**
  * Get req by ID
- * @param  {objectId} reqID - can be either the _id or key
+ * @param  reqID
  * @returns {Req}
  */
 const getReq = async (req, res, next) => {
     try {
-        const { userID, team } = req.user;
+        const { userID } = req.user;
+        const { reqID } = req.params;
 
-        const isObjectID = mongoose.Types.ObjectId.isValid(req.params.reqID);
+        await checkReqAccess(reqID, userID);
+        
+        const requirement = await Req
+            .findById(reqID)
+            .populate([history, comments]);
 
-        const reqID = isObjectID && req.params.reqID;
-        const reqKey = !isObjectID && req.params.reqID;
+        res.json(requirement);
+    } catch (err) {
+        err.errorCode = 'reqs_002';
+        next(err);
+    }
+}
 
-        if (reqKey) {
-            const requirement = await Req
-                .findOne({ team, changed_req: { $exists: false }, key: { $regex: new RegExp(reqKey, 'i') } })
-                .populate([history, comments]);
+/**
+ * Get req by ID
+ * @param  {reqKey}
+ * @param  {projectKey}
+ * @returns {Req}
+ */
+const getReqByKey = async (req, res, next) => {
+    try {
+        const { userID } = req.user;
+        const { reqKey, projectKey } = req.params;
 
-            if (!requirement) throwError('Requirement not found');
+        const project = await Project.findOne({ key: projectKey })
 
-            await checkReqAccess(requirement._id, userID);
+        const requirement = await Req
+            .findOne({
+                changed_req: { $exists: false },
+                key: { $regex: new RegExp(reqKey, 'i') },
+                project: project._id
+            })
+            .populate([history, comments]);
 
-            res.json(requirement);
-        }
+        if (!requirement) throwError('Requirement not found');
 
-        if (reqID) {
-            await checkReqAccess(reqID, userID);
-            const requirement = await Req
-                .findById(reqID)
-                .populate([history, comments]);
+        await checkReqAccess(requirement._id, userID);
 
-            res.json(requirement);
-        }
-
-        throwError("No valid reqKey or reqID");
+        res.json(requirement);
     } catch (err) {
         err.errorCode = 'reqs_002';
         next(err);
@@ -384,5 +398,6 @@ module.exports = {
     searchReqs,
     addComment,
     editComment,
-    deleteComment
+    deleteComment,
+    getReqByKey
 }
