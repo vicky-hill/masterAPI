@@ -2,7 +2,6 @@ const Req = require('./reqs.model')
 const Feature = require('../features/features.model')
 const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
-const mongoose = require('mongoose')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
@@ -53,9 +52,7 @@ const getReq = async (req, res, next) => {
 
         await checkReqAccess(reqID, userID);
         
-        const requirement = await Req
-            .findById(reqID)
-            .populate([history, comments]);
+        const requirement = await getReqByID(reqID);
 
         res.json(requirement);
     } catch (err) {
@@ -65,7 +62,7 @@ const getReq = async (req, res, next) => {
 }
 
 /**
- * Get req by ID
+ * Get req by key
  * @param  {reqKey}
  * @param  {projectKey}
  * @returns {Req}
@@ -224,8 +221,7 @@ const changeReq = async (req, res, next) => {
             { new: true }
         );
 
-        const latestReq = await Req.findById(_id)
-            .populate([history]);
+        const latestReq = await getReqByID(_id)
 
         res.json(latestReq);
     } catch (err) {
