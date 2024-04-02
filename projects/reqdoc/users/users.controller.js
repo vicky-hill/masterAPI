@@ -1,4 +1,5 @@
 const User = require('./users.model')
+const Team = require('../teams/teams.model')
 const jwt_decode = require('jwt-decode')
 const validate = require('../utils/validation')
 
@@ -21,7 +22,7 @@ const getAllUsers = async (req, res, next) => {
  * Save a new user
  * @property {string} req.body.email
  * @property {string} req.body.firebaseID
- * @returns user { _id, firebaseID, email, createdAt }
+ * @returns {User}
  */
 const createUser = async (req, res, next) => {
     try {
@@ -31,6 +32,17 @@ const createUser = async (req, res, next) => {
         await validate.createUser(body);
 
         const newUser = await User.create(body);
+        const newTeam = await Team.create({
+            name: 'New Team',
+            users: [{ user: newUser._id, role: 'admin'}]
+        })
+
+        await User.findByIdAndUpdate(
+            newUser._id,
+            { team: newTeam._id, role: 'admin' },
+            { new: true}
+        )
+  
         const user = await User.findById(newUser._id)
             .select('-firebaseID -createdAt -updatedAt -__v');
 
