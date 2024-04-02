@@ -72,7 +72,7 @@ const getReqByKey = async (req, res, next) => {
         const { userID } = req.user;
         const { reqKey, projectKey } = req.params;
 
-        const project = await Project.findOne({ key: projectKey })
+        const project = await Project.findOne({ slug: projectKey })
 
         const requirement = await Req
             .findOne({
@@ -88,7 +88,7 @@ const getReqByKey = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_002';
+        err.errorCode = 'reqs_003';
         next(err);
     }
 }
@@ -110,7 +110,9 @@ const createReq = async (req, res, next) => {
 
         const reqs = await Req.find({ feature: featureID, changed_req: { $exists: false } });
 
-        const feature = await Feature.findById(featureID);
+        const feature = await Feature
+            .findById(featureID)
+            .populate({ path: 'project', select: 'key' })
 
         if (!feature) throwError(`Feature with _id ${featureID} does not exist, can't create req for non existing feature`);
 
@@ -119,14 +121,14 @@ const createReq = async (req, res, next) => {
 
         const requirement = await Req.create({
             ...req.body,
-            key: `Req-${keyNumber.toString().padStart(3, 0)}`,
+            key: `${feature.project.key}-${keyNumber.toString().padStart(3, 0)}`,
             sort: reqs.length,
             project: feature.project
         });
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_003';
+        err.errorCode = 'reqs_004';
         next(err);
     }
 }
@@ -155,7 +157,7 @@ const updateReq = async (req, res, next) => {
 
         res.status(200).json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_004';
+        err.errorCode = 'reqs_005';
         next(err);
     }
 }
@@ -176,7 +178,7 @@ const deleteReq = async (req, res, next) => {
 
         res.status(200).json(deletedReq);
     } catch (err) {
-        err.errorCode = 'reqs_005';
+        err.errorCode = 'reqs_006';
         next(err);
     }
 }
@@ -225,7 +227,7 @@ const changeReq = async (req, res, next) => {
 
         res.json(latestReq);
     } catch (err) {
-        err.errorCode = 'reqs_006';
+        err.errorCode = 'reqs_007';
         next(err);
     }
 }
@@ -253,7 +255,7 @@ const sortReqs = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = 'reqs_007';
+        err.errorCode = 'reqs_008';
         next(err);
     }
 }
@@ -300,7 +302,7 @@ const searchReqs = async (req, res, next) => {
 
         res.json({ data: { reqs, history } });
     } catch (err) {
-        err.errorCode = 'reqs_008';
+        err.errorCode = 'reqs_009';
         next(err);
     }
 }
@@ -331,6 +333,7 @@ const addComment = async (req, res, next) => {
 
         res.json(updatedReq)
     } catch (err) {
+        err.errorCode = 'reqs_010';
         next(err);
     }
 }
@@ -357,6 +360,7 @@ const editComment = async (req, res, next) => {
 
         res.json(updatedReq);
     } catch (err) {
+        err.errorCode = 'reqs_011';
         next(err);
     }
 }
@@ -379,6 +383,7 @@ const deleteComment = async (req, res, next) => {
 
         res.json(updatedReq);
     } catch (err) {
+        err.errorCode = 'reqs_012';
         next(err);
     }
 }

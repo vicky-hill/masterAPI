@@ -17,8 +17,8 @@ const getProjects = async (req, res, next) => {
             .populate(features);
 
         const response = {
-            data: projects.map(({ _id, name, key, first_feature, team }) => ({
-                _id, name, key, team, first_feature
+            data: projects.map(({ _id, name, slug, first_feature, team }) => ({
+                _id, name, slug, team, first_feature
             }))
         }
 
@@ -59,6 +59,8 @@ const getProject = async (req, res, next) => {
 /**
  * Create a project
  * @property {String} req.body.name 
+ * @property {String} req.body.slug 
+ * @property {String} req.body.key 
  * @returns {Project}
  */
 const createProject = async (req, res, next) => {
@@ -103,6 +105,7 @@ const deleteProject = async (req, res, next) => {
  * Update project
  * @param projectID
  * @property req.body.name
+ * @property req.body.slug
  * @returns {Project}
  */
 const updateProject = async (req, res, next) => {

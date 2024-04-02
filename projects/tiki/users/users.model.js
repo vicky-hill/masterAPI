@@ -2,12 +2,14 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
     firebaseID: {
-        type: String,
-        required: true
+        type: String
     },
     email: {
         type: String,
         required: true,
+    },
+    pending: {
+        type: Boolean
     }
 }, {
     timestamps: true

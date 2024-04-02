@@ -39,11 +39,11 @@ const updateReq = async (values) => {
 }
 
 const createProject = async (values) => {
-    await validateStrings(values, "name team");
+    await validateStrings(values, "name team slug key");
 }
 
 const updateProject = async (values) => {
-    await validateStrings(values, "name");
+    await validateStrings(values, "~name ~slug");
 }
 
 const createFeature = async (values) => {

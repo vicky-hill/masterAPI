@@ -34,21 +34,52 @@ const createUser = async (req, res, next) => {
         const newUser = await User.create(body);
         const newTeam = await Team.create({
             name: 'New Team',
-            users: [{ user: newUser._id, role: 'admin'}]
+            users: [{ user: newUser._id, role: 'admin' }]
         })
 
         await User.findByIdAndUpdate(
             newUser._id,
             { team: newTeam._id, role: 'admin' },
-            { new: true}
+            { new: true }
         )
-  
+
         const user = await User.findById(newUser._id)
             .select('-firebaseID -createdAt -updatedAt -__v');
 
         res.status(201).json(user);
     } catch (err) {
         err.errorCode = 'users_002';
+        next(err);
+    }
+}
+
+/**
+ * Invite user to team
+ * @property {string} req.body.team
+ * @property {string} req.body.email
+ * @property {string} req.body.firebaseID
+ * @returns {User}
+ */
+const inviteUser = async (req, res, next) => {
+    try {
+        const { userID } = req.user;
+        const { team } = req.body;
+
+        if (userID) {
+            await Team.findByIdAndUpdate(
+                team,
+                { $push: { users: { user: userID, role: 'user' } } },
+                { new: true }
+            )
+
+            const user = await User.findById(user)
+                .select('-firebaseID -createdAt -updatedAt -__v');
+
+            return res.json(user);
+        } 
+
+    } catch (err) {
+        err.errorCode = 'users_003';
         next(err);
     }
 }
@@ -69,7 +100,7 @@ const updateUser = async (req, res, next) => {
 
         res.status(200).json(updatedUser);
     } catch (err) {
-        err.errorCode = 'users_002';
+        err.errorCode = 'users_004';
         next(err);
     }
 }
@@ -100,7 +131,7 @@ const getUser = async (req, res, next) => {
 
         res.json(user);
     } catch (err) {
-        next({ ...err, errorCode: 'users_003' })
+        next({ ...err, errorCode: 'users_005' })
         next(err);
     }
 }
@@ -111,5 +142,6 @@ module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    getUser
+    getUser,
+    inviteUser
 }
