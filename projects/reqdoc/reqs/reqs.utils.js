@@ -1,6 +1,6 @@
 const Req = require('./reqs.model')
 const throwError = require('../../../utils/throwError')
-const { history } = require('../utils/populate')
+const { history, comments } = require('../utils/populate')
 
 const getReqByID = async function (reqID) {
     const product = await Req

@@ -34,7 +34,7 @@ const team = {
 
 const project = {
     path: 'project',
-    select: 'key'
+    select: 'key slug'
 }
 
 const reqs = {
