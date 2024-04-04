@@ -27,9 +27,13 @@ const createUser = async (values) => {
     await validateStrings(values, "firebaseID email");
 }
 
+const createImage = async (values) => {
+    await validateStrings(values, "url name event user imageID");
+}
 
 module.exports = {
     validateStrings,
     createEvent,
-    createUser
+    createUser,
+    createImage
 };

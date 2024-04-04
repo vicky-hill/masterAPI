@@ -15,19 +15,19 @@ const ImageSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Minite_User',
+        ref: 'MINITE_User',
         required: true
     },
     event: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Minite_Event',
+        ref: 'MINITE_Event',
         required: true
     },
-    bookmark: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Minite_Bookmark',
-        default: null
-    },
+    // bookmark: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'MINITE_Bookmark',
+    //     default: null
+    // },
     orientation: {
         type: String,
         enum: ['portrait', 'landscape', 'even'],
@@ -48,4 +48,4 @@ const ImageSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-module.exports = mongoose.model('Minite_Image', ImageSchema);
+module.exports = mongoose.model('MINITE_Image', ImageSchema);

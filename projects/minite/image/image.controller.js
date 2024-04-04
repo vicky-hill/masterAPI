@@ -1,9 +1,10 @@
-const Image = require('./image.model');
-const Bookmark = require('../bookmarks/bookmarks.model');
-const utils = require('./image.utils');
-const ImageKit = require('imagekit');
-require('dotenv').config();
+const Image = require('./image.model')
+const Bookmark = require('../bookmarks/bookmarks.model')
+const utils = require('./image.utils')
+const ImageKit = require('imagekit')
+const validate = require('../utils/validation')
 
+require('dotenv').config();
 
 const imagekit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -11,24 +12,26 @@ const imagekit = new ImageKit({
     privateKey: process.env.IK_PRIVATE_KEY
 });
 
-
 /**
  * Create image
- * @header x-auth-token
- * @property req.body.name - name of the event
+ * @property {array} [{ url, name, event }]
+ * @property {string} req.body.url - imagekit url for image
+ * @property {string} req.body.name - 2024_paris_main
+ * @property {string} req.body.event - object Id of event
  */
-const createImage = async (req, res) => {
+const createImage = async (req, res, next) => {
     try {
+        const { user } = req.user;
+        
         const uploadedImages = [];
 
         for (let i = 0; i < req.body.length; i++) {
             const imageID = await utils.getNewImageID();
+            const body = { ...req.body[i], user, imageID }
 
-            const uploaded = await Image.create({
-                ...req.body[i],
-                user: req.user.id,
-                imageID
-            })
+            await validate.createImage(body);
+
+            const uploaded = await Image.create(body);
             uploadedImages.push(uploaded);
         }
 
@@ -38,15 +41,16 @@ const createImage = async (req, res) => {
         }, 1)
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something didnt work right' });
+        err.errorCode = 'images_001';
+        next(err);
     }
 }
 
-/* ===================================
-   Get all images
-=================================== */
-const getImages = async (req, res) => {
+/**
+ * Get all images
+
+ */
+const getImages = async (req, res, next) => {
     try {
         // const bookmark = await Bookmark.findById(req.params.id);
 
@@ -56,44 +60,45 @@ const getImages = async (req, res) => {
         //     query.bookmark = bookmark._id.toString();
         // }
 
-        const images = await Image.find({ user: req.user.id })
-            // .populate("event");
+        const { user } = req.user;
+
+        const images = await Image.find({ user })
+            .populate("event");
 
         res.status(200).json(images);
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: 'Something went wrong' });
+        err.errorCode = 'images_002';
+        next(err);
     }
 }
 
-/* ===================================
-   Update image
-=================================== */
-const updateImage = async (req, res) => {
+/**
+ * Update image
+ * @param imageID
+ * @property req.body.url
+ * @property req.body.name
+ * @property req.body.version
+ */
+const updateImage = async (req, res, next) => {
     try {
-        let image = await Image.findById(req.params.id);
+        const { imageID } = req.params;
+        
+        let image = await Image.findById(imageID);
 
-        if (!image) {
-            return res.status(404).json({ msg: 'Image not found' });
-        }
-
-        if (image.user.toString() !== req.user.id) {
-            return res.status(403).json({ msg: 'You are not authorized to update the image' })
-        }
-
-        image = await Image.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        image = await Image.findByIdAndUpdate(imageID, req.body, { new: true });
 
         res.status(200).json(image);
     } catch (err) {
-        console.log(err);
-        res.status(500)
+        err.errorCode = 'images_003';
+        next(err);
     }
 }
 
-/* ===================================
-   Delete images
-=================================== */
-const deleteImages = async (req, res) => {
+/**
+ * Delete images
+ * @property {array} req.body [objectID]
+ */
+const deleteImages = async (req, res, next) => {
     try {
         const deletedImages = [];
 
@@ -107,18 +112,18 @@ const deleteImages = async (req, res) => {
         }, 1)
 
     } catch (err) {
-        console.log(err);
-        res.status(500)
+        err.errorCode = 'images_004';
+        next(err);
     }
 }
 
-const imageKitAuth = async (req, res) => {
+const imageKitAuth = async (req, res, next) => {
     try {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        console.log(err);
-        res.status(500)
+        err.errorCode = 'images_005';
+        next(err);
     }
 }
 
