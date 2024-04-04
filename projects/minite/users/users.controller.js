@@ -65,7 +65,7 @@ const createUser = async (req, res, next) => {
 /**
  * Get current user
  * @header x-auth-token
- * @returns user { _id, email, createdAt }
+ * @returns user { _id, email }
  */
 const getUser = async (req, res, next) => {
     try {

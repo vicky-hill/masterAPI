@@ -20,7 +20,7 @@ const validateStrings = async (values, string) => {
 }
 
 const createEvent = async (values) => {
-    await validateStrings(values, "~title text feature");
+    await validateStrings(values, "name user");
 }
 
 const createUser = async (values) => {

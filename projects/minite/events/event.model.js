@@ -6,12 +6,8 @@ const EventSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Minite_User'
+        ref: 'MINITE_User'
     },
-    images: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'Minite_Image'
-    }],
     year: {
         type: String,
         default: new Date().getFullYear()
@@ -22,5 +18,11 @@ const EventSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
+EventSchema.virtual('images', {
+    ref: 'MINITE_Image',
+    localField: '_id',
+    foreignField: 'event',
+    justOne: false
+})
 
-module.exports = mongoose.model('Minite_Event', EventSchema);
+module.exports = mongoose.model('MINITE_Event', EventSchema);

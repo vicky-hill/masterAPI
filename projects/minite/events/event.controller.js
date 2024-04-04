@@ -1,14 +1,19 @@
 const Event = require('./event.model')
-
+const validate = require('../utils/validation')
 
 /**
  * Create event
- * @property req.body.name - name of the event
+ * @property {string} req.body.name 
  */
 const createEvent = async (req, res) => {
     try {
+        const { name } = req.body;
+        const { userID } = req.user;
+       
+        const body = { name, user: userID }
+        await validate.createEvent(body);
         
-        const event = await Event.create({ ...req.body, user: req.user.id });
+        const event = await Event.create(body);
 
         res.status(201).json(event);
     } catch (err) {
@@ -18,13 +23,14 @@ const createEvent = async (req, res) => {
 
 /**
  * Get all events for user
- * @header x-auth-token
  * @returns [{ _id, name, user, year, createdAt, updatedAt }]
  */
 const getAllUserEvents = async (req, res) => {
     try {
-        const events = await Event.find({ user: req.user.id })
-            .populate('images');
+        const { userID } = req.user;
+
+        const events = await Event.find({ user: userID })
+            // .populate('images');
 
         res.status(200).json(events);
     } catch (err) {
@@ -35,13 +41,15 @@ const getAllUserEvents = async (req, res) => {
 
 /**
  * Get event with images
- * @header x-auth-token
- * @param eventID
+ * @query eventID
  * @returns [{ _id, name, user, year, createdAt, updatedAt }]
  */
 const getEventByID = async (req, res) => {
     try {
-        const event = await Event.findById("64fe366b7c6fc458c573dd6f").populate('images');
+        const { eventID } = req.params;
+
+        const event = await Event.findById(eventID)
+        // .populate('images');
          
         res.status(200).json(event);
     } catch (err) {

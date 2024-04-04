@@ -51,10 +51,10 @@ router.use('/api/lesprit/words', lesprit_wordRoutes)
 =================================== */
 router.use('/api/minite/user', minite_userRoutes)
 router.use('/api/minite/upload', minite_uploadRoutes)
-router.use('/api/minite/image', minite_imageRoutes)
-router.use('/api/minite/group', minite_groupRoutes)
-router.use('/api/minite/bookmark', minite_bookmarkRoutes)
-router.use('/api/minite/event', minite_eventRoutes)
+router.use('/api/minite/images', minite_imageRoutes)
+router.use('/api/minite/groups', minite_groupRoutes)
+router.use('/api/minite/bookmarks', minite_bookmarkRoutes)
+router.use('/api/minite/events', minite_eventRoutes)
 
 /* ===================================
    Hot Sauce

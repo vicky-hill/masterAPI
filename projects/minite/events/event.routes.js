@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const eventCtrl = require('./event.controller')
-const { protect } = require('../../../middleware/auth')
+const { protect } = require('../utils/middleware');
 
 router
     .route('/')
@@ -9,7 +9,7 @@ router
     .post(protect, eventCtrl.createEvent)
 
 router
-    .route('/:id')
+    .route('/:eventID')
     .get(protect, eventCtrl.getEventByID)
 
 module.exports = router;
