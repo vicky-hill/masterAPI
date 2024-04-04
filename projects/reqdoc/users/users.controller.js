@@ -121,6 +121,7 @@ const getUser = async (req, res, next) => {
         }
 
         const decodedToken = jwt_decode(token);
+
         const user = await User.findOne({ firebaseID: decodedToken.user_id })
             .select('-firebaseID -createdAt -updatedAt -__v');
 

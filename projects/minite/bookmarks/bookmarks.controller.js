@@ -1,5 +1,5 @@
 const Bookmark = require('./bookmarks.model');
-const User = require('../auth/auth.model');
+const User = require('../users/users.model');
 
 /* ===================================
    Save Bookmark

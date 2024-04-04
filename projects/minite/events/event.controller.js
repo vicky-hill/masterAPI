@@ -3,11 +3,11 @@ const Event = require('./event.model')
 
 /**
  * Create event
- * @header x-auth-token
  * @property req.body.name - name of the event
  */
 const createEvent = async (req, res) => {
     try {
+        
         const event = await Event.create({ ...req.body, user: req.user.id });
 
         res.status(201).json(event);

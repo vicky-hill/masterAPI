@@ -5,7 +5,7 @@ const lesprit_authRoutes = require('./projects/lesprit/auth/auth.routes')
 const lesprit_listRoutes = require('./projects/lesprit/lists/lists.routes')
 const lesprit_wordRoutes = require('./projects/lesprit/words/words.routes')
 
-const minite_authRoutes = require('./projects/minite/auth/auth.routes')
+const minite_userRoutes = require('./projects/minite/users/users.routes')
 const minite_uploadRoutes = require('./projects/minite/upload/upload.routes')
 const minite_imageRoutes = require('./projects/minite/image/image.routes')
 const minite_groupRoutes = require('./projects/minite/group/group.routes')
@@ -49,7 +49,7 @@ router.use('/api/lesprit/words', lesprit_wordRoutes)
 /* ===================================
    Minite
 =================================== */
-router.use('/api/minite/user', minite_authRoutes)
+router.use('/api/minite/user', minite_userRoutes)
 router.use('/api/minite/upload', minite_uploadRoutes)
 router.use('/api/minite/image', minite_imageRoutes)
 router.use('/api/minite/group', minite_groupRoutes)
