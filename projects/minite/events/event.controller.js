@@ -31,9 +31,9 @@ const getAllUserEvents = async (req, res, next) => {
         const { user } = req.user;
 
         const events = await Event.find({ user })
-        // .populate('images');
+            .populate('images');
 
-        res.status(200).json(events);
+        res.status(200).json({ data: events });
     } catch (err) {
         err.errorCode = 'events_002';
         next(err);

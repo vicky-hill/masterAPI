@@ -2,7 +2,8 @@ const User = require('./users.model');
 const Bookmark = require('../bookmarks/bookmarks.model');
 require('dotenv').config();
 const jwt_decode = require('jwt-decode')
-const validate = require('../utils/validation')
+const validate = require('../utils/validation');
+const { getNewImageID } = require('../image/image.utils');
 
 
 /**
@@ -79,13 +80,16 @@ const getUser = async (req, res, next) => {
 
         const decodedToken = jwt_decode(token);
 
-        const user = await User.findOne({ firebaseID: decodedToken.user_id })
+        let user = await User.findOne({ firebaseID: decodedToken.user_id })
             .select('-firebaseID -createdAt -updatedAt -__v');
 
         if (!user) {
             res.json(null);
             return;
         }
+
+        user = user.toObject()
+        user.nextImageID = await getNewImageID(user._id);
 
         res.json(user);
     } catch (err) {
