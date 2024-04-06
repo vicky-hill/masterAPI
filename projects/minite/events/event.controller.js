@@ -5,13 +5,14 @@ const { checkEventAccess } = require('../utils/access');
 /**
  * Create event
  * @property {string} req.body.name 
+ * @property {string} req.body.year 
  */
 const createEvent = async (req, res, next) => {
     try {
-        const { name } = req.body;
+        const { name, year } = req.body;
         const { user } = req.user;
 
-        const body = { name, user }
+        const body = { name, year, user }
         await validate.createEvent(body);
 
         const event = await Event.create(body);
