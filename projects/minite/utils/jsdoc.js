@@ -18,6 +18,7 @@
  * @property {string} year
  * @property {objectId} user
  * @property {objectId} event
+ * @property {string} file
  * @property {date} createdAt
  * @property {date} [deleted]
  * @property {'portrait' | 'landscape' | 'even'} portrait

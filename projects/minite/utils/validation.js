@@ -28,7 +28,7 @@ const createUser = async (values) => {
 }
 
 const createImage = async (values) => {
-    await validateStrings(values, "url name event user imageID");
+    await validateStrings(values, "url filePath fileName thumbnail name event user imageID");
 }
 
 module.exports = {

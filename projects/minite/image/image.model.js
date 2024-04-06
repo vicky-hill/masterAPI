@@ -5,6 +5,18 @@ const ImageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    fileName: {
+        type: String,
+        required: true
+    },
+    filePath: {
+        type: String,
+        required: true
+    },
+    thumbnail: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -23,15 +35,9 @@ const ImageSchema = new mongoose.Schema({
         ref: 'MINITE_Event',
         required: true
     },
-    // bookmark: {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'MINITE_Bookmark',
-    //     default: null
-    // },
     orientation: {
         type: String,
-        enum: ['portrait', 'landscape', 'even'],
-        default: 'portrait'
+        enum: ['portrait', 'landscape', 'even']
     },
     version: {
         type: String,
@@ -42,10 +48,21 @@ const ImageSchema = new mongoose.Schema({
         type: String,
         default: new Date().getFullYear()
     },
+    width: {
+        type: Number,
+    },
+    height: {
+        type: Number
+    },
     deleted: {
         type: Date,
         required: false
-    }
+    },
+    // bookmark: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'MINITE_Bookmark',
+    //     default: null
+    // },
 }, {
     timestamps: true,
     toJSON: { virtuals: true },

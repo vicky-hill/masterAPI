@@ -3,6 +3,7 @@ const Bookmark = require('../bookmarks/bookmarks.model')
 const utils = require('./image.utils')
 const ImageKit = require('imagekit')
 const validate = require('../utils/validation')
+const { checkEventAccess } = require('../utils/access')
 
 require('dotenv').config();
 
@@ -16,18 +17,21 @@ const imagekit = new ImageKit({
  * Create image
  * @property {array} [{ url, name, event }]
  * @property {string} req.body.url - imagekit url for image
+ * @property {string} req.body.file - file name of image
  * @property {string} req.body.name - 2024_paris_main
  * @property {string} req.body.event - object Id of event
+ * @property {string} req.body.imageID - image id 
  */
 const createImage = async (req, res, next) => {
     try {
         const { user } = req.user;
+
+        await checkEventAccess(req.body[0].event, user);
         
         const uploadedImages = [];
 
         for (let i = 0; i < req.body.length; i++) {
-            const imageID = await utils.getNewImageID();
-            const body = { ...req.body[i], user, imageID }
+            const body = { ...req.body[i], user }
 
             await validate.createImage(body);
 
