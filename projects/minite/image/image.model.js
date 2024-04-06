@@ -41,6 +41,10 @@ const ImageSchema = new mongoose.Schema({
     year: {
         type: String,
         default: new Date().getFullYear()
+    },
+    deleted: {
+        type: Date,
+        required: false
     }
 }, {
     timestamps: true,

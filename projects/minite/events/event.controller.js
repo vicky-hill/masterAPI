@@ -1,5 +1,6 @@
 const Event = require('./event.model')
-const validate = require('../utils/validation')
+const validate = require('../utils/validation');
+const { checkEventAccess } = require('../utils/access');
 
 /**
  * Create event
@@ -48,6 +49,9 @@ const getAllUserEvents = async (req, res, next) => {
 const getEventByID = async (req, res, next) => {
     try {
         const { eventID } = req.params;
+        const { userID } = req.user;
+
+        await checkEventAccess(eventID, userID);
 
         const event = await Event.findById(eventID)
             .populate('images');
