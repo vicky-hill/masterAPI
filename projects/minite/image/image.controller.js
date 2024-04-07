@@ -1,6 +1,5 @@
 const Image = require('./image.model')
 const Bookmark = require('../bookmarks/bookmarks.model')
-const utils = require('./image.utils')
 const ImageKit = require('imagekit')
 const validate = require('../utils/validation')
 const { checkEventAccess } = require('../utils/access')
@@ -149,6 +148,40 @@ const imageKitAuth = async (req, res, next) => {
     }
 }
 
+/**
+ * Get next image id for event's year
+ * @param year
+ * @returns {string} imageID
+ */
+const getNextImageID = async (req, res, next) => {
+    try {
+        const { year } = req.params;
+        const { user } = req.user;
+        let nextImageID;
+
+        const latestImage = await Image.findOne({ user, year }).sort({imageID: -1});
+
+        if (latestImage) {
+            let imagePrefix = latestImage.imageID.slice(0, 3);
+            let imageDigits = Number(latestImage.imageID.slice(3)) + 1;
+    
+            nextImageID = imagePrefix + imageDigits.toString().padStart(4, 0);
+      
+        } else {
+            let imagePrefix = `i${year.slice(2)}`;
+            let imageDigits = '0001';
+
+            nextImageID = imagePrefix + imageDigits;
+        }
+
+        res.json(nextImageID);
+    } catch (err) {
+        err.errorCode = 'images_007';
+        console.log(err);
+    }
+}
+
+
 
 module.exports = {
     createImage,
@@ -156,5 +189,6 @@ module.exports = {
     updateImage,
     deleteImages,
     imageKitAuth,
-    getImagesByImageID
+    getImagesByImageID,
+    getNextImageID
 }

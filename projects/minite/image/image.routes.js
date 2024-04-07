@@ -11,9 +11,8 @@ router
     .post(protect, imageCtrl.createImage)
     .delete(protect, imageCtrl.deleteImages)
 
-router
-    .route('/imagekit')
-    .get(imageCtrl.imageKitAuth)
+router.route('/imagekit').get(imageCtrl.imageKitAuth)
+router.route('/imageID/:year').get(protect, imageCtrl.getNextImageID)
 
 router
     .route('/:imageID')

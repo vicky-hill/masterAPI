@@ -64,6 +64,7 @@ const getEventByID = async (req, res, next) => {
     }
 }
 
+
 module.exports = {
     createEvent,
     getAllUserEvents,
