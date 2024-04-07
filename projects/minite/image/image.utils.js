@@ -2,7 +2,7 @@ const Image = require('./image.model');
 
 const getNewImageID = async (user) => {
     const year = new Date().getFullYear().toString();
-    const latestImage = await Image.findOne({ user }).sort({createdAt: -1});
+    const latestImage = await Image.findOne({ user }).sort({imageID: -1});
     
     let imagePrefix = `i${year.slice(2)}`;
     let imageDigits = latestImage ? Number(latestImage.imageID.slice(3)) + 1 : 1;

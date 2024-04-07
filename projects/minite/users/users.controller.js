@@ -1,5 +1,6 @@
 const User = require('./users.model');
 const Bookmark = require('../bookmarks/bookmarks.model');
+const Image = require('../image/image.model');
 require('dotenv').config();
 const jwt_decode = require('jwt-decode')
 const validate = require('../utils/validation');
@@ -88,8 +89,14 @@ const getUser = async (req, res, next) => {
             return;
         }
 
+        const imageIDs = await Image
+            .find({ user: user._id })
+            .select('imageID')
+            .sort({ imageID: -1 })
+
         user = user.toObject()
         user.nextImageID = await getNewImageID(user._id);
+        user.imageIDs = imageIDs
 
         res.json(user);
     } catch (err) {
