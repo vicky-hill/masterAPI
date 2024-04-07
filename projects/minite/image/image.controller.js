@@ -79,6 +79,24 @@ const getImages = async (req, res, next) => {
 /**
  * Update image
  * @param imageID
+ */
+const getImagesByImageID = async (req, res, next) => {
+    try {
+        const { imageID } = req.params;
+        const { user } = req.user;
+
+        const images = await Image.find({ imageID, user });
+
+        res.json(images);
+    } catch (err) {
+        err.errorCode = 'images_003';
+        next(err);
+    }
+}
+
+/**
+ * Update image
+ * @param imageID
  * @property req.body.url
  * @property req.body.name
  * @property req.body.version
@@ -93,7 +111,7 @@ const updateImage = async (req, res, next) => {
 
         res.status(200).json(image);
     } catch (err) {
-        err.errorCode = 'images_003';
+        err.errorCode = 'images_004';
         next(err);
     }
 }
@@ -116,7 +134,7 @@ const deleteImages = async (req, res, next) => {
         }, 1)
 
     } catch (err) {
-        err.errorCode = 'images_004';
+        err.errorCode = 'images_005';
         next(err);
     }
 }
@@ -126,7 +144,7 @@ const imageKitAuth = async (req, res, next) => {
         const result = imagekit.getAuthenticationParameters();
         res.send(result);
     } catch (err) {
-        err.errorCode = 'images_005';
+        err.errorCode = 'images_006';
         next(err);
     }
 }
@@ -137,5 +155,6 @@ module.exports = {
     getImages,
     updateImage,
     deleteImages,
-    imageKitAuth
+    imageKitAuth,
+    getImagesByImageID
 }

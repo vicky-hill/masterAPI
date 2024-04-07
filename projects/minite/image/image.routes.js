@@ -17,6 +17,7 @@ router
 
 router
     .route('/:imageID')
+    .get(protect, imageCtrl.getImagesByImageID)
     .put(protect, imageCtrl.updateImage)
 
 
