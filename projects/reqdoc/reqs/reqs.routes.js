@@ -33,7 +33,8 @@ router.route('/:commentID/comment').delete(protect, reqCtrl.deleteComment)
 /**
  * @get api/reqdoc/reqs/:featureID - get reqs by feature
  */
-router.route('/:featureID').get(protect, reqCtrl.getReqs)
+router.route('/feature/:featureID').get(protect, reqCtrl.getFeatureReqs)
+router.route('/project/:projectID').get(protect, reqCtrl.getProjectReqs)
 
 
 /**
