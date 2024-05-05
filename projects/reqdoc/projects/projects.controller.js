@@ -3,7 +3,8 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteProject } = require('../utils/delete')
-const { features, subFeatures, team } = require('../utils/populate')
+const { features, subFeatures, team, history } = require('../utils/populate')
+const Req = require('../reqs/reqs.model')
 
 /**
  * Get projects
@@ -37,18 +38,25 @@ const getProjects = async (req, res, next) => {
 const getProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkProjectAccess(projectID, userID);
 
-        const project = await Project.findById(projectID)
+        const projectInstance = await Project.findById(projectID)
             .populate([{
                 ...features,
                 populate: subFeatures
             }, team])
 
-        if (!project) throwError('Project not found');
+        const project = projectInstance.toObject();
 
+        const reqs = await Req
+            .find({ project: projectID, changed_req: { $exists: false } })
+            .populate([history])
+            .sort({ sort: 1 });
+
+        project.reqs = reqs;
+            
         res.json(project);
     } catch (err) {
         err.errorCode = 'projects_002';
@@ -88,7 +96,7 @@ const createProject = async (req, res, next) => {
 const deleteProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkProjectAccess(projectID, userID);
 
@@ -111,13 +119,13 @@ const deleteProject = async (req, res, next) => {
 const updateProject = async (req, res, next) => {
     try {
         const { projectID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await validate.updateProject(req.body);
 
         await checkProjectAccess(projectID, userID);
 
-        const project = await Project.findByIdAndUpdate(projectID, req.body, { new: true});
+        const project = await Project.findByIdAndUpdate(projectID, req.body, { new: true });
 
         res.json(project);
     } catch (err) {
