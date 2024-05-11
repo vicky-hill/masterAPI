@@ -3,7 +3,7 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteProject } = require('../utils/delete')
-const { features, subFeatures, team, history } = require('../utils/populate')
+const { features: featuresPopulation, subFeatures, team, history } = require('../utils/populate')
 const Req = require('../reqs/reqs.model')
 
 /**
@@ -15,7 +15,7 @@ const getProjects = async (req, res, next) => {
         const { team } = req.user;
 
         const projects = await Project.find({ team, deleted: { $exists: false } })
-            .populate(features);
+            .populate(featuresPopulation);
 
         const response = {
             data: projects.map(({ _id, name, slug, first_feature, team }) => ({
@@ -33,7 +33,7 @@ const getProjects = async (req, res, next) => {
 /**
  * Get project by ID
  * @param  {objectId} projectID
- * @returns {Project}
+ * @returns { {Project}, [<Feature>], [<Reqs>]}
  */
 const getProject = async (req, res, next) => {
     try {
@@ -44,20 +44,30 @@ const getProject = async (req, res, next) => {
 
         const projectInstance = await Project.findById(projectID)
             .populate([{
-                ...features,
+                ...featuresPopulation,
                 populate: subFeatures
             }, team])
 
-        const project = projectInstance.toObject();
+        const projectObject = projectInstance.toObject();
 
         const reqs = await Req
             .find({ project: projectID, changed_req: { $exists: false } })
             .populate([history])
             .sort({ sort: 1 });
 
-        project.reqs = reqs;
+        const project = {
+            _id: projectObject._id,
+            id: projectObject.id,
+            key: projectObject.key,
+            team: projectObject.team,
+            slug: projectObject.slug,
+            mame: projectObject.name,
+            first_feature: projectObject.first_feature
+        }
+
+        const features = projectObject.features;
             
-        res.json(project);
+        res.json({ project, features, reqs });
     } catch (err) {
         err.errorCode = 'projects_002';
         next(err);
