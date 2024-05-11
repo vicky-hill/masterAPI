@@ -51,7 +51,11 @@ const getProject = async (req, res, next) => {
         const projectObject = projectInstance.toObject();
 
         const reqs = await Req
-            .find({ project: projectID, changed_req: { $exists: false } })
+            .find({ 
+                project: projectID, 
+                changed_req: { $exists: false }, 
+                deleted: { $exists: false }
+            })
             .populate([history])
             .sort({ sort: 1 });
 
