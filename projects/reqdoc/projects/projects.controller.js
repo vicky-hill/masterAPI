@@ -5,15 +5,15 @@ const { checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteProject } = require('../utils/delete')
 const { features: featuresPopulation, subFeatures, team, history } = require('../utils/populate')
 const Req = require('../reqs/reqs.model')
-const Redis = require('redis');
+// const Redis = require('redis');
 
-const redisClient = Redis.createClient({
-    password: 'Gy1ftk9JdqT47J0fRNx9lPTG10VtpGjK',
-    socket: {
-        host: 'redis-17159.c331.us-west1-1.gce.redns.redis-cloud.com',
-        port: 17159
-    }
-});
+// const redisClient = Redis.createClient({
+//     password: 'Gy1ftk9JdqT47J0fRNx9lPTG10VtpGjK',
+//     socket: {
+//         host: 'redis-17159.c331.us-west1-1.gce.redns.redis-cloud.com',
+//         port: 17159
+//     }
+// });
 
 /**
  * Get projects
@@ -51,48 +51,48 @@ const getProject = async (req, res, next) => {
 
         await checkProjectAccess(projectID, userID);
 
-        // const projectInstance = await Project.findById(projectID)
-        //     .populate([{
-        //         ...featuresPopulation,
-        //         populate: subFeatures
-        //     }, team])
+        const projectInstance = await Project.findById(projectID)
+            .populate([{
+                ...featuresPopulation,
+                populate: subFeatures
+            }, team])
 
-        // const projectObject = projectInstance.toObject();
+        const projectObject = projectInstance.toObject();
 
-        // const reqs = await Req
-        //     .find({ 
-        //         project: projectID, 
-        //         changed_req: { $exists: false }, 
-        //         deleted: { $exists: false }
-        //     })
-        //     .populate([history])
-        //     .sort({ sort: 1 });
+        const reqs = await Req
+            .find({ 
+                project: projectID, 
+                changed_req: { $exists: false }, 
+                deleted: { $exists: false }
+            })
+            .populate([history])
+            .sort({ sort: 1 });
 
-        // const project = {
-        //     _id: projectObject._id,
-        //     id: projectObject.id,
-        //     key: projectObject.key,
-        //     team: projectObject.team,
-        //     slug: projectObject.slug,
-        //     mame: projectObject.name,
-        //     first_feature: projectObject.first_feature
-        // }
+        const project = {
+            _id: projectObject._id,
+            id: projectObject.id,
+            key: projectObject.key,
+            team: projectObject.team,
+            slug: projectObject.slug,
+            mame: projectObject.name,
+            first_feature: projectObject.first_feature
+        }
 
-        // const features = projectObject.features;
-        // const data = { project, features, reqs };
+        const features = projectObject.features;
+        const data = { project, features, reqs };
 
-        redisClient.get('project', (err, project) => {
-            if (err) console.log(err)
-            if (photos) {
-                return res.json(JSON.parse(project))
-            } else {
-                return res.json({ msg: 'no redis cache'})
-            }
-        })
+        // redisClient.get('project', (err, project) => {
+        //     if (err) console.log(err)
+        //     if (photos) {
+        //         return res.json(JSON.parse(project))
+        //     } else {
+        //         return res.json({ msg: 'no redis cache'})
+        //     }
+        // })
 
         // redisClient.set('project', JSON.stringify(data));
             
-        // res.json(data);
+        res.json(data);
     } catch (err) {
         err.errorCode = 'projects_002';
         next(err);
