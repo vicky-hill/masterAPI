@@ -5,7 +5,7 @@ const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess, checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteReq } = require('../utils/delete')
-const { history, features, subFeatures, project, comments, reqs: reqsPopulate } = require('../utils/populate')
+const { history, features, feature, subFeatures, project, comments, reqs: reqsPopulate } = require('../utils/populate')
 const Project = require('../projects/projects.model')
 
 /**
@@ -104,7 +104,7 @@ const getReqByKey = async (req, res, next) => {
                 key: { $regex: new RegExp(reqKey, 'i') },
                 project: project._id
             })
-            .populate([history, comments]);
+            .populate([history, comments, feature]);
 
         if (!requirement) throwError('Requirement not found');
 
