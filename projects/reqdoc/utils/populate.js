@@ -1,3 +1,7 @@
+const feature = {
+    path: 'feature'
+}
+
 const features = {
     path: 'features',
     match: { main_feature: { $exists: false }, deleted: { $exists: false } },
@@ -47,7 +51,7 @@ module.exports = {
     history,
     team,
     reqs,
-    features,
+    feature,
     features,
     project,
     subFeatures,
