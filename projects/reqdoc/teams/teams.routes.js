@@ -16,7 +16,7 @@ router.route('/:teamID').put(protect, teamCtrl.updateTeam);
 router
     .route('/')
     .post(teamCtrl.createTeam)
-    .get(teamCtrl.getAllTeams)
+    .get(teamCtrl.getTeams)
 
 
 

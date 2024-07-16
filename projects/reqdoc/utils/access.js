@@ -3,6 +3,13 @@ const Project = require('../projects/projects.model')
 const Req = require('../reqs/reqs.model')
 const throwError = require('../../../utils/throwError')
 
+const Access = () => {
+    checkProjectAccess()
+    checkFeatureAccess()
+    checkReqAccess()
+    checkCommentAccess()
+}
+
 const checkFeatureAccess = async (featureID, userID) => {
     const feature = await Feature
         .findById(featureID)

@@ -44,5 +44,4 @@ FeatureSchema.virtual('reqs', {
     justOne: false
 })
 
-
 module.exports = mongoose.model('REQDOC_Feature', FeatureSchema);

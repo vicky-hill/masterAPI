@@ -3,11 +3,18 @@ const Team = require('../teams/teams.model')
 const jwt_decode = require('jwt-decode')
 const validate = require('../utils/validation')
 
+const UserController = () => {
+    getUser()
+    getUsers() 
+    createUser()
+    inviteUser()
+}
+
 /**
  * Get all users
  * @returns {array<User>}
  */
-const getAllUsers = async (req, res, next) => {
+const getUsers = async (req, res, next) => {
     try {
         const users = await User.find()
             .select('-firebaseID -createdAt -updatedAt -__v')
@@ -140,7 +147,7 @@ const getUser = async (req, res, next) => {
 // Todo :: create endpoint to select team & role
 
 module.exports = {
-    getAllUsers,
+    getUsers,
     createUser,
     updateUser,
     getUser,

@@ -30,49 +30,17 @@ const sort = async (values) => {
     await schema.validate(values, { abortEarly: false });
 }
 
-const createReq = async (values) => {
-    await validateStrings(values, "~title text feature");
-}
-
-const updateReq = async (values) => {
-    await validateStrings(values, "~title ~text ~details");
-}
-
-const createProject = async (values) => {
-    await validateStrings(values, "name team slug key");
-}
-
-const updateProject = async (values) => {
-    await validateStrings(values, "~name ~slug");
-}
-
-const createFeature = async (values) => {
-    await validateStrings(values, "name project");
-}
-
-const updateFeature = async (values) => {
-    await validateStrings(values, "name");
-}
-
-const createTeam = async (values) => {
-    await validateStrings(values, "user");
-}
-
-const addComment = async (values) => {
-    await validateStrings(values, "user text");
-}
-
-const editComment = async (values) => {
-    await validateStrings(values, "text");
-}
-
-const createUser = async (values) => {
-    await validateStrings(values, "firebaseID email");
-}
-
-const updateUser = async (values) => {
-    await validateStrings(values, "name");
-}
+const createReq = async (values) => await validateStrings(values, "~title text feature");
+const updateReq = async (values) => await validateStrings(values, "~title ~text ~details");
+const createProject = async (values) => await validateStrings(values, "name team slug key");
+const updateProject = async (values) => await validateStrings(values, "~name ~slug");
+const createFeature = async (values) => await validateStrings(values, "name project");
+const updateFeature = async (values) => await validateStrings(values, "name");
+const createTeam = async (values) => await validateStrings(values, "user");
+const addComment = async (values) => await validateStrings(values, "user text");
+const editComment = async (values) => await validateStrings(values, "text");
+const createUser = async (values) => await validateStrings(values, "firebaseID email");
+const updateUser = async (values) => await validateStrings(values, "name");
 
 module.exports = {
     validateStrings,

@@ -4,9 +4,30 @@ const throwError = require('../../../utils/throwError')
 const validate = require('../utils/validation')
 const { getReqByID } = require('./reqs.utils')
 const { checkFeatureAccess, checkReqAccess, checkCommentAccess, checkProjectAccess } = require('../utils/access')
-const { cascadeDeleteReq } = require('../utils/delete')
 const { history, features, feature, subFeatures, project, comments, reqs: reqsPopulate } = require('../utils/populate')
+const { cascadeDeleteReq } = require('../utils/delete')
 const Project = require('../projects/projects.model')
+
+const ReqController = () => {
+    getFeatureReqs()
+    getProjectReqs()
+
+    getReqById()
+    getReqByKey()
+    createReq()
+    updateReq()
+    deleteReq()
+
+    // Actions
+    changeReq()
+    sortReqs()
+    searchReqs()
+
+    // Comments
+    addComment()
+    editComment()
+    deleteComment()
+}
 
 /**
  * Get feature reqs
@@ -57,7 +78,7 @@ const getProjectReqs = async (req, res, next) => {
             .populate([history])
             .sort({ sort: 1 });
 
-            res.json({ data: [...reqs] });
+        res.json({ data: [...reqs] });
     } catch (err) {
         err.errorCode = 'reqs_002';
         next(err);
@@ -69,7 +90,7 @@ const getProjectReqs = async (req, res, next) => {
  * @param  reqID
  * @returns {Req}
  */
-const getReq = async (req, res, next) => {
+const getReqById = async (req, res, next) => {
     try {
         const { userID } = req.user;
         const { reqID } = req.params;
@@ -415,7 +436,7 @@ const deleteComment = async (req, res, next) => {
 module.exports = {
     getFeatureReqs,
     getProjectReqs,
-    getReq,
+    getReqById,
     createReq,
     updateReq,
     changeReq,

@@ -15,7 +15,7 @@ router.route('/:projectID/search').get(protect, reqCtrl.searchReqs)
 router.route('/:projectKey/:reqKey/retrieve').get(protect, reqCtrl.getReqByKey)
 router.route('/:reqID/change').put(protect, reqCtrl.changeReq)
 router.route('/:reqID/update').put(protect, reqCtrl.updateReq)
-router.route('/:reqID/retrieve').get(protect, reqCtrl.getReq)
+router.route('/:reqID/retrieve').get(protect, reqCtrl.getReqById)
 router.route('/:reqID/delete').delete(protect, reqCtrl.deleteReq)
 
 

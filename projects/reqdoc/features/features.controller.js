@@ -3,7 +3,19 @@ const validate = require('../utils/validation')
 const throwError = require('../../../utils/throwError')
 const { checkFeatureAccess, checkProjectAccess } = require('../utils/access')
 const { cascadeDeleteFeature } = require('../utils/delete')
-const { history, reqs } = require('../utils/populate')
+const { reqs } = require('../utils/populate')
+
+const FeatureController = () => {
+    getFeature()
+    getFeatures()
+    createFeature()
+    updateFeature()
+    deleteFeature()
+
+    // Actions
+    createSubFeature()
+    sortFeatures()
+}
 
 /**
  * Get features
@@ -34,19 +46,19 @@ const getFeatures = async (req, res, next) => {
 const getFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
         const feature = await Feature
             .findById(featureID)
             .populate([
-                reqs, 
+                reqs,
                 {
                     path: 'sub_features',
                     options: { sort: { sort: 'asc' } },
                     populate: reqs,
-                }, 
+                },
                 {
                     path: 'main_feature',
                     select: 'name'
@@ -105,7 +117,7 @@ const createFeature = async (req, res, next) => {
 const updateFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -133,7 +145,7 @@ const updateFeature = async (req, res, next) => {
 const deleteFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -155,7 +167,7 @@ const deleteFeature = async (req, res, next) => {
 const createSubFeature = async (req, res, next) => {
     try {
         const { featureID } = req.params;
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(featureID, userID);
 
@@ -188,7 +200,7 @@ const createSubFeature = async (req, res, next) => {
 const sortFeatures = async (req, res, next) => {
     try {
         await validate.sort(req.body);
-       const { userID } = req.user;
+        const { userID } = req.user;
 
         await checkFeatureAccess(req.body[0]._id, userID);
 
