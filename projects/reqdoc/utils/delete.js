@@ -2,6 +2,12 @@ const Feature = require('../features/features.model')
 const Project = require('../projects/projects.model')
 const Req = require('../reqs/reqs.model')
 
+const Delete = () => {
+    cascadeDeleteReq()
+    cascadeDeleteFeature()
+    cascadeDeleteProject()
+}
+
 
 const cascadeDeleteReq = async (reqID) => {
     const deletedReq = await Req.findByIdAndUpdate(reqID, { deleted: new Date() }, { new: true});

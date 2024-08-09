@@ -4,7 +4,7 @@ const router = express.Router()
 const userCtrl = require('./users.controller');
 
 /** @get /api/reqdoc/user/all */
-router.route('/all').get(userCtrl.getAllUsers)
+router.route('/all').get(userCtrl.getUsers)
 
 /**
  * @route /api/squirreled/user

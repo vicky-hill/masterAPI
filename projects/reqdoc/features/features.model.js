@@ -44,5 +44,8 @@ FeatureSchema.virtual('reqs', {
     justOne: false
 })
 
+FeatureSchema.virtual('type').get(function () {
+    return this.main_feature ? 'sub' : 'main'
+});
 
 module.exports = mongoose.model('REQDOC_Feature', FeatureSchema);

@@ -2,6 +2,14 @@ const Team = require('./teams.model')
 const User = require('../users/users.model')
 const validate = require('../utils/validation')
 
+const TeamController = () => {
+    getTeams()
+    createTeam()
+    updateTeam()
+    getUserTeams()
+    switchUserTeam()
+}
+
 /**
  * Create Team
  * @property {string} req.body.name 
@@ -30,7 +38,7 @@ const createTeam = async (req, res, next) => {
  * Get all teams
  * @returns {array<User>}
  */
-const getAllTeams = async (req, res, next) => {
+const getTeams = async (req, res, next) => {
     try {
         const teams = await Team.find();
         res.json(teams);
@@ -117,7 +125,7 @@ const switchUserTeam = async (req, res, next) => {
 
 module.exports = {
     createTeam,
-    getAllTeams,
+    getTeams,
     getUserTeams,
     switchUserTeam,
     updateTeam

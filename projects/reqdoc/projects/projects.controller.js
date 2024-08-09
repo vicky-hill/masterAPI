@@ -15,8 +15,16 @@ const Req = require('../reqs/reqs.model')
 //     }
 // });
 
+const ProjectController = () => {
+    getProject()
+    getProjects()
+    createProject()
+    deleteProject()
+    updateProject()
+}
+
 /**
- * Get projects
+ * Get Projects
  * @returns {array<Project>}
  */
 const getProjects = async (req, res, next) => {

@@ -3,6 +3,9 @@ const Project = require('../projects/projects.model')
 const Req = require('../reqs/reqs.model')
 const throwError = require('../../../utils/throwError')
 
+const AdminController = () => {
+    deleteFlagged()
+}
 
 /**
  * Delete all flagged resources
