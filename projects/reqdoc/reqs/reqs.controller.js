@@ -57,7 +57,7 @@ const getFeatureReqs = async (req, res, next) => {
 
         res.json({ data: [...reqs, ...subFeatureReqs] });
     } catch (err) {
-        err.errorCode = 'reqs_001';
+        err.ctrl = getFeatureReqs;
         next(err);
     }
 }
@@ -81,7 +81,7 @@ const getProjectReqs = async (req, res, next) => {
 
         res.json({ data: [...reqs] });
     } catch (err) {
-        err.errorCode = 'reqs_002';
+        err.ctrl = getProjectReqs;
         next(err);
     }
 }
@@ -102,7 +102,7 @@ const getReqById = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_003';
+        err.ctrl = getReqById;
         next(err);
     }
 }
@@ -134,7 +134,7 @@ const getReqByKey = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_004';
+        err.ctrl = getReqByKey;
         next(err);
     }
 }
@@ -174,7 +174,7 @@ const createReq = async (req, res, next) => {
 
         res.json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_005';
+        err.ctrl = createReq;
         next(err);
     }
 }
@@ -197,13 +197,13 @@ const updateReq = async (req, res, next) => {
 
         const updatedReq = await Req.findByIdAndUpdate(reqID, req.body, { new: true });
 
-        if (!updatedReq) throwError(`Req not found`);
+        if (!updatedReq) throwError(`Req not found: ${reqID}`);
 
         const requirement = await getReqByID(updatedReq._id);
 
         res.status(200).json(requirement);
     } catch (err) {
-        err.errorCode = 'reqs_006';
+        err.ctrl = updateReq;
         next(err);
     }
 }
@@ -224,7 +224,7 @@ const deleteReq = async (req, res, next) => {
 
         res.status(200).json(deletedReq);
     } catch (err) {
-        err.errorCode = 'reqs_007';
+        err.ctrl = deleteReq;
         next(err);
     }
 }
@@ -273,7 +273,7 @@ const changeReq = async (req, res, next) => {
 
         res.json(latestReq);
     } catch (err) {
-        err.errorCode = 'reqs_008';
+        err.ctrl = changeReq;
         next(err);
     }
 }
@@ -301,7 +301,7 @@ const sortReqs = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = 'reqs_009';
+        err.ctrl = sortReqs;
         next(err);
     }
 }
@@ -348,7 +348,7 @@ const searchReqs = async (req, res, next) => {
 
         res.json({ data: { reqs, history } });
     } catch (err) {
-        err.errorCode = 'reqs_010';
+        err.ctrl = searchReqs;
         next(err);
     }
 }
@@ -379,7 +379,7 @@ const addComment = async (req, res, next) => {
 
         res.json(updatedReq)
     } catch (err) {
-        err.errorCode = 'reqs_011';
+        err.ctrl = addComment;
         next(err);
     }
 }
@@ -406,7 +406,7 @@ const editComment = async (req, res, next) => {
 
         res.json(updatedReq);
     } catch (err) {
-        err.errorCode = 'reqs_012';
+        err.ctrl = editComment;
         next(err);
     }
 }
@@ -429,7 +429,7 @@ const deleteComment = async (req, res, next) => {
 
         res.json(updatedReq);
     } catch (err) {
-        err.errorCode = 'reqs_013';
+        err.ctrl = deleteComment;
         next(err);
     }
 }

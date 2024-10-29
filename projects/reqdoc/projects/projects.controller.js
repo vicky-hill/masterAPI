@@ -42,7 +42,7 @@ const getProjects = async (req, res, next) => {
 
         res.json(response);
     } catch (err) {
-        err.errorCode = 'projects_001';
+        err.ctrl = getProjects;
         next(err);
     }
 }
@@ -102,7 +102,7 @@ const getProject = async (req, res, next) => {
             
         res.json(data);
     } catch (err) {
-        err.errorCode = 'projects_002';
+        err.ctrl = getProject;
         next(err);
     }
 }
@@ -126,7 +126,7 @@ const createProject = async (req, res, next) => {
 
         res.json(project);
     } catch (err) {
-        err.errorCode = 'projects_003';
+        err.ctrl = createProject;
         next(err);
     }
 }
@@ -147,7 +147,7 @@ const deleteProject = async (req, res, next) => {
 
         res.json(project);
     } catch (err) {
-        err.errorCode = 'projects_003';
+        err.ctrl = deleteProject;
         next(err);
     }
 }
@@ -172,7 +172,7 @@ const updateProject = async (req, res, next) => {
 
         res.json(project);
     } catch (err) {
-        err.errorCode = 'projects_003';
+        err.ctrl = updateProject;
         next(err);
     }
 }

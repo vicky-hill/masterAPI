@@ -37,7 +37,8 @@ const onError = (err, req, res, next) => {
         debug: error.debug,
         validation: error.validation,
         status: error.statusCode,
-        errorCode: error.errorCode
+        errorCode: error.errorCode,
+        controller: error.controller
     }
 
     Object.keys(payload).forEach(key => {

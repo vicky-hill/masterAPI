@@ -33,7 +33,7 @@ const getFeatures = async (req, res, next) => {
 
         res.json({ data: features });
     } catch (err) {
-        err.errorCode = 'features_001';
+        err.errorCode = getFeatures;
         next(err);
     }
 }
@@ -72,7 +72,7 @@ const getFeature = async (req, res, next) => {
 
         res.json(feature);
     } catch (err) {
-        err.errorCode = 'features_002';
+        err.errorCode = getFeature;
         next(err);
     }
 }
@@ -103,7 +103,7 @@ const createFeature = async (req, res, next) => {
 
         res.json(feature);
     } catch (err) {
-        err.errorCode = 'features_003';
+        err.ctrl = createFeature;
         next(err);
     }
 }
@@ -131,7 +131,7 @@ const updateFeature = async (req, res, next) => {
 
         res.status(200).json(feature);
     } catch (err) {
-        err.errorCode = 'features_004';
+        err.ctrl = updateFeature;
         next(err);
     }
 }
@@ -153,7 +153,7 @@ const deleteFeature = async (req, res, next) => {
 
         res.status(200).json(deletedFeature);
     } catch (err) {
-        err.errorCode = 'features_005';
+        err.ctrl = deleteFeature;
         next(err);
     }
 }
@@ -186,7 +186,7 @@ const createSubFeature = async (req, res, next) => {
 
         res.json(subFeature);
     } catch (err) {
-        err.errorCode = 'features_006';
+        err.ctrl = createSubFeature;
         next(err);
     }
 }
@@ -214,7 +214,7 @@ const sortFeatures = async (req, res, next) => {
 
         res.json({ data });
     } catch (err) {
-        err.errorCode = 'features_007';
+        err.ctrl = sortFeatures;
         next(err);
     }
 }
