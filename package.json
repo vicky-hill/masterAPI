@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@api/fsq-developers": "file:.api/apis/fsq-developers",
     "@sendgrid/mail": "^8.1.1",
     "aws-sdk": "^2.1520.0",
     "bcrypt": "^5.0.1",
