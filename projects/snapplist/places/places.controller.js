@@ -24,7 +24,7 @@ const test = async (req, res, next) => {
 
 const getPhotos = async (req, res, next) => {
     try {
-        fsqDevelopers.auth('');
+        fsqDevelopers.auth('fsq3nik7c+GzEF6ruflZ3nFzKGT48Kk09IlyVAUGMDG2Twk=');
         const data = await fsqDevelopers.placePhotos({ fsq_id: req.params.id })
         
         res.json(data)
