@@ -4,11 +4,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "rimraf dist && npx tsc",
+    "build": "rimraf public && npx tsc",
     "prestart": "npm run build",
-    "start": "node dist/server.js",
+    "start": "node public/server.js",
     "predev": "npm run build",
-    "dev": "concurrently \"tsc -w\" \"nodemon node dist/server.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon node public/server.js\""
   },
   "author": "",
   "license": "ISC",
