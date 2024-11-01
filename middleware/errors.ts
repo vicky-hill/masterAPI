@@ -1,4 +1,4 @@
-const Err = require('../utils/errorHandler')
+import Err from '../utils/errorHandler'
 
 const onError = (err: any, req: any, res: any, next: any) => {
     err.statusCode = err.statusCode || 500;
@@ -11,7 +11,7 @@ const onError = (err: any, req: any, res: any, next: any) => {
     // Wrong mongoose object ID Error
     if (err.name === 'CastError') {
         const errorMessage = `Invalid mongoose objectId for field: ${err.path}`;
-        error = new Err(null, errorMessage, 400);
+        error = new Err('Invalid objectId', errorMessage, 400, null, null, null);
     }
 
     // Yup validation error

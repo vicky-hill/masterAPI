@@ -1,29 +1,19 @@
 import express from 'express'
-const router = express.Router()
+const router: any = express.Router()
 
-import notesCtrl from './notes.controller'
+import { createNote, deleteNote, getNoteById, getNotes, updateNote } from './notes.controller'
 
-/**
- * @route /api/notes
- * @get get all notes
- * @post save a notes
- */
+// api/notes
+router.route('/').get(getNotes)
+router.route('/').post(createNote)
+
+
+// api/notes/:noteId
 router
-    .route('/')
-    .get(notesCtrl.getNotes)
-    // .post(notesCtrl.createNotes)
-
-/**
- * @route /api/notes/:notesId
- * @get notes
- * @update notes
- * @delete notes
- */
-router
-    .route('/:notesId')
-    // .get(notesCtrl.getNotesById)
-    // .put(notesCtrl.updateNotes)
-    // .delete(notesCtrl.deleteNotes)
+    .route('/:noteId')
+    .get(getNoteById)
+    .put(updateNote)
+    .delete(deleteNote)
 
 
 export default router; 
