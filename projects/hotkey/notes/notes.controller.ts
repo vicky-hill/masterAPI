@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { NotesAttributes } from '../../../types/hotkey/attribute.types'
 import throwError from '../../../utils/throwError'
 import Notes from './notes.model'
+import { CreateNote } from '../../../types/hotkey/payload.types'
 
 export const getNotes = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,10 +32,13 @@ export const getNoteById = async (req: Request, res: Response, next: NextFunctio
 
 export const createNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        req.body as CreateNote;
+
         const note: NotesAttributes | null = await Notes.create({ ...req.body, done: false });
+        
         res.json(note);    
     } catch (err: any) {
-        err.ctrl = getNoteById;
+        err.ctrl = createNote;
         next(err);
     }
 }
@@ -49,7 +53,7 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
     
         res.json(updatedNote);    
     } catch (err: any) {
-        err.ctrl = getNoteById;
+        err.ctrl = updateNote;
         next(err);
     }
 }
@@ -62,7 +66,7 @@ export const deleteNote = async (req: Request, res: Response, next: NextFunction
         
         res.json(note);    
     } catch (err: any) {
-        err.ctrl = getNoteById;
+        err.ctrl = deleteNote;
         next(err);
     }
 }

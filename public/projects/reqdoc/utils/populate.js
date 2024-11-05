@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reqs = exports.project = exports.team = exports.comments = exports.history = exports.subFeatures = exports.features = exports.feature = void 0;
 exports.feature = {
-    path: 'feature'
+    path: 'features'
 };
 exports.features = {
     path: 'features',

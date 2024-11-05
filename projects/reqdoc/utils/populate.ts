@@ -1,5 +1,5 @@
 export const feature = {
-    path: 'feature'
+    path: 'features'
 }
 
 export const features = {
