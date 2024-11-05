@@ -11,10 +11,8 @@ const router = express_1.default.Router();
  * @get api/reqdoc/projects - get all projects
  * @post api/reqdoc/projects - create new project
  */
-router
-    .route('/')
-    .get(middleware_1.protect, projects_controller_1.getProjects)
-    .post(middleware_1.protect, projects_controller_1.createProject);
+router.route('/').get(middleware_1.protect, projects_controller_1.getProjects);
+router.route('/').post(middleware_1.protect, projects_controller_1.createProject);
 /**
  * @get api/reqdoc/projects/:projectID - get project by id
  * @put api/reqdoc/projects/:projectID - update project

@@ -42,11 +42,12 @@ const getNoteById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.getNoteById = getNoteById;
 const createNote = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        req.body;
         const note = yield notes_model_1.default.create(Object.assign(Object.assign({}, req.body), { done: false }));
         res.json(note);
     }
     catch (err) {
-        err.ctrl = exports.getNoteById;
+        err.ctrl = exports.createNote;
         next(err);
     }
 });
@@ -58,7 +59,7 @@ const updateNote = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.json(updatedNote);
     }
     catch (err) {
-        err.ctrl = exports.getNoteById;
+        err.ctrl = exports.updateNote;
         next(err);
     }
 });
@@ -70,7 +71,7 @@ const deleteNote = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.json(note);
     }
     catch (err) {
-        err.ctrl = exports.getNoteById;
+        err.ctrl = exports.deleteNote;
         next(err);
     }
 });
