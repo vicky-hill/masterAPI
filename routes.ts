@@ -31,4 +31,11 @@ import hotkeysnippets_noteRoutes from './projects/hotkey/notes/notes.routes'
 
 router.use('/api/hotkey/notes', hotkeysnippets_noteRoutes)
 
+/* ===================================
+   Snapplist
+=================================== */
+import snapplist_placeRoutes from './projects/snapplist/places/places.routes'
+
+router.use('/api/snapplist/places', snapplist_placeRoutes)
+
 export default router;

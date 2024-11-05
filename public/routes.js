@@ -27,4 +27,9 @@ router.use('/api/reqdoc/admin', admin_routes_1.default);
 =================================== */
 const notes_routes_1 = __importDefault(require("./projects/hotkey/notes/notes.routes"));
 router.use('/api/hotkey/notes', notes_routes_1.default);
+/* ===================================
+   Snapplist
+=================================== */
+const places_routes_1 = __importDefault(require("./projects/snapplist/places/places.routes"));
+router.use('/api/snapplist/places', places_routes_1.default);
 exports.default = router;
