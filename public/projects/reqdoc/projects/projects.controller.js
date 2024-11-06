@@ -24,7 +24,7 @@ const getProjects = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     try {
         const { team } = req.user;
         const projects = yield projects_model_1.default.find({ team, deleted: { $exists: false } })
-            .populate(populate_1.feature);
+            .populate(populate_1.features);
         const response = {
             data: projects.map(({ _id, name, slug, first_feature, team }) => ({
                 _id, name, slug, team, first_feature
@@ -44,7 +44,7 @@ const getProject = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { userID } = req.user;
         yield (0, access_1.checkProjectAccess)(projectID, userID);
         const projectInstance = yield projects_model_1.default.findById(projectID)
-            .populate([Object.assign(Object.assign({}, populate_1.feature), { populate: populate_1.subFeatures }), populate_1.team]);
+            .populate([Object.assign(Object.assign({}, populate_1.features), { populate: populate_1.subFeatures }), populate_1.team]);
         if (!projectInstance)
             return (0, throwError_1.default)('Project not found');
         const projectObject = projectInstance.toObject();
