@@ -9,7 +9,7 @@ const TeamSchema = new mongoose.Schema<TeamAttributes>({
     users: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'REQDOC_User'
+            ref: 'Reqdoc_User'
         },
         role: {
             type: String,
@@ -25,4 +25,4 @@ const TeamSchema = new mongoose.Schema<TeamAttributes>({
     toJSON: { virtuals: true }
 });
 
-export default mongoose.model<TeamAttributes>('REQDOC_Team', TeamSchema)
+export default mongoose.model<TeamAttributes>('Reqdoc_Team', TeamSchema)

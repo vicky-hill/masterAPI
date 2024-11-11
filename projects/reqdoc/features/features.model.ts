@@ -8,12 +8,12 @@ const FeatureSchema = new mongoose.Schema<FeatureAttributes>({
     },
     project: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Project',
+        ref: 'Reqdoc_Project',
         required: true
     },
     main_feature: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Feature'
+        ref: 'Reqdoc_Feature'
     },
     sort: {
         type: Number
@@ -32,14 +32,14 @@ const FeatureSchema = new mongoose.Schema<FeatureAttributes>({
 });
 
 FeatureSchema.virtual('sub_features', {
-    ref: 'REQDOC_Feature',
+    ref: 'Reqdoc_Feature',
     localField: '_id',
     foreignField: 'main_feature',
     justOne: false
 });
 
 FeatureSchema.virtual('reqs', {
-    ref: 'REQDOC_Req',
+    ref: 'Reqdoc_Req',
     localField: '_id',
     foreignField: 'feature',
     justOne: false
@@ -49,4 +49,4 @@ FeatureSchema.virtual('type').get(function () {
     return this.main_feature ? 'sub' : 'main'
 });
 
-export default mongoose.model<FeatureAttributes>('REQDOC_Feature', FeatureSchema)
+export default mongoose.model<FeatureAttributes>('Reqdoc_Feature', FeatureSchema)

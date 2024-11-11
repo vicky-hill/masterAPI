@@ -4,7 +4,7 @@ import { ReqCommentAttributes, ReqAttributes } from '../../../types/reqdoc/attri
 const ReqCommentSchema = new mongoose.Schema<ReqCommentAttributes>({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_User',
+        ref: 'Reqdoc_User',
         required: true
     },
     text: {
@@ -40,12 +40,12 @@ const ReqSchema = new mongoose.Schema<ReqAttributes>({
     },
     project: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Project',
+        ref: 'Reqdoc_Project',
         required: true
     },
     feature: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Feature',
+        ref: 'Reqdoc_Feature',
         required: true
     },
     status: {
@@ -57,7 +57,7 @@ const ReqSchema = new mongoose.Schema<ReqAttributes>({
     },
     latest_req: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Req',
+        ref: 'Reqdoc_Req',
         required: false
     },
     deleted: {
@@ -79,11 +79,11 @@ const ReqSchema = new mongoose.Schema<ReqAttributes>({
 });
 
 ReqSchema.virtual('history', {
-    ref: 'REQDOC_Req',
+    ref: 'Reqdoc_Req',
     localField: 'key',
     foreignField: 'changed_req',
     justOne: false
 });
 
 
-export default mongoose.model<ReqAttributes>('REQDOC_Req', ReqSchema)
+export default mongoose.model<ReqAttributes>('Reqdoc_Req', ReqSchema)

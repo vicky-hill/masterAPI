@@ -18,7 +18,7 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     team: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Team'
+        ref: 'Reqdoc_Team'
     },
     role: {
         type: String,
@@ -35,4 +35,4 @@ const UserSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true
 });
-exports.default = mongoose_1.default.model('REQDOC_User', UserSchema);
+exports.default = mongoose_1.default.model('Reqdoc_User', UserSchema);

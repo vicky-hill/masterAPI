@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema<UserAttributes>({
     },
     team: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Team'
+        ref: 'Reqdoc_Team'
     },
     role:  {
         type: String,
@@ -33,4 +33,4 @@ const UserSchema = new mongoose.Schema<UserAttributes>({
     timestamps: true
 });
 
-export default mongoose.model<UserAttributes>('REQDOC_User', UserSchema)
+export default mongoose.model<UserAttributes>('Reqdoc_User', UserSchema)

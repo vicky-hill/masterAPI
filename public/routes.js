@@ -31,5 +31,9 @@ router.use('/api/hotkey/notes', notes_routes_1.default);
    Snapplist
 =================================== */
 const places_routes_1 = __importDefault(require("./projects/snapplist/places/places.routes"));
+const neighborhoods_routes_1 = __importDefault(require("./projects/snapplist/neighborhoods/neighborhoods.routes"));
+const categories_routes_1 = __importDefault(require("./projects/snapplist/categories/categories.routes"));
 router.use('/api/snapplist/places', places_routes_1.default);
+router.use('/api/snapplist/neighborhoods', neighborhoods_routes_1.default);
+router.use('/api/snapplist/categories', categories_routes_1.default);
 exports.default = router;

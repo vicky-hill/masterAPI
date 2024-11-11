@@ -16,7 +16,7 @@ const ProjectSchema = new mongoose.Schema<ProjectAttributes>({
     },
     team: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'REQDOC_Team'
+        ref: 'Reqdoc_Team'
     },
     deleted: {
         type: Date,
@@ -28,7 +28,7 @@ const ProjectSchema = new mongoose.Schema<ProjectAttributes>({
 });
 
 ProjectSchema.virtual('features', {
-    ref: 'REQDOC_Feature',
+    ref: 'Reqdoc_Feature',
     localField: '_id',
     foreignField: 'project',
     justOne: false
@@ -42,4 +42,4 @@ ProjectSchema.virtual('first_feature').get(function () {
     return null;
 });
 
-export default mongoose.model<ProjectAttributes>('REQDOC_Project', ProjectSchema)
+export default mongoose.model<ProjectAttributes>('Reqdoc_Project', ProjectSchema)

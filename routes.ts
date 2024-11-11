@@ -4,6 +4,7 @@ const router: Router = express.Router()
 // Check backend health
 router.get('/health-check', (req, res) => { res.send('Great Health')})
 
+
 /* ===================================
    Reqdoc
 =================================== */
@@ -22,7 +23,6 @@ router.use('/api/reqdoc/teams', reqdoc_teams)
 router.use('/api/reqdoc/admin', reqdoc_admin)
 
 
-
 /* ===================================
    Hot Key
 =================================== */
@@ -31,11 +31,16 @@ import hotkeysnippets_noteRoutes from './projects/hotkey/notes/notes.routes'
 
 router.use('/api/hotkey/notes', hotkeysnippets_noteRoutes)
 
+
 /* ===================================
    Snapplist
 =================================== */
 import snapplist_placeRoutes from './projects/snapplist/places/places.routes'
+import snapplist_neighborhoodRoutes from './projects/snapplist/neighborhoods/neighborhoods.routes'
+import snapplist_categoryRoutes from './projects/snapplist/categories/categories.routes'
 
 router.use('/api/snapplist/places', snapplist_placeRoutes)
+router.use('/api/snapplist/neighborhoods', snapplist_neighborhoodRoutes)
+router.use('/api/snapplist/categories', snapplist_categoryRoutes)
 
 export default router;

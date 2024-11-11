@@ -69,7 +69,38 @@ const PlaceSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    neighborhood: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: 'Snapplist_Neighborhood'
+    },
+    categories: [{
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Snapplist_Category'
+        }],
+    rating: {
+        type: Number
+    },
+    price: {
+        type: Number
+    },
+    photos: [{
+            fsq_id: {
+                type: String
+            },
+            prefix: {
+                type: String
+            },
+            suffix: {
+                type: String
+            },
+            width: {
+                type: Number
+            },
+            height: {
+                type: Number
+            }
+        }]
 }, {
     timestamps: true
 });
-exports.default = (0, mongoose_1.model)('SNAPPLIST_Place', PlaceSchema);
+exports.default = (0, mongoose_1.model)('Snapplist_Place', PlaceSchema);

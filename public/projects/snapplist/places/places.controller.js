@@ -12,15 +12,91 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.test = void 0;
+exports.deletePlace = exports.deleteAllPlaces = exports.getPlaces = exports.test = void 0;
 const fsq_developers_1 = __importDefault(require("@api/fsq-developers"));
-const places_utils_1 = require("./places.utils");
+const places_model_1 = __importDefault(require("./places.model"));
+const neighborhoods_model_1 = __importDefault(require("../neighborhoods/neighborhoods.model"));
+const throwError_1 = __importDefault(require("../../../utils/throwError"));
+const categories_model_1 = __importDefault(require("../categories/categories.model"));
 // const Place = require('./places.model');
 const test = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { term } = req.query;
+        const query = JSON.stringify(term);
         fsq_developers_1.default.auth('fsq3U4PqPc3XCDECkQ5eqr/+TqV0rxbhDSpPI9vEFcvs0K0=');
-        const data = yield fsq_developers_1.default.placeSearch({ query: 'Cocktail%20Bar', limit: 50, near: 'Los Angeles' });
-        const places = data.data.results.map((result) => ({
+        const data = yield fsq_developers_1.default.placeSearch({
+            query,
+            limit: 1,
+            near: 'Los Angeles',
+            fields: 'fsq_id,name,location,rating,hours,description,menu,name,photos,price,rating,geocodes,categories'
+        });
+        // const data: any = await fsqDevelopers.placeDetails({ 
+        //     fsq_id,
+        //     fields: 'name,location,rating,hours,description,menu,name,photos,price,rating'
+        //  })
+        // const data = await fsqDevelopers.placeSearch({
+        //     near: 'Los Angeles',
+        //     query: 'chinatown',
+        //     limit: 10, // Number of results to return
+        //     fields: 'name,location,rating,hours,description,menu,name,photos,price,rating' // Request rich data fields
+        //   })
+        // Arts District
+        const neighborhood = yield neighborhoods_model_1.default.findById("673152221ef36580208f98dc");
+        if (!neighborhood)
+            return (0, throwError_1.default)('No neighborhood found');
+        // Compile places payload
+        // const places = data.data.results.map((result: any) => ({
+        //     fsq_id: result.fsq_id,
+        //     name: result.name,
+        //     geo: {
+        //         lat: result.geocodes.main.latitude,
+        //         long: result.geocodes.main.longitude
+        //     },
+        //     location: {
+        //         address: result.location.address,
+        //         country: result.location.country,
+        //         locality: result.location.locality,
+        //         postcode: result.location.postcode,
+        //         region: result.location.region
+        //     },
+        //     address: result.location.formatted_address,
+        //     // neighborhood: neighborhood._id,
+        //     price: result.price,
+        //     rating: result.rating,
+        //     photos: result.photos.map((photo: any) => ({
+        //         fsq_id: photo.id,
+        //         prefix: photo.prefix,
+        //         suffix: photo.suffix,
+        //         width: photo.width,
+        //         length: photo.length
+        //     }))
+        // }))
+        const result = data.data.results[0];
+        const categories = [];
+        result.categories.forEach((category) => {
+            const exists = categories.find((c) => c.fsq_id === category.id);
+            if (!exists) {
+                categories.push({
+                    fsq_id: category.id,
+                    name: category.name,
+                    short_name: category.short_name,
+                    plural_name: category.plural_name,
+                    icon: {
+                        prefix: category.icon.prefix,
+                        suffix: category.icon.suffix,
+                    }
+                });
+            }
+        });
+        // Upsert categories
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            yield categories_model_1.default.updateOne({ fsq_id: category.fsq_id }, { $set: category }, { upsert: true });
+        }
+        // Get mongo category Ids
+        const dbCategories = yield categories_model_1.default.find({ fsq_id: result.categories.map((category) => category.id) });
+        const categoryIds = dbCategories.map((category) => category._id);
+        const place = {
             fsq_id: result.fsq_id,
             name: result.name,
             geo: {
@@ -34,10 +110,51 @@ const test = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 postcode: result.location.postcode,
                 region: result.location.region
             },
-            address: result.location.formatted_address
-        }));
-        const created = yield (0, places_utils_1.createPlace)(places[0]);
-        res.json(created);
+            address: result.location.formatted_address,
+            neighborhood: neighborhood._id,
+            price: result.price,
+            rating: result.rating,
+            categories: categoryIds,
+            photos: result.photos.map((photo) => ({
+                fsq_id: photo.id,
+                prefix: photo.prefix,
+                suffix: photo.suffix,
+                width: photo.width,
+                length: photo.length
+            }))
+        };
+        const upsertPlace = yield places_model_1.default.updateOne({ fsq_id: place.fsq_id }, { $set: place }, { upsert: true });
+        // Add new place to neighborhood
+        if (upsertPlace.upsertedCount || upsertPlace.matchedCount) {
+            const upsertedPlace = yield places_model_1.default.findOne({ fsq_id: place.fsq_id });
+            yield neighborhoods_model_1.default.findByIdAndUpdate(neighborhood._id, {
+                $addToSet: {
+                    fsq_ids: place.fsq_id,
+                    places: upsertedPlace._id
+                },
+            });
+        }
+        // Upsert places
+        // for (let i = 0; i < places.length; i++) {
+        //     const place = places[i];
+        //     const upsertPlace: any = await Place.updateOne(
+        //         { fsq_id: place.fsq_id },
+        //         { $set: place },
+        //         { upsert: true }
+        //     )
+        //     // Add new place to neighborhood
+        //     if (upsertPlace.upsertedCount) {
+        //         const upsertedPlace: any = await Place.findOne({ fsq_id: place.fsq_id });
+        //         // await Neighborhood.findByIdAndUpdate(neighborhood._id,
+        //         //     {
+        //         //         $addToSet: {
+        //         //             fsq_ids: place.fsq_id,
+        //         //             places: upsertedPlace._id
+        //         //         },
+        //         //     });
+        //     }
+        // }
+        res.json(result.name);
     }
     catch (err) {
         err.ctrl = exports.test;
@@ -56,27 +173,41 @@ const getPhotos = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         next(err);
     }
 });
-// const createPlace = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const body = {
-//             fsq_id: req.body.fsq_id,
-//             name: req.body.name,
-//             geo: {
-//                 lat: req.body.geocodes.main.latitude,
-//                 long:  req.body.geocodes.main.longitude,
-//             },
-//             location: {
-//                 address: req.body.location.address,
-//                 country: req.body.location.country,
-//                 locality: req.body.location.locality,
-//                 postcode: req.body.location.postcode,
-//                 region: req.body.location.region
-//             },
-//             address: req.body.location.formatted_address
-//         }
-//         // const place = await Place.create(body);
-//         res.json(body);
-//     } catch (err) {
-//         next(err);
-//     }
-// }
+const getPlaces = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const places = yield places_model_1.default.find().populate({
+            path: 'neighborhood',
+            select: 'name'
+        });
+        res.json(places);
+    }
+    catch (err) {
+        err.ctrl = exports.getPlaces;
+        next(err);
+    }
+});
+exports.getPlaces = getPlaces;
+const deleteAllPlaces = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield places_model_1.default.deleteMany({});
+        res.json('deleted');
+    }
+    catch (err) {
+        err.ctrl = exports.getPlaces;
+        next(err);
+    }
+});
+exports.deleteAllPlaces = deleteAllPlaces;
+const deletePlace = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { placeId } = req.params;
+        const place = yield places_model_1.default.findByIdAndDelete(placeId);
+        yield neighborhoods_model_1.default.updateOne({ _id: place === null || place === void 0 ? void 0 : place.neighborhood }, { $pull: { places: placeId, fsq_ids: place === null || place === void 0 ? void 0 : place.fsq_id } });
+        res.json(place);
+    }
+    catch (err) {
+        err.ctrl = exports.deletePlace;
+        next(err);
+    }
+});
+exports.deletePlace = deletePlace;

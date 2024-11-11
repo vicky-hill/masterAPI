@@ -1,11 +1,27 @@
 import express from 'express'
-import { test } from './places.controller'
+import {test, getPlaces, deleteAllPlaces, deletePlace} from './places.controller'
 const router = express.Router()
 
 
-router.route('/').get(test);
-// router.route('/').post(createPlace);
-// router.route('/:id/photos').get(getPhotos);
+
+
+/* ================================================
+   Places @ api/snapplist/places/search
+================================================ */
+
+router.route('/search').get(test);
+
+// router.route('/delete').delete(deleteAllPlaces);
+
+
+/* ================================================
+   Places @ api/snapplist/places
+================================================ */
+router.route('/').get(getPlaces);
+
+router.route('/:placeId').delete(deletePlace);
+
+
 
 
 export default router; 

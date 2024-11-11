@@ -19,7 +19,7 @@ const ProjectSchema = new mongoose_1.default.Schema({
     },
     team: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Team'
+        ref: 'Reqdoc_Team'
     },
     deleted: {
         type: Date,
@@ -30,7 +30,7 @@ const ProjectSchema = new mongoose_1.default.Schema({
     toJSON: { virtuals: true }
 });
 ProjectSchema.virtual('features', {
-    ref: 'REQDOC_Feature',
+    ref: 'Reqdoc_Feature',
     localField: '_id',
     foreignField: 'project',
     justOne: false
@@ -41,4 +41,4 @@ ProjectSchema.virtual('first_feature').get(function () {
     }
     return null;
 });
-exports.default = mongoose_1.default.model('REQDOC_Project', ProjectSchema);
+exports.default = mongoose_1.default.model('Reqdoc_Project', ProjectSchema);

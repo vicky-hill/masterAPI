@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const ReqCommentSchema = new mongoose_1.default.Schema({
     user: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_User',
+        ref: 'Reqdoc_User',
         required: true
     },
     text: {
@@ -42,12 +42,12 @@ const ReqSchema = new mongoose_1.default.Schema({
     },
     project: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Project',
+        ref: 'Reqdoc_Project',
         required: true
     },
     feature: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Feature',
+        ref: 'Reqdoc_Feature',
         required: true
     },
     status: {
@@ -59,7 +59,7 @@ const ReqSchema = new mongoose_1.default.Schema({
     },
     latest_req: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Req',
+        ref: 'Reqdoc_Req',
         required: false
     },
     deleted: {
@@ -80,9 +80,9 @@ const ReqSchema = new mongoose_1.default.Schema({
     toObject: { virtuals: true }
 });
 ReqSchema.virtual('history', {
-    ref: 'REQDOC_Req',
+    ref: 'Reqdoc_Req',
     localField: 'key',
     foreignField: 'changed_req',
     justOne: false
 });
-exports.default = mongoose_1.default.model('REQDOC_Req', ReqSchema);
+exports.default = mongoose_1.default.model('Reqdoc_Req', ReqSchema);
