@@ -50,3 +50,17 @@ interface NeighborhoodAttributes {
     places: [PlaceAttributes]
     fsq_ids: [string]
 }
+
+interface UserAttributes {    
+    _id: ObjectId
+    firebaseId: string
+    email: string    
+    username: string    
+    fname: string    
+    lname: string    
+    been: PlaceAttributes[]    
+    wish: PlaceAttributes[]        
+    dislike: PlaceAttributes[]
+    createdAt: Date
+    updatedAt: Date
+}

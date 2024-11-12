@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePlace = exports.deleteAllPlaces = exports.getPlaces = exports.test = void 0;
+exports.addPlaceToUserList = exports.deletePlace = exports.deleteAllPlaces = exports.getPlaces = exports.test = void 0;
 const fsq_developers_1 = __importDefault(require("@api/fsq-developers"));
 const places_model_1 = __importDefault(require("./places.model"));
 const neighborhoods_model_1 = __importDefault(require("../neighborhoods/neighborhoods.model"));
+const users_model_1 = __importDefault(require("../users/users.model"));
 const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const categories_model_1 = __importDefault(require("../categories/categories.model"));
 // const Place = require('./places.model');
@@ -211,3 +212,16 @@ const deletePlace = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.deletePlace = deletePlace;
+const addPlaceToUserList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { placeId } = req.params;
+        const place = yield places_model_1.default.findByIdAndDelete(placeId);
+        yield users_model_1.default.updateOne({ _id: place === null || place === void 0 ? void 0 : place.neighborhood }, { $pull: { places: placeId, fsq_ids: place === null || place === void 0 ? void 0 : place.fsq_id } });
+        res.json(place);
+    }
+    catch (err) {
+        err.ctrl = exports.addPlaceToUserList;
+        next(err);
+    }
+});
+exports.addPlaceToUserList = addPlaceToUserList;

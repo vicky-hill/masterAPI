@@ -1,9 +1,9 @@
 import fsqDevelopers from '@api/fsq-developers'
 import { NextFunction, Request, Response } from 'express'
-import { createPlace } from './places.utils'
 import { NeighborhoodAttributes, PlaceAttributes } from '../../../types/snapplist/attribute.types'
 import Place from './places.model'
-import Neighborhood from '../neighborhoods/neighborhoods.model';
+import Neighborhood from '../neighborhoods/neighborhoods.model'
+import User from '../users/users.model'
 import throwError from '../../../utils/throwError'
 import Category from '../categories/categories.model'
 
@@ -237,6 +237,25 @@ export const deletePlace = async (req: Request, res: Response, next: NextFunctio
         res.json(place);
     } catch (err: any) {
         err.ctrl = deletePlace;
+        next(err);
+    }
+}
+
+
+export const addPlaceToUserList = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { placeId } = req.params;
+
+        const place: PlaceAttributes | null = await Place.findByIdAndDelete(placeId);
+
+        await User.updateOne(
+            { _id: place?.neighborhood },
+            { $pull: { places: placeId, fsq_ids: place?.fsq_id } }
+        )
+
+        res.json(place);
+    } catch (err: any) {
+        err.ctrl = addPlaceToUserList;
         next(err);
     }
 }

@@ -38,9 +38,11 @@ router.use('/api/hotkey/notes', hotkeysnippets_noteRoutes)
 import snapplist_placeRoutes from './projects/snapplist/places/places.routes'
 import snapplist_neighborhoodRoutes from './projects/snapplist/neighborhoods/neighborhoods.routes'
 import snapplist_categoryRoutes from './projects/snapplist/categories/categories.routes'
+import snapplist_userRoutes from './projects/snapplist/users/users.routes'
 
 router.use('/api/snapplist/places', snapplist_placeRoutes)
 router.use('/api/snapplist/neighborhoods', snapplist_neighborhoodRoutes)
 router.use('/api/snapplist/categories', snapplist_categoryRoutes)
+router.use('/api/snapplist/user', snapplist_userRoutes)
 
 export default router;
