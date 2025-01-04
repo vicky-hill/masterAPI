@@ -1,5 +1,10 @@
 import { Schema, model, Document, ObjectId } from 'mongoose'
 
+interface ReqUser {
+    userId: string
+    email: string
+}
+
 interface PlaceAttributes extends Document {
     _id: ObjectId
     fsq_id: string
@@ -31,7 +36,7 @@ interface PlaceAttributes extends Document {
     updatedAt: Date
 }
 
-interface CategoryAttributes {
+interface CategoryAttributes extends Document {
     _id: ObjectId
     fsq_id: string    
     name: string    
@@ -43,7 +48,7 @@ interface CategoryAttributes {
     }
 }
 
-interface NeighborhoodAttributes {    
+interface NeighborhoodAttributes extends Document {    
     _id: ObjectId
     name: string
     city: string
@@ -51,7 +56,7 @@ interface NeighborhoodAttributes {
     fsq_ids: [string]
 }
 
-interface UserAttributes {    
+interface UserAttributes extends Document {    
     _id: ObjectId
     firebaseId: string
     email: string    

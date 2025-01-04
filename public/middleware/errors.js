@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errorHandler_1 = __importDefault(require("../utils/errorHandler"));
+const controllers_1 = require("../utils/controllers");
 const onError = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     let error = Object.assign({}, err);
@@ -24,6 +25,7 @@ const onError = (err, req, res, next) => {
         err.inner.forEach((error) => validation[error.path] = error.message);
         error = new errorHandler_1.default(message, errorMessage, 400, validation, null, err.errorCode);
     }
+    const controller = controllers_1.controllers.find((ctrl) => req.originalUrl.startsWith(ctrl.endpoint) && req.method === ctrl.method);
     let payload = {
         name: err.name && err.name !== "Error" ? err.name : null,
         error: error.error,
@@ -32,7 +34,9 @@ const onError = (err, req, res, next) => {
         validation: error.validation,
         status: error.statusCode,
         errorCode: error.errorCode,
-        controller: error.controller
+        controller: controller === null || controller === void 0 ? void 0 : controller.controller,
+        endpoint: req.originalUrl,
+        method: req.method
     };
     Object.keys(payload).forEach(key => {
         if (payload[key] === 'null' || !payload[key]) {

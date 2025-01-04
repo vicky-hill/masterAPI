@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,150 +31,87 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sortFeatures = exports.createSubFeature = exports.deleteFeature = exports.updateFeature = exports.createFeature = exports.getFeature = exports.getFeatures = void 0;
-const features_model_1 = __importDefault(require("./features.model"));
-const throwError_1 = __importDefault(require("../../../utils/throwError"));
-const access_1 = require("../utils/access");
-const populate_1 = require("../utils/populate");
-const validation_1 = __importDefault(require("../utils/validation"));
-const delete_1 = require("../utils/delete");
+const Feature = __importStar(require("./features.functions"));
 const getFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { projectID } = req.params;
-        const features = yield features_model_1.default
-            .find({ project: projectID, deleted: { $exists: false } })
-            .sort({ sort: 1 });
-        res.json({ data: features });
+        const { projectId } = req.params;
+        const features = Feature.getFeatures(projectId);
+        res.json(features);
     }
     catch (err) {
-        err.ctrl = exports.getFeatures;
         next(err);
     }
 });
 exports.getFeatures = getFeatures;
 const getFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { featureID } = req.params;
-        const { userID } = req.user;
-        yield (0, access_1.checkFeatureAccess)(featureID, userID);
-        const feature = yield features_model_1.default
-            .findById(featureID)
-            .populate([
-            populate_1.reqs,
-            {
-                path: 'sub_features',
-                options: { sort: { sort: 'asc' } },
-                populate: populate_1.reqs,
-            },
-            {
-                path: 'main_feature',
-                select: 'name'
-            }
-        ]);
-        if (!feature)
-            return (0, throwError_1.default)('Feature not found');
-        const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
-        feature.reqs = JSON.parse(JSON.stringify([...feature.reqs.sort((a, b) => a.sort - b.sort), ...subFeatureReqs]));
-        feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify(Object.assign(Object.assign({}, sub_feature), { reqs: null }))));
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const feature = yield Feature.getFeature(featureId, userId);
         res.json(feature);
     }
     catch (err) {
-        err.ctrl = exports.getFeature;
         next(err);
     }
 });
 exports.getFeature = getFeature;
 const createFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        const projectID = req.body.project;
-        const userID = req.user._id;
-        yield (0, access_1.checkProjectAccess)(projectID, userID);
-        yield validation_1.default.createFeature(req.body);
-        const features = yield features_model_1.default.find({ project: req.body.project });
-        if (!features)
-            (0, throwError_1.default)(`Features with the project _id ${projectID} not be found`);
-        const feature = yield features_model_1.default.create(Object.assign(Object.assign({}, req.body), { sort: features.length + 1 }));
+        const projectId = req.body.project;
+        const userId = req.user._id;
+        const feature = yield Feature.createFeature(req.body, projectId, userId);
         res.json(feature);
     }
     catch (err) {
-        err.ctrl = exports.createFeature;
         next(err);
     }
 });
 exports.createFeature = createFeature;
 const updateFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        const { featureID } = req.params;
-        const { userID } = req.user;
-        yield (0, access_1.checkFeatureAccess)(featureID, userID);
-        yield validation_1.default.updateFeature(req.body);
-        const updatedFeature = yield features_model_1.default.findByIdAndUpdate(featureID, req.body, { new: true });
-        if (!updatedFeature)
-            return (0, throwError_1.default)(`Feature to update not found`);
-        const feature = yield features_model_1.default.findById(updatedFeature._id);
-        res.status(200).json(feature);
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const feature = yield Feature.updateFeature(req.body, featureId, userId);
+        res.json(feature);
     }
     catch (err) {
-        err.ctrl = exports.updateFeature;
         next(err);
     }
 });
 exports.updateFeature = updateFeature;
 const deleteFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { featureID } = req.params;
-        const { userID } = req.user;
-        yield (0, access_1.checkFeatureAccess)(featureID, userID);
-        const deletedFeature = yield (0, delete_1.cascadeDeleteFeature)(featureID);
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const deletedFeature = yield Feature.deleteFeature(featureId, userId);
         res.json(deletedFeature);
     }
     catch (err) {
-        err.ctrl = exports.deleteFeature;
         next(err);
     }
 });
 exports.deleteFeature = deleteFeature;
 const createSubFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        const { featureID } = req.params;
-        const { userID } = req.user;
-        yield (0, access_1.checkFeatureAccess)(featureID, userID);
-        yield validation_1.default.updateFeature(req.body);
-        const feature = yield features_model_1.default.findById(featureID).populate('sub_features');
-        if (!feature)
-            return (0, throwError_1.default)('Feature not found');
-        const subFeature = yield features_model_1.default.create(Object.assign(Object.assign({}, req.body), { project: feature.project, sort: feature.sub_features.length, main_feature: featureID }));
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const subFeature = yield Feature.createSubFeature(req.body, featureId, userId);
         res.json(subFeature);
     }
     catch (err) {
-        err.ctrl = exports.createSubFeature;
         next(err);
     }
 });
 exports.createSubFeature = createSubFeature;
 const sortFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        yield validation_1.default.sort(req.body);
-        const { userID } = req.user;
-        yield (0, access_1.checkFeatureAccess)(req.body[0]._id, userID);
-        const data = [];
-        for (const feature of req.body) {
-            const { _id, sort } = feature;
-            const updatedFeature = yield features_model_1.default.findByIdAndUpdate(_id, { sort }, { new: true });
-            data.push(updatedFeature);
-        }
-        res.json({ data });
+        const { userId } = req.user;
+        const data = yield Feature.sortFeatures(req.body, userId);
+        res.json(data);
     }
     catch (err) {
-        err.ctrl = exports.sortFeatures;
         next(err);
     }
 });

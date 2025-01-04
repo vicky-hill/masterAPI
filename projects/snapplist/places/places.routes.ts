@@ -1,8 +1,7 @@
 import express from 'express'
-import {test, getPlaces, deleteAllPlaces, deletePlace} from './places.controller'
+import {test, getPlaces, deleteAllPlaces, deletePlace, addPlaceToUserList, removePlaceFromUserList} from './places.controller'
+import { protect } from '../utils/middleware'
 const router = express.Router()
-
-
 
 
 /* ================================================
@@ -20,6 +19,8 @@ router.route('/search').get(test);
 router.route('/').get(getPlaces);
 
 router.route('/:placeId').delete(deletePlace);
+router.route('/add/:list/:placeId').put(protect, addPlaceToUserList);
+router.route('/remove/:list/:placeId').put(protect, removePlaceFromUserList);
 
 
 

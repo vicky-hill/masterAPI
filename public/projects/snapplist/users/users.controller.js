@@ -19,7 +19,8 @@ const validation_1 = __importDefault(require("../utils/validation"));
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield users_model_1.default.find()
-            .select('-firebaseId -createdAt -updatedAt -__v');
+            .select('-firebaseId -createdAt -updatedAt -__v')
+            .populate('been', 'name');
         res.json(users);
     }
     catch (err) {
@@ -55,7 +56,7 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         }
         const decodedToken = (0, jwt_decode_1.default)(token);
         const user = yield users_model_1.default.findOne({ firebaseID: decodedToken.user_id })
-            .select('-firebaseID -createdAt -updatedAt -__v');
+            .select('-firebaseId -createdAt -updatedAt -__v');
         if (!user) {
             res.json(null);
             return;

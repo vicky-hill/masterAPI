@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,26 +31,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFlagged = void 0;
-const features_model_1 = __importDefault(require("../features/features.model"));
-const projects_model_1 = __importDefault(require("../projects/projects.model"));
-const reqs_model_1 = __importDefault(require("../reqs/reqs.model"));
-const throwError_1 = __importDefault(require("../../../utils/throwError"));
+const Admin = __importStar(require("./admin.functions"));
 const deleteFlagged = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.user.email !== 'pm@excersys.com')
-            (0, throwError_1.default)('Not authorized, dev route only');
-        yield projects_model_1.default.deleteMany({ deleted: true });
-        yield reqs_model_1.default.deleteMany({ deleted: true });
-        yield features_model_1.default.deleteMany({ deleted: true });
+        const { email } = req.user;
+        yield Admin.deleteFlagged(email);
         res.json({ msg: 'All flagged resources deleted' });
     }
     catch (err) {
-        err.ctrl = exports.deleteFlagged;
         next(err);
     }
 });

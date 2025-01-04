@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose'
+import { Schema, model, Document, ObjectId } from 'mongoose'
 
 /* ===================================
    Users
@@ -56,6 +56,16 @@ interface UpdatePlace {
         country: string
     }
     address: string
+}
+
+interface AddPlaceToUserList {
+    placeId: ObjectId
+    list: "been" | "wish" | "dislike"
+}
+
+interface RemovePlaceFromUserList {
+    placeId: ObjectId
+    list: "been" | "wish" | "dislike"
 }
 
 /* ===================================

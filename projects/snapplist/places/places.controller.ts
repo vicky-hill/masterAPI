@@ -1,11 +1,12 @@
 import fsqDevelopers from '@api/fsq-developers'
 import { NextFunction, Request, Response } from 'express'
-import { NeighborhoodAttributes, PlaceAttributes } from '../../../types/snapplist/attribute.types'
+import { NeighborhoodAttributes, PlaceAttributes, ReqUser } from '../../../types/snapplist/attribute.types'
 import Place from './places.model'
 import Neighborhood from '../neighborhoods/neighborhoods.model'
 import User from '../users/users.model'
 import throwError from '../../../utils/throwError'
 import Category from '../categories/categories.model'
+import { AddPlaceToUserList, RemovePlaceFromUserList } from '../../../types/snapplist/payload.types'
 
 // const Place = require('./places.model');
 
@@ -244,14 +245,21 @@ export const deletePlace = async (req: Request, res: Response, next: NextFunctio
 
 export const addPlaceToUserList = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { placeId } = req.params;
+        const { placeId, list } = req.params as unknown as AddPlaceToUserList;
+        const { userId } = req.user;
 
-        const place: PlaceAttributes | null = await Place.findByIdAndDelete(placeId);
 
-        await User.updateOne(
-            { _id: place?.neighborhood },
-            { $pull: { places: placeId, fsq_ids: place?.fsq_id } }
-        )
+        const place: PlaceAttributes | null = await Place.findById(placeId);
+
+        if (!place) return throwError(`Place not found: ${placeId}`);
+
+        await User.findByIdAndUpdate(userId,
+            {
+                $addToSet: {
+                    [list]: placeId
+                },
+            }
+        );
 
         res.json(place);
     } catch (err: any) {
@@ -259,3 +267,25 @@ export const addPlaceToUserList = async (req: Request, res: Response, next: Next
         next(err);
     }
 }
+
+
+export const removePlaceFromUserList = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { placeId, list } = req.params as unknown as RemovePlaceFromUserList;
+        const { userId } = req.user as unknown as ReqUser;
+
+        const place: PlaceAttributes | null = await Place.findById(placeId);
+
+        if (!place) return throwError(`Place not found: ${placeId}`);
+
+        await User.findByIdAndUpdate(userId,
+            { $pull: { [list]: placeId } }
+        );
+
+        res.json(place);
+    } catch (err: any) {
+        err.ctrl = removePlaceFromUserList;
+        next(err);
+    }
+}
+

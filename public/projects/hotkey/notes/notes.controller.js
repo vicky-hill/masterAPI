@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,20 +31,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteNote = exports.updateNote = exports.createNote = exports.getNoteById = exports.getNotes = void 0;
-const throwError_1 = __importDefault(require("../../../utils/throwError"));
-const notes_model_1 = __importDefault(require("./notes.model"));
+const Notes = __importStar(require("./notes.functions"));
 const getNotes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const notes = yield notes_model_1.default.find();
+        const notes = yield Notes.getNotes();
         res.json(notes);
     }
     catch (err) {
-        err.ctrl = exports.getNotes;
         next(err);
     }
 });
@@ -29,13 +47,10 @@ exports.getNotes = getNotes;
 const getNoteById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { noteId } = req.params;
-        const note = yield notes_model_1.default.findById(noteId);
-        if (!note)
-            return (0, throwError_1.default)('Note not found');
+        const note = yield Notes.getNoteById(noteId);
         res.json(note);
     }
     catch (err) {
-        err.ctrl = exports.getNoteById;
         next(err);
     }
 });
@@ -43,11 +58,10 @@ exports.getNoteById = getNoteById;
 const createNote = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         req.body;
-        const note = yield notes_model_1.default.create(Object.assign(Object.assign({}, req.body), { done: false }));
+        const note = yield Notes.createNote(req.body);
         res.json(note);
     }
     catch (err) {
-        err.ctrl = exports.createNote;
         next(err);
     }
 });
@@ -55,11 +69,10 @@ exports.createNote = createNote;
 const updateNote = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { noteId } = req.params;
-        const updatedNote = yield notes_model_1.default.findByIdAndUpdate(noteId, req.body, { new: true });
+        const updatedNote = yield Notes.updateNote(noteId, req.body);
         res.json(updatedNote);
     }
     catch (err) {
-        err.ctrl = exports.updateNote;
         next(err);
     }
 });
@@ -67,11 +80,10 @@ exports.updateNote = updateNote;
 const deleteNote = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { noteId } = req.params;
-        const note = yield notes_model_1.default.findByIdAndDelete(noteId);
+        const note = yield Notes.deleteNote(noteId);
         res.json(note);
     }
     catch (err) {
-        err.ctrl = exports.deleteNote;
         next(err);
     }
 });

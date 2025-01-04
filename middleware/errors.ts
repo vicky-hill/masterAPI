@@ -1,4 +1,5 @@
 import Err from '../utils/errorHandler'
+import { controllers } from '../utils/controllers'
 
 const onError = (err: any, req: any, res: any, next: any) => {
     err.statusCode = err.statusCode || 500;
@@ -30,6 +31,8 @@ const onError = (err: any, req: any, res: any, next: any) => {
         error = new Err(message, errorMessage, 400, validation, null, err.errorCode)
     }
 
+    const controller: any = controllers.find((ctrl: any) => req.originalUrl.startsWith(ctrl.endpoint) && req.method === ctrl.method)
+
     let payload: any = {
         name: err.name && err.name !== "Error" ? err.name : null,
         error: error.error,
@@ -38,7 +41,9 @@ const onError = (err: any, req: any, res: any, next: any) => {
         validation: error.validation,
         status: error.statusCode,
         errorCode: error.errorCode,
-        controller: error.controller
+        controller: controller?.controller,
+        endpoint: req.originalUrl,
+        method: req.method
     }
 
     Object.keys(payload).forEach(key => {

@@ -35,6 +35,17 @@ const throwError = (message: any, options?: any) => {
     }
 
     const newError = new Err(message, options?.error, statusCode, null, options?.debug, null);
+
+    if (Error.captureStackTrace) {
+        Error.captureStackTrace(newError, throwError);  // Avoid the throwError function itself in the stack
+    }
+
+    const stack = newError.stack || '';
+    const functionNameMatch = stack.match(/at (\w+)/); // Match the first function name after 'at'
+    const functionName = functionNameMatch ? functionNameMatch[1] : 'Unknown function';
+
+    console.log('function name', functionName)
+
     throw newError;
 }
 

@@ -18,11 +18,17 @@ const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const getNeighborhoods = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const neighborhoods = yield neighborhoods_model_1.default.find()
-            .populate('places', 'name');
+            .populate({
+            path: 'places',
+            select: 'name categories photos rating price',
+            populate: {
+                path: 'categories',
+                select: 'name'
+            },
+        });
         res.json(neighborhoods);
     }
     catch (err) {
-        err.ctrl = exports.getNeighborhoods;
         next(err);
     }
 });
@@ -36,7 +42,6 @@ const getNeighborhoodById = (req, res, next) => __awaiter(void 0, void 0, void 0
         res.json(neighborhood);
     }
     catch (err) {
-        err.ctrl = exports.getNeighborhoodById;
         next(err);
     }
 });
@@ -48,7 +53,6 @@ const createNeighborhood = (req, res, next) => __awaiter(void 0, void 0, void 0,
         res.json(neighborhood);
     }
     catch (err) {
-        err.ctrl = exports.createNeighborhood;
         next(err);
     }
 });
@@ -61,7 +65,6 @@ const updateNeighborhood = (req, res, next) => __awaiter(void 0, void 0, void 0,
         res.json(updatedNeighborhood);
     }
     catch (err) {
-        err.ctrl = exports.updateNeighborhood;
         next(err);
     }
 });
@@ -73,7 +76,6 @@ const deleteNeighborhood = (req, res, next) => __awaiter(void 0, void 0, void 0,
         res.json(neighborhood);
     }
     catch (err) {
-        err.ctrl = exports.deleteNeighborhood;
         next(err);
     }
 });

@@ -32,4 +32,4 @@ const CategorySchema = new mongoose_1.default.Schema({
 }, {
     timestamps: false
 });
-exports.default = mongoose_1.default.model('Reqdoc_Category', CategorySchema);
+exports.default = mongoose_1.default.model('Snapplist_Category', CategorySchema);

@@ -3,17 +3,15 @@ import { createUser, getUser, getUsers } from './users.controller'
 
 const router: any = express.Router()
 
-/** @get /api/reqdoc/user/all */
+/* ====================================
+   Users @ api/reqdoc/user
+==================================== */
+
 router.route('/all').get(getUsers)
 
-/**
- * @route /api/squirreled/user
- * @get get current user
- * @post save a new user
- */
-router
-    .route('/')
-    .get(getUser)
-    .post(createUser)
+router.route('/').get(getUser)
+router.route('/').post(createUser)
+
+
 
 export default router;

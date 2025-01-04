@@ -4,18 +4,15 @@ import { createTeam, getTeams, getUserTeams, switchUserTeam, updateTeam } from '
 
 const router: any = express.Router()
 
-/** @get /api/reqdoc/teams/user */
-router.route('/user').get(protect, getUserTeams);
-router.route('/switch/:teamID').put(protect, switchUserTeam);
-router.route('/:teamID').put(protect, updateTeam);
+/* ====================================
+   Teams @ api/reqdoc/team
+==================================== */
 
-/**
- * @route /api/reqdoc/teams
- * @post create team
- */
-router
-    .route('/')
-    .post(createTeam)
-    .get(getTeams)
+router.route('/user').get(protect, getUserTeams);
+router.route('/switch/:teamId').put(protect, switchUserTeam);
+router.route('/:teamId').put(protect, updateTeam);
+
+router.route('/').post(createTeam)
+router.route('/').get(getTeams)
 
 export default router;

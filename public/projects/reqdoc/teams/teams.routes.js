@@ -7,16 +7,12 @@ const express_1 = __importDefault(require("express"));
 const middleware_1 = require("../utils/middleware");
 const teams_controller_1 = require("./teams.controller");
 const router = express_1.default.Router();
-/** @get /api/reqdoc/teams/user */
+/* ====================================
+   Teams @ api/reqdoc/team
+==================================== */
 router.route('/user').get(middleware_1.protect, teams_controller_1.getUserTeams);
-router.route('/switch/:teamID').put(middleware_1.protect, teams_controller_1.switchUserTeam);
-router.route('/:teamID').put(middleware_1.protect, teams_controller_1.updateTeam);
-/**
- * @route /api/reqdoc/teams
- * @post create team
- */
-router
-    .route('/')
-    .post(teams_controller_1.createTeam)
-    .get(teams_controller_1.getTeams);
+router.route('/switch/:teamId').put(middleware_1.protect, teams_controller_1.switchUserTeam);
+router.route('/:teamId').put(middleware_1.protect, teams_controller_1.updateTeam);
+router.route('/').post(teams_controller_1.createTeam);
+router.route('/').get(teams_controller_1.getTeams);
 exports.default = router;

@@ -38,4 +38,13 @@ router.use('/api/snapplist/places', places_routes_1.default);
 router.use('/api/snapplist/neighborhoods', neighborhoods_routes_1.default);
 router.use('/api/snapplist/categories', categories_routes_1.default);
 router.use('/api/snapplist/user', users_routes_2.default);
+/* ===================================
+   Hot Sauce
+=================================== */
+const user_routes_1 = __importDefault(require("./projects/hotsauce/users/user.routes"));
+// import hotsauce_productRoutes from  './projects/hotsauce/products/products.routes'
+// import hotsauce_cartRoutes from  './projects/hotsauce/carts/carts.routes'
+router.use('/api/hotsauce/user', user_routes_1.default);
+// router.use('/api/hotsauce/products', hotsauce_productRoutes)
+// router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
 exports.default = router;

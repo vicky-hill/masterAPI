@@ -11,6 +11,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
     try {
         const users: UserAttributes[] = await User.find()
             .select('-firebaseId -createdAt -updatedAt -__v')
+            .populate('been', 'name')
         res.json(users);
     } catch (err: any) {
         err.ctrl = getUsers;
@@ -51,7 +52,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
         const decodedToken: any = jwt_decode(token);
 
         const user: UserAttributes | null = await User.findOne({ firebaseID: decodedToken.user_id })
-            .select('-firebaseID -createdAt -updatedAt -__v');
+            .select('-firebaseId -createdAt -updatedAt -__v')
 
         if (!user) {
             res.json(null);
