@@ -51,11 +51,11 @@ router.use('/api/snapplist/user', snapplist_userRoutes)
 =================================== */
 import hotsauce_userRoutes from './projects/hotsauce/users/user.routes'
 import hotsauce_productRoutes from './projects/hotsauce/products/products.routes'
-// import hotsauce_cartRoutes from  './projects/hotsauce/carts/carts.routes'
+import hotsauce_cartRoutes from './projects/hotsauce/cart/cart.routes'
 
 router.use('/api/hotsauce/user', hotsauce_userRoutes)
 router.use('/api/hotsauce/products', hotsauce_productRoutes)
-// router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
+router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
 
 
 export default router;

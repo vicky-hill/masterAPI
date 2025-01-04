@@ -43,8 +43,8 @@ router.use('/api/snapplist/user', users_routes_2.default);
 =================================== */
 const user_routes_1 = __importDefault(require("./projects/hotsauce/users/user.routes"));
 const products_routes_1 = __importDefault(require("./projects/hotsauce/products/products.routes"));
-// import hotsauce_cartRoutes from  './projects/hotsauce/carts/carts.routes'
+const cart_routes_1 = __importDefault(require("./projects/hotsauce/cart/cart.routes"));
 router.use('/api/hotsauce/user', user_routes_1.default);
 router.use('/api/hotsauce/products', products_routes_1.default);
-// router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
+router.use('/api/hotsauce/cart', cart_routes_1.default);
 exports.default = router;

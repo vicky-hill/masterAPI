@@ -8,9 +8,15 @@ interface UserAttributes extends Document {
     cart?: ObjectId
 }
 
+interface CartItemAttributes extends Document {
+    productID: ObjectId | ProductAttributes
+    quantity: number
+}
+
 interface CartAttributes extends Document {
     _id: ObjectId
     userID: string
+    items: CartItemAttributes[]
 }
 
 interface ProductAttributes extends Document {

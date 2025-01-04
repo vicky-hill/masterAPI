@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import * as Product from './products.functions'
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
