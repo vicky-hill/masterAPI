@@ -58,4 +58,11 @@ router.use('/api/hotsauce/products', hotsauce_productRoutes)
 router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
 
 
+/* ===================================
+   Lesprit
+=================================== */
+import lesprit_userRoutes from './projects/lesprit/users/users.routes'
+
+router.use('/api/lesprit/user', lesprit_userRoutes)
+
 export default router;

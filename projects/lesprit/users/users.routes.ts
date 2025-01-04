@@ -1,15 +1,15 @@
 import express from 'express'
-import { addToCart, getCart } from './cart.controller'
 import { protect } from '../utils/middleware'
+import { createUser, getUser } from './users.controller'
 
 const router: any = express.Router()
 
 /* ====================================
-   Users @ api/hotsauce/products
+   Users @ api/lesprit/user
 ==================================== */
 
-router.route('/').get(protect, getCart)
-router.route('/').post(protect, addToCart)
+router.route('/').get(protect, getUser)
+router.route('/').post(createUser)
 
 
 

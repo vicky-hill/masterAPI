@@ -13,11 +13,18 @@ const UserSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    cart: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'HOTSAUCE_Cart'
+    name: {
+        type: String,
+    },
+    languages: {
+        type: [{
+                foreign: { type: String, required: true },
+                native: { type: String, required: true }
+            }],
+        default: [{ foreign: 'spanish', native: 'english' }],
+        required: true
     }
 }, {
     timestamps: true
 });
-exports.default = mongoose_1.default.model('HOTSAUCE_User', UserSchema);
+exports.default = mongoose_1.default.model('Lesprit_User', UserSchema);

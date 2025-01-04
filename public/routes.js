@@ -47,4 +47,9 @@ const cart_routes_1 = __importDefault(require("./projects/hotsauce/cart/cart.rou
 router.use('/api/hotsauce/user', user_routes_1.default);
 router.use('/api/hotsauce/products', products_routes_1.default);
 router.use('/api/hotsauce/cart', cart_routes_1.default);
+/* ===================================
+   Lesprit
+=================================== */
+const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.routes"));
+router.use('/api/lesprit/user', users_routes_3.default);
 exports.default = router;
