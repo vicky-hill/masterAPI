@@ -32,26 +32,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.createUser = void 0;
-const User = __importStar(require("./users.functions"));
-const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProduct = exports.getProducts = void 0;
+const Product = __importStar(require("./products.functions"));
+const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield User.createUser(req.body);
-        res.json(user);
+        const products = yield Product.getProducts();
+        res.json(products);
     }
     catch (err) {
         next(err);
     }
 });
-exports.createUser = createUser;
-const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getProducts = getProducts;
+const getProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.user;
-        const user = yield User.getUser(userId);
-        res.json(user);
+        const { productId } = req.params;
+        const product = yield Product.getProduct(productId);
+        res.json(product);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getUser = getUser;
+exports.getProduct = getProduct;
+const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = yield Product.createProduct(req.body);
+        res.json(product);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createProduct = createProduct;
+const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { productId } = req.params;
+        const product = yield Product.updateProduct(req.body, productId);
+        res.json(product);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.updateProduct = updateProduct;
+const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { productId } = req.params;
+        const product = yield Product.deleteProduct(productId);
+        res.json(product);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.deleteProduct = deleteProduct;

@@ -1,10 +1,10 @@
-import {Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import * as User from './users.functions'
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await User.createUser(req.body);
-        res.status(201).json(user);
+        res.json(user);
     } catch (err) {
         next(err);
     }
@@ -15,7 +15,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
         const { userId } = req.user;
 
         const user = await User.getUser(userId);
-        res.status(201).json(user);
+        res.json(user);
     } catch (err) {
         next(err);
     }
