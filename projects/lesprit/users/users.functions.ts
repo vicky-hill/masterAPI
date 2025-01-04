@@ -1,4 +1,4 @@
-import { CreateUser } from '../../../types/hotsauce/payload.types'
+import { CreateUser } from '../../../types/lesprit/payload.types'
 import User from './users.model'
 import throwError from '../../../utils/throwError'
 

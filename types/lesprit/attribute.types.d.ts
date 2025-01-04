@@ -14,8 +14,8 @@ interface WordAttributes extends Document {
     foreign: string
     native: string
     rating: number
-    dueDate: string
-    createdAt: string
+    dueDate: Date
+    createdAt: Date
     list: ObjectId | ListAttributes
     user: ObjectId | UserAttributes
 }
