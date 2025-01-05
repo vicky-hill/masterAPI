@@ -70,8 +70,8 @@ exports.getList = getList;
 const updateList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { listId } = req.params;
-        const review = yield List.updateList(req.body, listId);
-        res.json(review);
+        const list = yield List.updateList(req.body, listId);
+        res.json(list);
     }
     catch (err) {
         next(err);

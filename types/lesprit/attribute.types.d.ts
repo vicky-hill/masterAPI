@@ -11,6 +11,7 @@ interface UserAttributes extends Document {
 }
 
 interface WordAttributes extends Document {
+    _id: ObjectId
     language: string
     foreign: string
     native: string
@@ -22,8 +23,10 @@ interface WordAttributes extends Document {
 }
 
 interface ListAttributes extends Document {
+    _id: ObjectId
     title: string
     urlKey: string
     createdAt: Date
     user: ObjectId | UserAttributes
 }
+

@@ -35,7 +35,8 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next();
     }
     catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
+        console.log(err);
+        res.status(401).json(err);
     }
 });
 exports.protect = protect;

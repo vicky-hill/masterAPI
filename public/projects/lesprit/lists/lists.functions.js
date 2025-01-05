@@ -29,21 +29,21 @@ exports.getLists = getLists;
 const getList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.findById(listId);
     if (!list)
-        (0, throwError_1.default)('List not found');
+        return (0, throwError_1.default)('List not found');
     return list;
 });
 exports.getList = getList;
 const updateList = (data, listId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.findByIdAndUpdate(listId, data, { new: true });
     if (!list)
-        (0, throwError_1.default)('List not found');
+        return (0, throwError_1.default)('List not found');
     return list;
 });
 exports.updateList = updateList;
 const deleteList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.findByIdAndDelete(listId);
     if (!list)
-        (0, throwError_1.default)('List not found');
+        return (0, throwError_1.default)('List not found');
     return list;
 });
 exports.deleteList = deleteList;

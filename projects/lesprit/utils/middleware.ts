@@ -28,6 +28,7 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
 
         next();
     } catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
+        console.log(err)
+        res.status(401).json(err);
     }
 };
