@@ -49,8 +49,8 @@ export const updateWord = async (req: Request, res: Response, next: NextFunction
     try {
         const { wordId } = req.params;
 
-        const review = await Word.updateWord(req.body, wordId);
-        res.json(review);
+        const word = await Word.updateWord(req.body, wordId);
+        res.json(word);
     } catch (err) {
         next(err);
     }

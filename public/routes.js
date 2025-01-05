@@ -51,5 +51,9 @@ router.use('/api/hotsauce/cart', cart_routes_1.default);
    Lesprit
 =================================== */
 const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.routes"));
+const words_router_1 = __importDefault(require("./projects/lesprit/words/words.router"));
+const lists_routes_1 = __importDefault(require("./projects/lesprit/lists/lists.routes"));
 router.use('/api/lesprit/user', users_routes_3.default);
+router.use('/api/lesprit/words', words_router_1.default);
+router.use('/api/lesprit/lists', lists_routes_1.default);
 exports.default = router;

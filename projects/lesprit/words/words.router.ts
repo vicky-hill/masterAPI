@@ -13,6 +13,7 @@ router.route('/').post(protect, createWord)
 
 router.route('/:review').get(protect, getReview)
 
+router.route('/:wordId').get(protect, getWord)
 router.route('/:wordId').post(protect, createWord)
 router.route('/:wordId').put(protect, updateWord)
 router.route('/:wordId').delete(protect, deleteWord)

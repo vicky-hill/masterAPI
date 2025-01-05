@@ -23,6 +23,6 @@ interface WordAttributes extends Document {
 interface ListAttributes extends Document {
     title: string
     urlKey: string
-    createdAt: string
+    createdAt: Date
     user: ObjectId | UserAttributes
 }
