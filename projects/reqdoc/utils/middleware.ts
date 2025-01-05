@@ -24,7 +24,7 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
         }
 
         req.user = user;
-        req.user.userID = user._id;
+        req.user.userId = user._id;
 
         next();
     } catch (err) {

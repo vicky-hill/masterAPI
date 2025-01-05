@@ -46,9 +46,40 @@ const PlaceSchema = new mongoose.Schema<PlaceAttributes>({
         type: String,
         required: true
     },
+    neighborhood: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Snapplist_Neighborhood'
+    },
+    categories: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'Snapplist_Category'
+    }],
+    rating: {
+        type: Number
+    },
+    price: {
+        type: Number
+    },
+    photos: [{
+        fsq_id: {
+            type: String
+        },
+        prefix: {
+            type: String
+        },
+        suffix: {
+            type: String
+        },
+        width: {
+            type: Number
+        },
+        height: {
+            type: Number
+        }
+    }]
 }, {
     timestamps: true
 });
 
-export default model<PlaceAttributes>('SNAPPLIST_Place', PlaceSchema);
+export default model<PlaceAttributes>('Snapplist_Place', PlaceSchema);
 

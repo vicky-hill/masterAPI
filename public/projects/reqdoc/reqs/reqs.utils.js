@@ -16,12 +16,12 @@ exports.findReqByID = void 0;
 const reqs_model_1 = __importDefault(require("./reqs.model"));
 const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const populate_1 = require("../utils/populate");
-const findReqByID = function (reqID) {
+const findReqByID = function (reqId) {
     return __awaiter(this, void 0, void 0, function* () {
         const requirement = yield reqs_model_1.default
-            .findById(reqID)
+            .findById(reqId)
             .populate([populate_1.history, populate_1.comments]);
-        !requirement && (0, throwError_1.default)(`Could not find req by ID: ${reqID}`);
+        !requirement && (0, throwError_1.default)(`Could not find req by ID: ${reqId}`);
         return requirement;
     });
 };

@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,117 +31,70 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.switchUserTeam = exports.getUserTeams = exports.getUserTeam = exports.updateTeam = exports.getTeams = exports.createTeam = void 0;
-const teams_model_1 = __importDefault(require("./teams.model"));
-const users_model_1 = __importDefault(require("../users/users.model"));
-const validation_1 = __importDefault(require("../utils/validation"));
-const throwError_1 = __importDefault(require("../../../utils/throwError"));
+const Team = __importStar(require("./teams.functions"));
 const createTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        yield validation_1.default.createTeam(req.body);
-        const team = yield teams_model_1.default.create({ name: req.body.name });
-        const updatedTeam = yield teams_model_1.default.findByIdAndUpdate(team._id, {
-            $push: {
-                users: {
-                    user: req.body.user,
-                    role: 'user'
-                }
-            }
-        }, { new: true });
-        res.json(updatedTeam);
+        const team = yield Team.createTeam(req.body);
+        res.json(team);
     }
     catch (err) {
-        err.ctrl = exports.createTeam;
         next(err);
     }
 });
 exports.createTeam = createTeam;
 const getTeams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const teams = yield teams_model_1.default.find();
+        const teams = yield Team.getTeams();
         res.json(teams);
     }
     catch (err) {
-        err.ctrl = exports.getTeams;
         next(err);
     }
 });
 exports.getTeams = getTeams;
 const updateTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        req.body;
-        const { teamID } = req.params;
-        const team = yield teams_model_1.default.findByIdAndUpdate(teamID, req.body, { new: true })
-            .populate({
-            path: 'users.user',
-            select: 'email',
-        });
-        if (!team)
-            return (0, throwError_1.default)('Team not found');
+        const { teamId } = req.params;
+        const team = yield Team.updateTeam(req.body, teamId);
         res.json(team);
     }
     catch (err) {
-        err.ctrl = exports.updateTeam;
         next(err);
     }
 });
 exports.updateTeam = updateTeam;
 const getUserTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { teamID } = req.params;
-        const team = yield teams_model_1.default.findByIdAndUpdate(teamID, req.body, { new: true })
-            .populate({
-            path: 'users.user',
-            select: 'email',
-        });
-        if (!team)
-            return (0, throwError_1.default)('Team not found');
+        const { teamId } = req.params;
+        const team = yield Team.getUserTeam(teamId);
         res.json(team);
     }
     catch (err) {
-        err.ctrl = exports.getUserTeam;
         next(err);
     }
 });
 exports.getUserTeam = getUserTeam;
 const getUserTeams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userID } = req.user;
-        const teams = yield teams_model_1.default.find({ 'users.user': userID }).populate({
-            path: 'users.user',
-            select: 'email',
-        });
-        res.json({ data: teams });
+        const { userId } = req.user;
+        const teams = yield Team.getUserTeams(userId);
+        res.json(teams);
     }
     catch (err) {
-        err.ctrl = exports.getUserTeams;
         next(err);
     }
 });
 exports.getUserTeams = getUserTeams;
 const switchUserTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { teamID } = req.params;
-        const { userID } = req.user;
-        const team = yield teams_model_1.default.findById(teamID).populate({
-            path: 'users.user',
-            select: 'email',
-        });
-        if (!team)
-            return (0, throwError_1.default)('Team not found');
-        const teamUser = team.users.find(user => user.user._id.toString() === userID.toString());
-        if (!teamUser)
-            return (0, throwError_1.default)('Team user not found');
-        const user = yield users_model_1.default.findByIdAndUpdate(userID, { role: teamUser.role, team: team._id }, { new: true });
+        const { teamId } = req.params;
+        const { userId } = req.user;
+        const user = yield Team.switchUserTeam(teamId, userId);
         res.json(user);
     }
     catch (err) {
-        err.ctrl = exports.switchUserTeam;
         next(err);
     }
 });

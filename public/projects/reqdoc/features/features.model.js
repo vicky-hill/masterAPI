@@ -11,12 +11,12 @@ const FeatureSchema = new mongoose_1.default.Schema({
     },
     project: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Project',
+        ref: 'Reqdoc_Project',
         required: true
     },
     main_feature: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'REQDOC_Feature'
+        ref: 'Reqdoc_Feature'
     },
     sort: {
         type: Number
@@ -34,13 +34,13 @@ const FeatureSchema = new mongoose_1.default.Schema({
     }
 });
 FeatureSchema.virtual('sub_features', {
-    ref: 'REQDOC_Feature',
+    ref: 'Reqdoc_Feature',
     localField: '_id',
     foreignField: 'main_feature',
     justOne: false
 });
 FeatureSchema.virtual('reqs', {
-    ref: 'REQDOC_Req',
+    ref: 'Reqdoc_Req',
     localField: '_id',
     foreignField: 'feature',
     justOne: false
@@ -48,4 +48,4 @@ FeatureSchema.virtual('reqs', {
 FeatureSchema.virtual('type').get(function () {
     return this.main_feature ? 'sub' : 'main';
 });
-exports.default = mongoose_1.default.model('REQDOC_Feature', FeatureSchema);
+exports.default = mongoose_1.default.model('Reqdoc_Feature', FeatureSchema);

@@ -12,7 +12,7 @@ const TeamSchema = new mongoose_1.default.Schema({
     users: [{
             user: {
                 type: mongoose_1.default.Schema.Types.ObjectId,
-                ref: 'REQDOC_User'
+                ref: 'Reqdoc_User'
             },
             role: {
                 type: String,
@@ -27,4 +27,4 @@ const TeamSchema = new mongoose_1.default.Schema({
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
 });
-exports.default = mongoose_1.default.model('REQDOC_Team', TeamSchema);
+exports.default = mongoose_1.default.model('Reqdoc_Team', TeamSchema);

@@ -31,7 +31,7 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             return res.status(401).json({ msg: 'No user found' });
         }
         req.user = user;
-        req.user.userID = user._id;
+        req.user.userId = user._id;
         next();
     }
     catch (err) {

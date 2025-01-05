@@ -6,7 +6,7 @@ declare global {
         interface Request {
             user: {
                 _id: string
-                userID: string
+                userId: string
                 email: string
                 firebaseID: string
                 name?: string

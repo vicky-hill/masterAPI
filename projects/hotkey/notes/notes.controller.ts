@@ -1,16 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { NotesAttributes } from '../../../types/hotkey/attribute.types'
-import throwError from '../../../utils/throwError'
-import Notes from './notes.model'
+import * as Notes from './notes.functions'
 import { CreateNote } from '../../../types/hotkey/payload.types'
 
 export const getNotes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const notes: NotesAttributes[] = await Notes.find();
+        const notes = await Notes.getNotes();
         res.json(notes);
-    
     } catch (err: any) {
-        err.ctrl = getNotes;
         next(err);
     }
 }
@@ -18,14 +14,9 @@ export const getNotes = async (req: Request, res: Response, next: NextFunction) 
 export const getNoteById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-
-        const note: NotesAttributes | null = await Notes.findById(noteId);
-        if (!note) return throwError('Note not found');
-        
+        const note = await Notes.getNoteById(noteId);
         res.json(note);
-    
     } catch (err: any) {
-        err.ctrl = getNoteById;
         next(err);
     }
 }
@@ -33,12 +24,9 @@ export const getNoteById = async (req: Request, res: Response, next: NextFunctio
 export const createNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
         req.body as CreateNote;
-
-        const note: NotesAttributes | null = await Notes.create({ ...req.body, done: false });
-        
-        res.json(note);    
+        const note = await Notes.createNote(req.body);
+        res.json(note);
     } catch (err: any) {
-        err.ctrl = createNote;
         next(err);
     }
 }
@@ -46,14 +34,9 @@ export const createNote = async (req: Request, res: Response, next: NextFunction
 export const updateNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-
-        const updatedNote: NotesAttributes | null = await Notes.findByIdAndUpdate(
-            noteId, req.body, { new: true }
-        );
-    
-        res.json(updatedNote);    
+        const updatedNote = await Notes.updateNote(noteId, req.body);
+        res.json(updatedNote);
     } catch (err: any) {
-        err.ctrl = updateNote;
         next(err);
     }
 }
@@ -61,12 +44,9 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
 export const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-
-        const note = await Notes.findByIdAndDelete(noteId);
-        
-        res.json(note);    
+        const note = await Notes.deleteNote(noteId);
+        res.json(note);
     } catch (err: any) {
-        err.ctrl = deleteNote;
         next(err);
     }
 }

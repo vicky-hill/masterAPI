@@ -4,12 +4,12 @@ import Req  from './reqs.model'
 import throwError from '../../../utils/throwError'
 import { history, comments } from '../utils/populate'
 
-export const findReqByID = async function (reqID: string) {
+export const findReqByID = async function (reqId: string) {
     const requirement: ReqAttributes | null = await Req
-        .findById(reqID)
+        .findById(reqId)
         .populate([history, comments]);
 
-    !requirement && throwError(`Could not find req by ID: ${reqID}`);
+    !requirement && throwError(`Could not find req by ID: ${reqId}`);
 
     return requirement;
 }

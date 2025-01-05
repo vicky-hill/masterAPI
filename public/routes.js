@@ -31,5 +31,29 @@ router.use('/api/hotkey/notes', notes_routes_1.default);
    Snapplist
 =================================== */
 const places_routes_1 = __importDefault(require("./projects/snapplist/places/places.routes"));
+const neighborhoods_routes_1 = __importDefault(require("./projects/snapplist/neighborhoods/neighborhoods.routes"));
+const categories_routes_1 = __importDefault(require("./projects/snapplist/categories/categories.routes"));
+const users_routes_2 = __importDefault(require("./projects/snapplist/users/users.routes"));
 router.use('/api/snapplist/places', places_routes_1.default);
+router.use('/api/snapplist/neighborhoods', neighborhoods_routes_1.default);
+router.use('/api/snapplist/categories', categories_routes_1.default);
+router.use('/api/snapplist/user', users_routes_2.default);
+/* ===================================
+   Hot Sauce
+=================================== */
+const user_routes_1 = __importDefault(require("./projects/hotsauce/users/user.routes"));
+const products_routes_1 = __importDefault(require("./projects/hotsauce/products/products.routes"));
+const cart_routes_1 = __importDefault(require("./projects/hotsauce/cart/cart.routes"));
+router.use('/api/hotsauce/user', user_routes_1.default);
+router.use('/api/hotsauce/products', products_routes_1.default);
+router.use('/api/hotsauce/cart', cart_routes_1.default);
+/* ===================================
+   Lesprit
+=================================== */
+const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.routes"));
+const words_router_1 = __importDefault(require("./projects/lesprit/words/words.router"));
+const lists_routes_1 = __importDefault(require("./projects/lesprit/lists/lists.routes"));
+router.use('/api/lesprit/user', users_routes_3.default);
+router.use('/api/lesprit/words', words_router_1.default);
+router.use('/api/lesprit/lists', lists_routes_1.default);
 exports.default = router;
