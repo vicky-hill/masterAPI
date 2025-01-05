@@ -5,7 +5,7 @@ const WordSchema = new mongoose.Schema<WordAttributes>({
     language: {
         type: String,
         required: true,
-        default: 'Spanish'
+        default: 'french'
     },
     foreign: {
         type: String,
