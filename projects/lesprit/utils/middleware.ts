@@ -4,6 +4,7 @@ import User from '../users/users.model'
 
 // Protect all routes 
 export const protect = async (req: any, res: Response, next: NextFunction) => {
+
     // Get token in the header
     const token = req.header('x-auth-token');
 
@@ -16,7 +17,7 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
     try {
         const decoded: any = jwt_decode(token);
 
-        const user = await User.findOne({ _id: decoded.user_id });
+        const user = await User.findOne({ firebaseId: decoded.user_id });
 
         if (!user) {
             return res.status(401).json({ msg: 'No user found' });

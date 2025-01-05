@@ -11,9 +11,9 @@ const router: any = express.Router()
 router.route('/').get(protect, getLists)
 router.route('/').post(protect, createList)
 
-router.route('/:wordId').get(protect, getList)
-router.route('/:wordId').post(protect, createList)
-router.route('/:wordId').put(protect, updateList)
-router.route('/:wordId').delete(protect, deleteList)
+router.route('/:listId').get(protect, getList)
+router.route('/:listId').post(protect, createList)
+router.route('/:listId').put(protect, updateList)
+router.route('/:listId').delete(protect, deleteList)
 
 export default router;

@@ -26,7 +26,6 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     // Verify token
     try {
         const decoded = (0, jwt_decode_1.default)(token);
-        console.log(decoded);
         const user = yield users_model_1.default.findOne({ firebaseID: decoded.user_id });
         if (!user) {
             return res.status(401).json({ msg: 'No user found' });

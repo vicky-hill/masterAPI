@@ -12,8 +12,8 @@ const router = express_1.default.Router();
 ==================================== */
 router.route('/').get(middleware_1.protect, lists_controller_1.getLists);
 router.route('/').post(middleware_1.protect, lists_controller_1.createList);
-router.route('/:wordId').get(middleware_1.protect, lists_controller_1.getList);
-router.route('/:wordId').post(middleware_1.protect, lists_controller_1.createList);
-router.route('/:wordId').put(middleware_1.protect, lists_controller_1.updateList);
-router.route('/:wordId').delete(middleware_1.protect, lists_controller_1.deleteList);
+router.route('/:listId').get(middleware_1.protect, lists_controller_1.getList);
+router.route('/:listId').post(middleware_1.protect, lists_controller_1.createList);
+router.route('/:listId').put(middleware_1.protect, lists_controller_1.updateList);
+router.route('/:listId').delete(middleware_1.protect, lists_controller_1.deleteList);
 exports.default = router;

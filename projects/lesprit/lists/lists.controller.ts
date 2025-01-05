@@ -16,9 +16,8 @@ export const getLists = async (req: Request, res: Response, next: NextFunction) 
     try {
         const { userId } = req.user;
         
-
-        // const lists = await List.getLists(userId);
-        res.json(userId);
+        const lists = await List.getLists(userId);
+        res.json(lists);
     } catch (err) {
         next(err);
     }

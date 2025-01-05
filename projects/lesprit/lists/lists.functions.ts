@@ -33,7 +33,7 @@ export const updateList = async (data: UpdateList, listId: string) => {
 }
 
 export const deleteList = async (listId: string) => {
-    const list = await List.findById(listId);
+    const list = await List.findByIdAndDelete(listId);
 
     if (!list) throwError('List not found');
 

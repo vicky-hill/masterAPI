@@ -41,7 +41,7 @@ const updateList = (data, listId) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.updateList = updateList;
 const deleteList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
-    const list = yield lists_model_1.default.findById(listId);
+    const list = yield lists_model_1.default.findByIdAndDelete(listId);
     if (!list)
         (0, throwError_1.default)('List not found');
     return list;

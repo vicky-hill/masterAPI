@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { UserAttributes } from '../../../types/lesprit/attribute.types'
 
 const UserSchema = new mongoose.Schema<UserAttributes>({
-    _id: {
+    firebaseId: {
         type: String,
         required: true
     },

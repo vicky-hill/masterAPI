@@ -4,6 +4,7 @@ type Language = { foreign: string, native: string }
 
 interface UserAttributes extends Document {
     _id: ObjectId
+    firebaseId: string
     name: string
     email: string
     languages: Language[]
