@@ -16,12 +16,16 @@ const UserSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
     },
+    lists: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Lesprit_List'
+        }],
     languages: {
         type: [{
                 foreign: { type: String, required: true },
                 native: { type: String, required: true }
             }],
-        default: [{ foreign: 'spanish', native: 'english' }],
+        default: [{ foreign: 'french', native: 'english' }],
         required: true
     }
 }, {

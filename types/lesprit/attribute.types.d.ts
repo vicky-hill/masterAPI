@@ -7,6 +7,7 @@ interface UserAttributes extends Document {
     firebaseId: string
     name: string
     email: string
+    lists: ListAttributes[]
     languages: Language[]
 }
 
@@ -25,6 +26,8 @@ interface WordAttributes extends Document {
 interface ListAttributes extends Document {
     _id: ObjectId
     title: string
+    image?: string
+    public: boolean
     urlKey: string
     createdAt: Date
     user: ObjectId | UserAttributes

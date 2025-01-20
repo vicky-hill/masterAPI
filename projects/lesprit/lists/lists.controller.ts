@@ -24,6 +24,15 @@ export const getLists = async (req: Request, res: Response, next: NextFunction) 
     }
 }
 
+export const getPublicLists = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const lists: ListAttributes[] = await List.getPublicLists();
+        res.json(lists)
+    } catch (err) {
+      next(err);
+    }
+}
+
 export const getList = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { listId } = req.params;
@@ -40,6 +49,30 @@ export const updateList = async (req: Request, res: Response, next: NextFunction
         const { listId } = req.params;
 
         const list: ListAttributes = await List.updateList(req.body, listId);
+        res.json(list);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const addListToUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId } = req.user;
+        const { listId } = req.params;
+
+        const list: ListAttributes = await List.addListToUser(listId, userId);
+        res.json(list);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const removeListFromUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId } = req.user;
+        const { listId } = req.params;
+
+        const list: ListAttributes = await List.removeListFromUser(listId, userId);
         res.json(list);
     } catch (err) {
         next(err);

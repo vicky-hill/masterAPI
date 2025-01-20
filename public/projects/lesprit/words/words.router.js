@@ -12,7 +12,8 @@ const router = express_1.default.Router();
 ==================================== */
 router.route('/').get(middleware_1.protect, words_controller_1.getWords);
 router.route('/').post(middleware_1.protect, words_controller_1.createWord);
-router.route('/:review').get(middleware_1.protect, words_controller_1.getReview);
+router.route('/review').get(middleware_1.protect, words_controller_1.getReview);
+router.route('/import').get(middleware_1.protect, words_controller_1.importWords);
 router.route('/:wordId').get(middleware_1.protect, words_controller_1.getWord);
 router.route('/:wordId').post(middleware_1.protect, words_controller_1.createWord);
 router.route('/:wordId').put(middleware_1.protect, words_controller_1.updateWord);

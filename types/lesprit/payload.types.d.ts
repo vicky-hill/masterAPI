@@ -8,10 +8,14 @@ interface CreateUser {
 
 interface CreateList {
     title: string
+    image?: string
+    public?: boolean
 }
 
 interface UpdateList {
-    title: string
+    title?: string
+    image?: string
+    public?: boolean
 }
 
 interface CreateWord {

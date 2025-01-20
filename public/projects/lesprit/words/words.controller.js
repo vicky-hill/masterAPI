@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
+exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
 const Word = __importStar(require("./words.functions"));
 const createWord = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -48,7 +48,8 @@ exports.createWord = createWord;
 const getWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.user;
-        const words = yield Word.getWords(userId);
+        const { list } = req.query;
+        const words = yield Word.getWords(userId, list);
         res.json(words);
     }
     catch (err) {
@@ -100,3 +101,14 @@ const deleteWord = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deleteWord = deleteWord;
+const importWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.user;
+        const words = yield Word.importWords(userId);
+        res.json(words);
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+exports.importWords = importWords;

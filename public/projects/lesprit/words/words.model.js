@@ -8,7 +8,7 @@ const WordSchema = new mongoose_1.default.Schema({
     language: {
         type: String,
         required: true,
-        default: 'Spanish'
+        default: 'french'
     },
     foreign: {
         type: String,

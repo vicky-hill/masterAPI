@@ -12,20 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserLists = exports.deleteList = exports.updateList = exports.getList = exports.getLists = exports.createList = void 0;
+exports.deleteUserLists = exports.deleteList = exports.removeListFromUser = exports.addListToUser = exports.updateList = exports.getList = exports.getPublicLists = exports.getLists = exports.createList = void 0;
 const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const lists_model_1 = __importDefault(require("./lists.model"));
 const words_model_1 = __importDefault(require("../words/words.model"));
+const users_model_1 = __importDefault(require("../users/users.model"));
 const createList = (data, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.create(Object.assign(Object.assign({}, data), { user: userId }));
+    yield users_model_1.default.findByIdAndUpdate(userId, { $push: { lists: list._id } }, { new: true });
     return list;
 });
 exports.createList = createList;
 const getLists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const lists = yield lists_model_1.default.find({ user: userId }).sort({ createdAt: -1 });
-    return lists;
+    const user = yield users_model_1.default.findById(userId).populate({
+        path: 'lists',
+        options: { sort: { createdAt: -1 } }
+    });
+    if (!user)
+        return (0, throwError_1.default)('User not found');
+    return user.lists;
 });
 exports.getLists = getLists;
+const getPublicLists = () => __awaiter(void 0, void 0, void 0, function* () {
+    const lists = yield lists_model_1.default.find({ public: true });
+    return lists;
+});
+exports.getPublicLists = getPublicLists;
 const getList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.findById(listId);
     if (!list)
@@ -40,10 +52,36 @@ const updateList = (data, listId) => __awaiter(void 0, void 0, void 0, function*
     return list;
 });
 exports.updateList = updateList;
-const deleteList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
-    const list = yield lists_model_1.default.findByIdAndDelete(listId);
+const addListToUser = (listId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const list = yield lists_model_1.default.findById(listId);
     if (!list)
         return (0, throwError_1.default)('List not found');
+    const listWords = yield words_model_1.default.find({ list: listId, user: list.user });
+    yield words_model_1.default.create(listWords.map(({ foreign, native, list }) => ({
+        foreign,
+        native,
+        list,
+        user: userId,
+        rating: 0,
+        dueDate: new Date()
+    })));
+    yield users_model_1.default.findByIdAndUpdate(userId, { $addToSet: { lists: listId } }, { new: true });
+    return list;
+});
+exports.addListToUser = addListToUser;
+const removeListFromUser = (listId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const list = yield lists_model_1.default.findById(listId);
+    if (!list)
+        return (0, throwError_1.default)('List not found');
+    yield users_model_1.default.findByIdAndUpdate(userId, { $pull: { lists: listId } }, { new: true });
+    return list;
+});
+exports.removeListFromUser = removeListFromUser;
+const deleteList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
+    const list = yield lists_model_1.default.findByIdAndUpdate(listId, { deleted: new Date() }, { new: true });
+    if (!list)
+        return (0, throwError_1.default)('List not found');
+    yield words_model_1.default.deleteMany({ list: listId });
     return list;
 });
 exports.deleteList = deleteList;

@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
+exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
 const throwError_1 = __importDefault(require("../../../utils/throwError"));
+const import_1 = require("./import");
 const words_model_1 = __importDefault(require("./words.model"));
 const createWord = (data, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const newWord = yield words_model_1.default.create(Object.assign(Object.assign({}, data), { user: userId }));
@@ -24,11 +25,16 @@ const createWord = (data, userId) => __awaiter(void 0, void 0, void 0, function*
     return word;
 });
 exports.createWord = createWord;
-const getWords = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const words = yield words_model_1.default.find({ user: userId }).populate({
+const getWords = (userId, list) => __awaiter(void 0, void 0, void 0, function* () {
+    const find = { user: userId };
+    if (list)
+        find.list = list;
+    const words = yield words_model_1.default.find(find)
+        .populate({
         path: 'list',
         select: 'title'
-    }).sort({ createdAt: -1 });
+    })
+        .sort({ createdAt: -1 });
     return words;
 });
 exports.getWords = getWords;
@@ -62,3 +68,9 @@ const deleteWord = (wordId) => __awaiter(void 0, void 0, void 0, function* () {
     return word;
 });
 exports.deleteWord = deleteWord;
+const importWords = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = import_1.impWords.map(word => (Object.assign(Object.assign({}, word), { user: userId })));
+    const words = yield words_model_1.default.create(body);
+    return words;
+});
+exports.importWords = importWords;

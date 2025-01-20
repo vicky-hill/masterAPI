@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserLists = exports.deleteList = exports.updateList = exports.getList = exports.getLists = exports.createList = void 0;
+exports.deleteUserLists = exports.deleteList = exports.removeListFromUser = exports.addListToUser = exports.updateList = exports.getList = exports.getPublicLists = exports.getLists = exports.createList = void 0;
 const List = __importStar(require("./lists.functions"));
 const createList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -56,6 +56,16 @@ const getLists = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getLists = getLists;
+const getPublicLists = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const lists = yield List.getPublicLists();
+        res.json(lists);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.getPublicLists = getPublicLists;
 const getList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { listId } = req.params;
@@ -78,6 +88,30 @@ const updateList = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.updateList = updateList;
+const addListToUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.user;
+        const { listId } = req.params;
+        const list = yield List.addListToUser(listId, userId);
+        res.json(list);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.addListToUser = addListToUser;
+const removeListFromUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.user;
+        const { listId } = req.params;
+        const list = yield List.removeListFromUser(listId, userId);
+        res.json(list);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.removeListFromUser = removeListFromUser;
 const deleteList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { listId } = req.params;
