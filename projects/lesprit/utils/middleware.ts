@@ -17,6 +17,8 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
     try {
         const decoded: any = jwt_decode(token);
 
+        console.log(decoded.user_id)
+
         const user = await User.findOne({ firebaseId: decoded.user_id });
 
         if (!user) {

@@ -1,6 +1,6 @@
 import express from 'express'
 import { protect } from '../utils/middleware'
-import { getWords, getWord, createWord, updateWord, deleteWord, getReview } from './words.controller'
+import { getWords, getWord, createWord, updateWord, deleteWord, getReview, importWords } from './words.controller'
 
 const router: any = express.Router()
 
@@ -11,7 +11,8 @@ const router: any = express.Router()
 router.route('/').get(protect, getWords)
 router.route('/').post(protect, createWord)
 
-router.route('/:review').get(protect, getReview)
+router.route('/review').get(protect, getReview)
+router.route('/import').get(protect, importWords)
 
 router.route('/:wordId').get(protect, getWord)
 router.route('/:wordId').post(protect, createWord)

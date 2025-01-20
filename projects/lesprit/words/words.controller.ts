@@ -15,8 +15,9 @@ export const createWord = async (req: Request, res: Response, next: NextFunction
 export const getWords = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.user;
+        const { list } = req.query;
 
-        const words = await Word.getWords(userId);
+        const words = await Word.getWords(userId, list);
         res.json(words);
     } catch (err) {
         next(err);
@@ -67,3 +68,13 @@ export const deleteWord = async (req: Request, res: Response, next: NextFunction
     }
 }
 
+export const importWords = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId } = req.user;
+
+        const words = await Word.importWords(userId);
+        res.json(words);       
+    } catch (err) {
+      console.log(err);
+    }
+}

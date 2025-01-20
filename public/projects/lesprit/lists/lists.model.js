@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const WordSchema = new mongoose_1.default.Schema({
+const slugify_1 = __importDefault(require("slugify"));
+const ListSchema = new mongoose_1.default.Schema({
     title: {
         type: String,
         required: true
@@ -18,8 +19,17 @@ const WordSchema = new mongoose_1.default.Schema({
         type: Date,
         default: Date.now
     },
+    public: {
+        type: Boolean,
+        default: false
+    },
+    image: String,
     urlKey: String
 }, {
     timestamps: true
 });
-exports.default = mongoose_1.default.model('Lesprit_List', WordSchema);
+ListSchema.pre('save', function (next) {
+    this.urlKey = (0, slugify_1.default)(this.title, { lower: true });
+    next();
+});
+exports.default = mongoose_1.default.model('Lesprit_List', ListSchema);
