@@ -17,6 +17,7 @@ const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const lists_model_1 = __importDefault(require("./lists.model"));
 const words_model_1 = __importDefault(require("../words/words.model"));
 const users_model_1 = __importDefault(require("../users/users.model"));
+const getImageUrl_1 = __importDefault(require("../utils/getImageUrl"));
 const createList = (data, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const list = yield lists_model_1.default.create(Object.assign(Object.assign({}, data), { user: userId }));
     yield users_model_1.default.findByIdAndUpdate(userId, { $push: { lists: list._id } }, { new: true });
@@ -24,24 +25,27 @@ const createList = (data, userId) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.createList = createList;
 const getLists = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield users_model_1.default.findById(userId).populate({
+    const userInstance = yield users_model_1.default.findById(userId).populate({
         path: 'lists',
         options: { sort: { createdAt: -1 } }
     });
-    if (!user)
+    if (!userInstance)
         return (0, throwError_1.default)('User not found');
-    return user.lists;
+    const user = userInstance.toObject();
+    const lists = user.lists.map((list) => (Object.assign(Object.assign({}, list), { image: (0, getImageUrl_1.default)(list.image) })));
+    return lists;
 });
 exports.getLists = getLists;
 const getPublicLists = () => __awaiter(void 0, void 0, void 0, function* () {
-    const lists = yield lists_model_1.default.find({ public: true });
-    return lists;
+    const lists = yield lists_model_1.default.find({ public: true }).lean();
+    return lists.map(list => (Object.assign(Object.assign({}, list), { image: (0, getImageUrl_1.default)(list.image) })));
 });
 exports.getPublicLists = getPublicLists;
 const getList = (listId) => __awaiter(void 0, void 0, void 0, function* () {
-    const list = yield lists_model_1.default.findById(listId);
+    const list = yield lists_model_1.default.findById(listId).lean();
     if (!list)
         return (0, throwError_1.default)('List not found');
+    list.image = (0, getImageUrl_1.default)(list.image);
     return list;
 });
 exports.getList = getList;
