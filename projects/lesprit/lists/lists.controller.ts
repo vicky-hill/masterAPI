@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import * as List from './lists.functions'
 import { ListAttributes } from '../../../types/lesprit/attribute.types'
+import { ListObject } from '../../../types/lesprit/objects.types'
+import { LeanDocument } from 'mongoose'
 
 export const createList = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,8 +18,8 @@ export const createList = async (req: Request, res: Response, next: NextFunction
 export const getLists = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.user;
-        
-        const lists: ListAttributes[] = await List.getLists(userId);
+
+        const lists: ListObject[] = await List.getLists(userId);
         res.json(lists);
     } catch (err) {
         next(err);
@@ -26,10 +28,10 @@ export const getLists = async (req: Request, res: Response, next: NextFunction) 
 
 export const getPublicLists = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const lists: ListAttributes[] = await List.getPublicLists();
+        const lists: LeanDocument<ListAttributes>[] = await List.getPublicLists();
         res.json(lists)
     } catch (err) {
-      next(err);
+        next(err);
     }
 }
 
@@ -37,7 +39,7 @@ export const getList = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { listId } = req.params;
 
-        const list: ListAttributes = await List.getList(listId);
+        const list: ListObject = await List.getList(listId);
         res.json(list);
     } catch (err) {
         next(err);

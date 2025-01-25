@@ -4,6 +4,8 @@ import List from './lists.model'
 import Word from '../words/words.model'
 import User from '../users/users.model'
 import { ListAttributes } from '../../../types/lesprit/attribute.types'
+import { ListObject } from '../../../types/lesprit/objects.types'
+import getImageUrl from '../utils/getImageUrl'
 
 
 export const createList = async (data: CreateList, userId: string): Promise<ListAttributes> => {
@@ -13,29 +15,46 @@ export const createList = async (data: CreateList, userId: string): Promise<List
     return list;
 }
 
-export const getLists = async (userId: string): Promise<ListAttributes[]> => {
-    const user = await User.findById(userId).populate({
+
+export const getLists = async (userId: string): Promise<ListObject[]> => {
+    const userInstance = await User.findById(userId).populate({
         path: 'lists',
         options: { sort: { createdAt: -1 } }
     });
 
-    if (!user) return throwError('User not found');
+    if (!userInstance) return throwError('User not found');
 
-    return user.lists;
-}
+    const user = userInstance.toObject();
 
-export const getPublicLists = async (): Promise<ListAttributes[]> => {
-    const lists = await List.find({ public: true });
+    const lists = user.lists.map((list: ListObject) => ({
+        ...list,
+        image: getImageUrl(list.image)
+    }))
+
     return lists;
 }
 
-export const getList = async (listId: string): Promise<ListAttributes> => {
-    const list = await List.findById(listId);
+
+export const getPublicLists = async (): Promise<any> => {
+    const lists = await List.find({ public: true }).lean();
+
+    return lists.map(list => ({
+        ...list,
+        image: getImageUrl(list.image)
+    }))
+}
+
+
+export const getList = async (listId: string): Promise<any> => {
+    const list: any = await List.findById(listId).lean();
 
     if (!list) return throwError('List not found');
 
+    list.image = getImageUrl(list.image);
+
     return list;
 }
+
 
 export const updateList = async (data: UpdateList, listId: string): Promise<ListAttributes> => {
     const list = await List.findByIdAndUpdate(listId, data, { new: true });
@@ -45,13 +64,14 @@ export const updateList = async (data: UpdateList, listId: string): Promise<List
     return list;
 }
 
+
 export const addListToUser = async (listId: string, userId: string): Promise<ListAttributes> => {
     const list = await List.findById(listId);
 
     if (!list) return throwError('List not found');
 
     const listWords = await Word.find({ list: listId, user: list.user })
-    
+
     await Word.create(listWords.map(({ foreign, native, list }) => ({
         foreign,
         native,
@@ -76,6 +96,7 @@ export const removeListFromUser = async (listId: string, userId: string): Promis
     return list;
 }
 
+
 export const deleteList = async (listId: string): Promise<ListAttributes> => {
     const list = await List.findByIdAndUpdate(listId, { deleted: new Date() }, { new: true });
     if (!list) return throwError('List not found');
@@ -84,6 +105,7 @@ export const deleteList = async (listId: string): Promise<ListAttributes> => {
 
     return list;
 }
+
 
 export const deleteUserLists = async (userId: string): Promise<number> => {
     const words = await Word.deleteMany({ user: userId });

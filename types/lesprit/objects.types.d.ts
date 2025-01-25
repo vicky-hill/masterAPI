@@ -1,8 +1,8 @@
-import { Schema, model, Document, ObjectId, LeanDocument } from 'mongoose'
+import { Schema, model, Document, ObjectId } from 'mongoose'
 
 type Language = { foreign: string, native: string }
 
-interface UserAttributes extends Document {
+interface UserObject {
     _id: ObjectId
     firebaseId: string
     name: string
@@ -11,7 +11,7 @@ interface UserAttributes extends Document {
     languages: Language[]
 }
 
-interface WordAttributes extends Document {
+interface WordObject {
     _id: ObjectId
     language: string
     foreign: string
@@ -23,17 +23,13 @@ interface WordAttributes extends Document {
     user: ObjectId | UserAttributes
 }
 
-
-interface List {
+interface ListObject {
     _id: ObjectId
     title: string
-    image: string
+    image: string | null
     public: boolean
     urlKey: string
     createdAt: Date
     user: ObjectId | UserAttributes
 }
-
-interface ListAttributes extends Document, List { }
-interface ListDocument extends LeanDocument, List { }
 
