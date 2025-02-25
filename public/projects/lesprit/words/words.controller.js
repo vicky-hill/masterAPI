@@ -32,8 +32,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
+exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = exports.getAllWords = void 0;
 const Word = __importStar(require("./words.functions"));
+const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const words = yield Word.getAllWords();
+        res.json(words);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.getAllWords = getAllWords;
 const createWord = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.user;

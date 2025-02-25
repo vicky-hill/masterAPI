@@ -8,6 +8,10 @@ const middleware_1 = require("../utils/middleware");
 const words_controller_1 = require("./words.controller");
 const router = express_1.default.Router();
 /* ====================================
+   @ api/lesprit/words/admin
+==================================== */
+router.route('/admin').get(middleware_1.protect, words_controller_1.getWords);
+/* ====================================
    Users @ api/lesprit/words
 ==================================== */
 router.route('/').get(middleware_1.protect, words_controller_1.getWords);

@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
 import * as Word from './words.functions'
 
+export const getAllWords = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const words = await Word.getAllWords();
+        res.json(words);
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const createWord = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.user;

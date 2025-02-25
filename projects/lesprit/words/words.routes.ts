@@ -5,6 +5,13 @@ import { getWords, getWord, createWord, updateWord, deleteWord, getReview, impor
 const router: any = express.Router()
 
 /* ====================================
+   @ api/lesprit/words/admin
+==================================== */
+
+router.route('/admin').get(protect, getWords)
+
+
+/* ====================================
    Users @ api/lesprit/words
 ==================================== */
 

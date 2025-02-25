@@ -16,7 +16,15 @@ const UserSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin']
+    },
     lists: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Lesprit_List'
+        }],
+    verbs: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
             ref: 'Lesprit_List'
         }],
@@ -30,5 +38,11 @@ const UserSchema = new mongoose_1.default.Schema({
     }
 }, {
     timestamps: true
+});
+UserSchema.virtual('phrases', {
+    ref: 'Lesprit_Phrase',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: false
 });
 exports.default = mongoose_1.default.model('Lesprit_User', UserSchema);

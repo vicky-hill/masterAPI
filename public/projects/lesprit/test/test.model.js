@@ -20,3 +20,4 @@ ListSchema.pre('save', function (next) {
     next();
 });
 exports.default = mongoose_1.default.model('Lesprit_Test', ListSchema);
+// create snippet for urlkey

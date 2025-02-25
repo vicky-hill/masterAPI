@@ -1,8 +1,14 @@
 import { CreateWord, UpdateWord } from '../../../types/lesprit/payload.types'
-import throwError from '../../../utils/throwError';
-import { impWords } from './import';
+import throwError from '../../../utils/throwError'
+import { impWords } from './import'
 import Word from './words.model'
 
+
+export const getAllWords = async () => {
+    const words = await Word.find();
+
+    return words;
+}
 
 export const createWord = async (data: CreateWord, userId: string) => {
     const newWord = await Word.create({ ...data, user: userId });

@@ -21,3 +21,5 @@ ListSchema.pre('save', function(next){
 
 
 export default mongoose.model<ListAttributes>('Lesprit_Test', ListSchema);
+
+// create snippet for urlkey
