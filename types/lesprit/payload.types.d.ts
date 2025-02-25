@@ -31,3 +31,11 @@ interface UpdateWord {
     rating?: number
     dueDate?: number
 }
+
+interface CreateVerb {
+
+}
+
+interface UpdateVerb {
+    
+}

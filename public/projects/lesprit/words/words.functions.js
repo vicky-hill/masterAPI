@@ -12,10 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = void 0;
+exports.importWords = exports.deleteWord = exports.updateWord = exports.getReview = exports.getWord = exports.getWords = exports.createWord = exports.getAllWords = void 0;
 const throwError_1 = __importDefault(require("../../../utils/throwError"));
 const import_1 = require("./import");
 const words_model_1 = __importDefault(require("./words.model"));
+const getAllWords = () => __awaiter(void 0, void 0, void 0, function* () {
+    const words = yield words_model_1.default.find();
+    return words;
+});
+exports.getAllWords = getAllWords;
 const createWord = (data, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const newWord = yield words_model_1.default.create(Object.assign(Object.assign({}, data), { user: userId }));
     const word = yield words_model_1.default.findById(newWord._id).populate({

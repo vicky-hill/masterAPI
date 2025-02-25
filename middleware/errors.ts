@@ -2,8 +2,15 @@ import Err from '../utils/errorHandler'
 import { controllers } from '../utils/controllers'
 
 const onError = (err: any, req: any, res: any, next: any) => {
+    const notFoundStrings = ['not found', 'not find', 'cannot be found', 'does not exist'];
+
     err.statusCode = err.statusCode || 500;
-    
+
+    // check if message includes any of the above and set status to 404
+    if (notFoundStrings.some(string => err.message.includes(string))) {
+        err.statusCode = 404;
+    }
+
     let error = { ...err };
     let validation: any = {}
 
@@ -23,8 +30,8 @@ const onError = (err: any, req: any, res: any, next: any) => {
         const missing = err.inner.map((error: any) => error.path);
         const missingFields = missing.join(', ');
         const plural = missing.length > 1;
-        
-        const errorMessage = `req.body is missing or received wrong values for ${plural ? 'these': 'this'} required field${plural ? 's' : ''}: ${missingFields}`
+
+        const errorMessage = `req.body is missing or received wrong values for ${plural ? 'these' : 'this'} required field${plural ? 's' : ''}: ${missingFields}`
 
         err.inner.forEach((error: any) => validation[error.path] = error.message);
 

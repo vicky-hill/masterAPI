@@ -6,7 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const errorHandler_1 = __importDefault(require("../utils/errorHandler"));
 const controllers_1 = require("../utils/controllers");
 const onError = (err, req, res, next) => {
+    const notFoundStrings = ['not found', 'not find', 'cannot be found', 'does not exist'];
     err.statusCode = err.statusCode || 500;
+    // check if message includes any of the above and set status to 404
+    if (notFoundStrings.some(string => err.message.includes(string))) {
+        err.statusCode = 404;
+    }
     let error = Object.assign({}, err);
     let validation = {};
     error.message = err.message;

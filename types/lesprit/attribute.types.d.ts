@@ -7,8 +7,10 @@ interface UserAttributes extends Document {
     firebaseId: string
     name: string
     email: string
+    role: 'user' | 'admin'
     lists: ListAttributes[]
     languages: Language[]
+    verbs: Verb[]
 }
 
 interface WordAttributes extends Document {
@@ -34,6 +36,37 @@ interface List {
     user: ObjectId | UserAttributes
 }
 
+interface Tense {
+    pre?: string
+    conjugated: string
+}
+
+interface Phrase {
+    verb: ObjectId | VerbAttributes
+    user: ObjectId | UserAttributes
+    phrase: string
+    rating: number
+    group: number
+}
+
+interface Verb {
+    _id: ObjectId
+    verb: string
+    language: 'french' | 'spanish' | 'italian'
+    tenses: {
+        present: Tense[],
+        pastTense: Tense[]
+    }
+    priority: number,
+    phrases: Phrase[]
+}
+
 interface ListAttributes extends Document, List { }
 interface ListDocument extends LeanDocument, List { }
+
+interface VerbAttributes extends Document, Verb { }
+interface VerbDocument extends LeanDocument, Verb { }
+
+interface PhraseAttributes extends Document, Phrase { }
+interface PhraseDocument extends LeanDocument, Phrase { }
 

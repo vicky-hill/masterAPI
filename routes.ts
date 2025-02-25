@@ -62,11 +62,19 @@ router.use('/api/hotsauce/cart', hotsauce_cartRoutes)
    Lesprit
 =================================== */
 import lesprit_userRoutes from './projects/lesprit/users/users.routes'
-import lesprit_wordRoutes from './projects/lesprit/words/words.router'
+import lesprit_wordRoutes from './projects/lesprit/words/words.routes'
+import lesprit_admin_wordRoutes from './projects/lesprit/words/words.routes.admin'
 import lesprit_listRoutes from './projects/lesprit/lists/lists.routes'
+import lesprit_testRoutes from './projects/lesprit/test/test.routes'
+import lesprite_user_verbRoutes from './projects/lesprit/verbs/verbs.routes.user'
+import lesprite_admin_verbRoutes from './projects/lesprit/verbs/verbs.routes.admin'
 
 router.use('/api/lesprit/user', lesprit_userRoutes)
 router.use('/api/lesprit/words', lesprit_wordRoutes)
+router.use('/api/lesprit/admin/words', lesprit_admin_wordRoutes)
 router.use('/api/lesprit/lists', lesprit_listRoutes)
+router.use('/api/lesprit/test', lesprit_testRoutes)
+router.use('/api/lesprit/user/verbs', lesprite_user_verbRoutes)
+router.use('/api/lesprit/admin/verbs', lesprite_admin_verbRoutes)
 
 export default router;

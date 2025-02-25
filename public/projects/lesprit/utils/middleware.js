@@ -21,16 +21,21 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     const token = req.header('x-auth-token');
     // Check if no token
     if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        res.status(401).json({ msg: 'No token, authorization denied' });
+        return;
     }
     // Verify token
     try {
         const decoded = (0, jwt_decode_1.default)(token);
-        console.log(decoded.user_id);
         const user = yield users_model_1.default.findOne({ firebaseId: decoded.user_id });
         if (!user) {
-            return res.status(401).json({ msg: 'No user found' });
+            res.status(401).json({ msg: 'No user found' });
+            return;
         }
+        if (req.route.path.includes('admin') && user.role !== 'admin') {
+            res.status(401).json({ msg: 'User does not have admin access' });
+        }
+        console.log(req.route.path);
         req.user = user;
         req.user.userId = user._id;
         next();
