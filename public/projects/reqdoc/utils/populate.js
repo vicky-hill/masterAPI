@@ -40,5 +40,6 @@ exports.project = {
 exports.reqs = {
     path: 'reqs',
     match: { changed_req: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } },
     populate: [exports.history, exports.comments]
 };

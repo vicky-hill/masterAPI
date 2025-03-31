@@ -44,5 +44,6 @@ export const project = {
 export const reqs = {
     path: 'reqs',
     match: { changed_req: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } },
     populate: [history, comments]
 }

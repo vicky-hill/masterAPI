@@ -6,28 +6,44 @@ import { reqs } from '../utils/populate'
 import { checkFeatureAccess, checkProjectAccess } from '../utils/access'
 import validate from '../utils/validation'
 import { cascadeDeleteFeature } from '../utils/delete'
+import {updateValue, getValue, setValue} from '../../../utils/redis';
+import {getFeaturesByProjectId, invalidateProjectFeaturesCache, updateProjectFeaturesCache, invalidateFeatureCache} from './features.utils';
+import ProjectModel from '../projects/projects.model'
 
 
-export const getFeatures = async (projectId: string) => {
-    const features: FeatureAttributes[] = await Feature
-        .find({ project: projectId, deleted: { $exists: false } })
-        .sort({ sort: 1 })
+export const getFeatures = async (projectKey: string) => {
+    const project = await ProjectModel.findOne({ slug: projectKey });
 
-    return { data: features }
+    if (!project) throw new Error('Project not found');
+
+    const features = await getFeaturesByProjectId(project._id);
+
+    return features;
 }
-
 
 export const getFeature = async (featureId: string, userId: string) => {
     await checkFeatureAccess(featureId, userId);
 
+    const cacheKey = `feature:${featureId}`;
+    console.log('cacheKey get', cacheKey)
+
+    const cachedFeature = await getValue(cacheKey);
+    if (cachedFeature) return cachedFeature;
+
     const feature: FeatureAttributes | null = await Feature
         .findById(featureId)
         .populate([
-            reqs,
+            {
+                ...reqs,
+                options: { sort: { sort: 'asc' } }
+            },
             {
                 path: 'sub_features',
                 options: { sort: { sort: 'asc' } },
-                populate: reqs,
+                populate: {
+                    ...reqs,
+                    options: { sort: { sort: 'asc' } }
+                }
             },
             {
                 path: 'main_feature',
@@ -37,10 +53,7 @@ export const getFeature = async (featureId: string, userId: string) => {
 
     if (!feature) return throwError('Feature not found');
 
-    const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
-
-    feature.reqs = JSON.parse(JSON.stringify([...feature.reqs.sort((a, b) => a.sort - b.sort), ...subFeatureReqs]))
-    feature.sub_features = feature.sub_features.map(sub_feature => JSON.parse(JSON.stringify({ ...sub_feature, reqs: null })))
+     await setValue(cacheKey, feature);
 
     return feature;
 }
@@ -51,16 +64,17 @@ export const createFeature = async (data: CreateFeature, projectId: string, user
 
     await validate.createFeature(data);
 
-    const features: FeatureAttributes[] = await Feature.find({ project: projectId });
-
-    if (!features) throwError(`Features with the project _id ${projectId} not be found`);
+    const features: FeatureAttributes[] = await getFeaturesByProjectId(projectId);
 
     const feature = await Feature.create({
         ...data,
-        sort: features.length + 1
+        sort: features.length + 1,
+        sub_features: []
     });
 
-    return feature;
+    await updateValue(`features:project:${projectId}`, [...features, feature]);
+
+    return [...features, feature];
 }
 
 
@@ -69,13 +83,14 @@ export const updateFeature = async (data: UpdateFeature, featureId: string, user
 
     await validate.updateFeature(data);
 
-    const updatedFeature: FeatureAttributes | null = await Feature.findByIdAndUpdate(featureId, data, { new: true });
+    const updatedFeature = await Feature.findByIdAndUpdate(featureId, data, { new: true });
 
     if (!updatedFeature) return throwError(`Feature to update not found`);
 
-    const feature = await Feature.findById(updatedFeature._id);
+    const features = await updateProjectFeaturesCache(updatedFeature.project.toString());
+    await invalidateFeatureCache(featureId);
 
-    return feature;
+    return features;
 }
 
 
@@ -83,8 +98,11 @@ export const deleteFeature = async (featureId: string, userId: string) => {
     await checkFeatureAccess(featureId, userId);
 
     const deletedFeature = await cascadeDeleteFeature(featureId);
-
-    return deletedFeature;
+  
+    const features: FeatureAttributes[] = await updateProjectFeaturesCache(deletedFeature.project.toString());
+    await invalidateFeatureCache(featureId);
+    
+    return features;
 }
 
 
@@ -93,18 +111,31 @@ export const createSubFeature = async (data: CreateSubFeature, featureId: string
 
     await validate.updateFeature(data);
 
-    const feature: FeatureAttributes | null = await Feature.findById(featureId).populate('sub_features');
+    const mainFeature = await Feature.findById(featureId).populate('sub_features');
 
-    if (!feature) return throwError('Feature not found');
+    if (!mainFeature) return throwError('Feature not found');
+
+    const projectId = mainFeature.project.toString();
 
     const subFeature: FeatureAttributes = await Feature.create({
         ...data,
-        project: feature.project,
-        sort: feature.sub_features.length,
+        project: projectId,
+        sort: mainFeature.sub_features.length,
         main_feature: featureId
     });
 
-    return subFeature;
+    const features: FeatureAttributes[] = await getFeaturesByProjectId(projectId);
+
+    const updatedFeatures = features.map(feature => (
+        feature._id === mainFeature._id.toString()
+            ? { ...feature, sub_features: [...feature.sub_features, subFeature.toObject()] }
+            : feature
+    ));
+
+    await updateValue(`features:project:${projectId}`, updatedFeatures);
+    await invalidateFeatureCache(featureId);
+
+    return updatedFeatures;
 }
 
 
@@ -114,13 +145,15 @@ export const sortFeatures = async (data: any, userId: string) => {
     await validate.sort(data);
     await checkFeatureAccess(data[0]._id, userId);
 
-    const result = [];
+    const result: any = [];
 
     for (const feature of data) {
         const { _id, sort } = feature;
         const updatedFeature = await Feature.findByIdAndUpdate(_id, { sort }, { new: true });
         result.push(updatedFeature);
     }
+
+    await invalidateProjectFeaturesCache(result[0].project.toString());
 
     return { data }
 }

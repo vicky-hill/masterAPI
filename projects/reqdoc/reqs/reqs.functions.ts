@@ -9,9 +9,16 @@ import { findReqByID } from './reqs.utils'
 import Project from '../projects/projects.model'
 import validate from '../utils/validation'
 import { cascadeDeleteReq } from '../utils/delete'
+import { getValue, setValue } from '../../../utils/redis'
+import {invalidateFeatureCache} from '../features/features.utils';
 
 
 export const getFeatureReqs = async (featureId: string, userId: string) => {
+    // const cacheKey = `reqs:feature:${featureId}`;
+    // const cached = await getValue(cacheKey);
+    
+    // if (cached) return cached;
+ 
     await checkFeatureAccess(featureId, userId);
 
     const feature: FeatureAttributes | null = await Feature.findById(featureId)
@@ -29,6 +36,8 @@ export const getFeatureReqs = async (featureId: string, userId: string) => {
         .sort({ sort: 1 })
 
     const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
+
+    // await setValue(cacheKey, [...reqs, ...subFeatureReqs]);
 
     return { data: [...reqs, ...subFeatureReqs] }
 }
@@ -97,6 +106,8 @@ export const createReq = async (data: CreateReq, featureId: string, userId: stri
         project: feature.project
     });
 
+    await invalidateFeatureCache(featureId);
+
     return requirement;
 }
 
@@ -111,6 +122,8 @@ export const updateReq = async (data: UpdateReq, reqId: string, userId: string) 
 
     const requirement = await findReqByID(updatedReq._id);
 
+    await invalidateFeatureCache(updatedReq.feature.toString());
+
     return requirement;
 }
 
@@ -118,6 +131,8 @@ export const updateReq = async (data: UpdateReq, reqId: string, userId: string) 
 export const deleteReq = async (reqId: string, userId: string) => {
     await checkReqAccess(reqId, userId);
     const deletedReq = await cascadeDeleteReq(reqId);
+
+    await invalidateFeatureCache(deletedReq.feature.toString());
 
     return deletedReq;
 }
@@ -157,6 +172,8 @@ export const changeReq = async (data: ChangeReq, reqId: string, userId: string) 
 
     const latestReq = await findReqByID(_id);
 
+    await invalidateFeatureCache(changedReq.feature.toString());
+
     return latestReq;
 }
 
@@ -167,15 +184,21 @@ export const sortReqs = async (data: any, userId: string) => {
     await validate.sort(data);
     await checkReqAccess(data[0]._id, userId);
 
-    const result = [];
+    const reqs: ReqAttributes[] = [];
 
     for (const requirement of data) {
         const { _id, sort } = requirement;
-        const updatedReq = await Req.findByIdAndUpdate(_id, { sort }, { new: true });
-        result.push(updatedReq);
+        const updatedReq = await Req.findByIdAndUpdate(_id, { sort }, { new: true, populate: 'feature' });
+        updatedReq && reqs.push(updatedReq);
     }
 
-    return { data: result };
+    const mainFeatureId = reqs[0].feature.main_feature 
+        ? reqs[0].feature.main_feature.toString() 
+        : reqs[0].feature._id.toString()
+
+    await invalidateFeatureCache(mainFeatureId);
+
+    return reqs;
 }
 
 

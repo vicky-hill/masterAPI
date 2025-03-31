@@ -2,6 +2,9 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config();
 
+// Set strictQuery to true to suppress the deprecation warning
+mongoose.set('strictQuery', true);
+
 const uri: string | undefined = process.env.DB_URI;
 
 if (!uri) {

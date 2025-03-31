@@ -16,7 +16,8 @@ router.route('/:featureId').delete(protect, deleteFeature)
 
 router.route('/:featureId/sub').post(protect, createSubFeature)
 
-router.route('/:projectId').get(protect, getFeatures)
+router.route('/project/:projectKey').get(protect, getFeatures)
+
 router.route('/').post(protect, createFeature)
 
 

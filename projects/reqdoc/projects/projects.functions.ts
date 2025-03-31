@@ -7,6 +7,7 @@ import { checkProjectAccess } from '../utils/access'
 import { CreateProject, UpdateProject } from '../../../types/reqdoc/payloads.types'
 import validate from '../utils/validation'
 import { cascadeDeleteProject } from '../utils/delete'
+import {getValue, setValue} from '../../../utils/redis';
 
 
 export const getProjects = async (team: any) => {
@@ -25,6 +26,11 @@ export const getProjects = async (team: any) => {
 
 export const getProject = async (projectId: string, userId: string) => {
     await checkProjectAccess(projectId, userId);
+
+    const cacheKey = `projects:project:${projectId}`;
+    const cached = await getValue(cacheKey);
+    
+    if (cached) return cached;
 
     const projectInstance: ProjectAttributes | null = await Project.findById(projectId)
         .populate([{
@@ -58,16 +64,7 @@ export const getProject = async (projectId: string, userId: string) => {
     const features = projectObject.features;
     const data = { project, features, reqs };
 
-    // redisClient.get('project', (err, project) => {
-    //     if (err) console.log(err)
-    //     if (photos) {
-    //         return res.json(JSON.parse(project))
-    //     } else {
-    //         return res.json({ msg: 'no redis cache'})
-    //     }
-    // })
-
-    // redisClient.set('project', JSON.stringify(data));
+    await setValue(cacheKey, data);
 
     return data;
 }

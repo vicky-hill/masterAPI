@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import * as Req from './reqs.functions'
 
+
 export const getFeatureReqs = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { featureId } = req.params;
@@ -29,7 +30,7 @@ export const getReqById = async (req: Request, res: Response, next: NextFunction
     try {
         const { reqId } = req.params;
         const { userId } = req.user;
-   
+
         const requirement = await Req.getReqById(reqId, userId);
         res.json(requirement);
     } catch (err: any) {
@@ -67,7 +68,7 @@ export const updateReq = async (req: Request, res: Response, next: NextFunction)
         const { userId } = req.user;
 
         const requirement = await Req.updateReq(req.body, reqId, userId);
-        res.status(200).json(requirement);
+        res.json(requirement);
     } catch (err: any) {
         next(err);
     }
@@ -99,11 +100,10 @@ export const changeReq = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const sortReqs = async (req: Request, res: Response, next: NextFunction) => {
-    try {       
+    try {
         const { userId } = req.user;
 
         const data = await Req.sortReqs(req.body, userId);
-
         res.json(data);
     } catch (err: any) {
         next(err);
@@ -138,7 +138,7 @@ export const editComment = async (req: Request, res: Response, next: NextFunctio
     try {
         const { userId } = req.user;
         const { commentID } = req.params;
-     
+
         const updatedReq = await Req.editComment(req.body, commentID, userId);
         res.json(updatedReq);
     } catch (err: any) {

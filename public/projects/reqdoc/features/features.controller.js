@@ -36,8 +36,8 @@ exports.sortFeatures = exports.createSubFeature = exports.deleteFeature = export
 const Feature = __importStar(require("./features.functions"));
 const getFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { projectId } = req.params;
-        const features = Feature.getFeatures(projectId);
+        const { projectKey } = req.params;
+        const features = yield Feature.getFeatures(projectKey);
         res.json(features);
     }
     catch (err) {

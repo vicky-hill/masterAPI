@@ -20,6 +20,7 @@ const populate_1 = require("../utils/populate");
 const access_1 = require("../utils/access");
 const validation_1 = __importDefault(require("../utils/validation"));
 const delete_1 = require("../utils/delete");
+const redis_1 = require("../../../utils/redis");
 const getProjects = (team) => __awaiter(void 0, void 0, void 0, function* () {
     const projects = yield projects_model_1.default.find({ team, deleted: { $exists: false } })
         .populate(populate_1.features);
@@ -33,6 +34,10 @@ const getProjects = (team) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getProjects = getProjects;
 const getProject = (projectId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, access_1.checkProjectAccess)(projectId, userId);
+    const cacheKey = `projects:project:${projectId}`;
+    const cached = yield (0, redis_1.getValue)(cacheKey);
+    if (cached)
+        return cached;
     const projectInstance = yield projects_model_1.default.findById(projectId)
         .populate([Object.assign(Object.assign({}, populate_1.features), { populate: populate_1.subFeatures }), populate_1.team]);
     if (!projectInstance)
@@ -57,15 +62,7 @@ const getProject = (projectId, userId) => __awaiter(void 0, void 0, void 0, func
     };
     const features = projectObject.features;
     const data = { project, features, reqs };
-    // redisClient.get('project', (err, project) => {
-    //     if (err) console.log(err)
-    //     if (photos) {
-    //         return res.json(JSON.parse(project))
-    //     } else {
-    //         return res.json({ msg: 'no redis cache'})
-    //     }
-    // })
-    // redisClient.set('project', JSON.stringify(data));
+    yield (0, redis_1.setValue)(cacheKey, data);
     return data;
 });
 exports.getProject = getProject;
