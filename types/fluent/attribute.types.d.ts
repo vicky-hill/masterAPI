@@ -28,6 +28,7 @@ interface ImageAttributes extends Document {
     url: string
     file: string
     name: string
+    source?: string
 }
 
 interface GroupAttributes extends Document {

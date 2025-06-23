@@ -13,6 +13,9 @@ const imageSchema = new mongoose_1.default.Schema({
     },
     name: {
         type: String
+    },
+    source: {
+        type: String
     }
 }, {
     timestamps: true
