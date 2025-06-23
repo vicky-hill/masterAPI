@@ -64,4 +64,13 @@ router.use('/api/lesprit/lists', lists_routes_1.default);
 router.use('/api/lesprit/test', test_routes_1.default);
 router.use('/api/lesprit/user/verbs', verbs_routes_user_1.default);
 router.use('/api/lesprit/admin/verbs', verbs_routes_admin_1.default);
+/* ===================================
+   Fluent
+=================================== */
+const words_routes_2 = __importDefault(require("./projects/fluent/words/words.routes"));
+const images_routes_1 = __importDefault(require("./projects/fluent/images/images.routes"));
+const groups_routes_1 = __importDefault(require("./projects/fluent/groups/groups.routes"));
+router.use('/api/fluent/words', words_routes_2.default);
+router.use('/api/fluent/images', images_routes_1.default);
+router.use('/api/fluent/groups', groups_routes_1.default);
 exports.default = router;

@@ -77,4 +77,18 @@ router.use('/api/lesprit/test', lesprit_testRoutes)
 router.use('/api/lesprit/user/verbs', lesprite_user_verbRoutes)
 router.use('/api/lesprit/admin/verbs', lesprite_admin_verbRoutes)
 
+
+/* ===================================
+   Fluent
+=================================== */
+
+import fluent_wordRoutes from './projects/fluent/words/words.routes'
+import fluent_imageRoutes from './projects/fluent/images/images.routes'
+import fluent_groupRoutes from './projects/fluent/groups/groups.routes'
+
+router.use('/api/fluent/words', fluent_wordRoutes)
+router.use('/api/fluent/images', fluent_imageRoutes)
+router.use('/api/fluent/groups', fluent_groupRoutes)
+
+
 export default router;
