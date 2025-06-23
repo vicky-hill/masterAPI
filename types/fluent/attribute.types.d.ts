@@ -28,6 +28,7 @@ interface ImageAttributes extends Document {
     url: string
     file: string
     name: string
+    source: string
 }
 
 interface GroupAttributes extends Document {
@@ -41,6 +42,7 @@ interface Image {
     _id: ObjectId
     url: string
     file: string
+    source: string
 }
 
 interface Word {

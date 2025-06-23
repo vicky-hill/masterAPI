@@ -10,6 +10,9 @@ const imageSchema = new mongoose.Schema<ImageAttributes>({
     },
     name: {
         type: String
+    },
+    source: {
+        type: String
     }
 }, {
     timestamps: true
