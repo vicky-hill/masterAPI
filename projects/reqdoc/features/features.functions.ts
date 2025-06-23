@@ -2,12 +2,12 @@ import Feature from './features.model'
 import { FeatureAttributes } from '../../../types/reqdoc/attributes.types'
 import { CreateFeature, CreateSubFeature, SortFeatures, UpdateFeature } from '../../../types/reqdoc/payloads.types'
 import throwError from '../../../utils/throwError'
-import { reqs } from '../utils/populate'
+import {reqs, subFeatures, mainFeature} from '../utils/populate';
 import { checkFeatureAccess, checkProjectAccess } from '../utils/access'
 import validate from '../utils/validation'
 import { cascadeDeleteFeature } from '../utils/delete'
-import {updateValue, getValue, setValue} from '../../../utils/redis';
-import {getFeaturesByProjectId, invalidateProjectFeaturesCache, updateProjectFeaturesCache, invalidateFeatureCache} from './features.utils';
+import {updateValue, getValue, setValue} from '../../../utils/redis'
+import {getFeaturesByProjectId, invalidateProjectFeaturesCache, updateProjectFeaturesCache, invalidateFeatureCache} from './features.utils'
 import ProjectModel from '../projects/projects.model'
 
 
@@ -25,30 +25,15 @@ export const getFeature = async (featureId: string, userId: string) => {
     await checkFeatureAccess(featureId, userId);
 
     const cacheKey = `feature:${featureId}`;
-    console.log('cacheKey get', cacheKey)
-
     const cachedFeature = await getValue(cacheKey);
     if (cachedFeature) return cachedFeature;
 
     const feature: FeatureAttributes | null = await Feature
         .findById(featureId)
         .populate([
-            {
-                ...reqs,
-                options: { sort: { sort: 'asc' } }
-            },
-            {
-                path: 'sub_features',
-                options: { sort: { sort: 'asc' } },
-                populate: {
-                    ...reqs,
-                    options: { sort: { sort: 'asc' } }
-                }
-            },
-            {
-                path: 'main_feature',
-                select: 'name'
-            }
+            reqs,
+            subFeatures,
+            mainFeature
         ]);
 
     if (!feature) return throwError('Feature not found');

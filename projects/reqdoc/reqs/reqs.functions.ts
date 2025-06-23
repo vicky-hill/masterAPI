@@ -99,12 +99,14 @@ export const createReq = async (data: CreateReq, featureId: string, userId: stri
     const allProjectReqs = await Req.find({ project: feature.project, changed_req: { $exists: false } });
     const keyNumber = allProjectReqs.length + 1;
 
-    const requirement: ReqAttributes = await Req.create({
+    const newReq: ReqAttributes = await Req.create({
         ...data,
         key: `${feature.project.key}-${keyNumber.toString().padStart(3, '0')}`,
         sort: reqs.length,
         project: feature.project
     });
+
+    const requirement = await findReqByID(newReq._id);
 
     await invalidateFeatureCache(featureId);
 

@@ -33,23 +33,15 @@ exports.getFeatures = getFeatures;
 const getFeature = (featureId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, access_1.checkFeatureAccess)(featureId, userId);
     const cacheKey = `feature:${featureId}`;
-    console.log('cacheKey get', cacheKey);
     const cachedFeature = yield (0, redis_1.getValue)(cacheKey);
     if (cachedFeature)
         return cachedFeature;
     const feature = yield features_model_1.default
         .findById(featureId)
         .populate([
-        Object.assign(Object.assign({}, populate_1.reqs), { options: { sort: { sort: 'asc' } } }),
-        {
-            path: 'sub_features',
-            options: { sort: { sort: 'asc' } },
-            populate: Object.assign(Object.assign({}, populate_1.reqs), { options: { sort: { sort: 'asc' } } })
-        },
-        {
-            path: 'main_feature',
-            select: 'name'
-        }
+        populate_1.reqs,
+        populate_1.subFeatures,
+        populate_1.mainFeature
     ]);
     if (!feature)
         return (0, throwError_1.default)('Feature not found');

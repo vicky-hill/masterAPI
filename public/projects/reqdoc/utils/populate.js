@@ -1,18 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reqs = exports.project = exports.team = exports.comments = exports.history = exports.subFeatures = exports.features = exports.feature = void 0;
+exports.project = exports.team = exports.mainFeature = exports.subFeatures = exports.features = exports.reqs = exports.comments = exports.history = exports.feature = void 0;
 exports.feature = {
     path: 'feature'
-};
-exports.features = {
-    path: 'features',
-    match: { main_feature: { $exists: false }, deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } }
-};
-exports.subFeatures = {
-    path: 'sub_features',
-    match: { deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } }
 };
 exports.history = {
     path: 'history',
@@ -29,6 +19,27 @@ exports.comments = {
         select: 'name email'
     }
 };
+exports.reqs = {
+    path: 'reqs',
+    match: { changed_req: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } },
+    populate: [exports.history, exports.comments]
+};
+exports.features = {
+    path: 'features',
+    match: { main_feature: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } }
+};
+exports.subFeatures = {
+    path: 'sub_features',
+    options: { sort: { sort: 'asc' } },
+    match: { deleted: { $exists: false } },
+    populate: Object.assign(Object.assign({}, exports.reqs), { options: { sort: { sort: 'asc' } } })
+};
+exports.mainFeature = {
+    path: 'main_feature',
+    select: 'name'
+};
 exports.team = {
     path: 'team',
     populate: 'users.user'
@@ -36,10 +47,4 @@ exports.team = {
 exports.project = {
     path: 'project',
     select: 'key slug'
-};
-exports.reqs = {
-    path: 'reqs',
-    match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } },
-    populate: [exports.history, exports.comments]
 };

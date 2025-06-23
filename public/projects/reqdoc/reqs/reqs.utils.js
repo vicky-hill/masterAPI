@@ -20,7 +20,7 @@ const findReqByID = function (reqId) {
     return __awaiter(this, void 0, void 0, function* () {
         const requirement = yield reqs_model_1.default
             .findById(reqId)
-            .populate([populate_1.history, populate_1.comments]);
+            .populate([populate_1.history, populate_1.comments, populate_1.feature]);
         !requirement && (0, throwError_1.default)(`Could not find req by ID: ${reqId}`);
         return requirement;
     });

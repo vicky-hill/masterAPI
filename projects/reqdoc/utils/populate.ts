@@ -2,18 +2,6 @@ export const feature = {
     path: 'feature'
 }
 
-export const features = {
-    path: 'features',
-    match: { main_feature: { $exists: false }, deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } }
-}
-
-export const subFeatures = {
-    path: 'sub_features',
-    match: { deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } }
-}
-
 export const history = {
     path: 'history',
     select: 'title text latest_req createdAt',
@@ -31,6 +19,34 @@ export const comments = {
     }
 }
 
+export const reqs = {
+    path: 'reqs',
+    match: { changed_req: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } },
+    populate: [history, comments]
+}
+
+export const features = {
+    path: 'features',
+    match: { main_feature: { $exists: false }, deleted: { $exists: false } },
+    options: { sort: { sort: 'asc' } }
+}
+
+export const subFeatures = {
+    path: 'sub_features',
+    options: { sort: { sort: 'asc' } },
+    match: { deleted: { $exists: false } },
+    populate: {
+        ...reqs,
+        options: { sort: { sort: 'asc' } }
+    }
+}
+
+export const mainFeature = {
+    path: 'main_feature',
+    select: 'name'
+}
+
 export const team = {
     path: 'team',
     populate: 'users.user'
@@ -41,9 +57,3 @@ export const project = {
     select: 'key slug'
 }
 
-export const reqs = {
-    path: 'reqs',
-    match: { changed_req: { $exists: false }, deleted: { $exists: false } },
-    options: { sort: { sort: 'asc' } },
-    populate: [history, comments]
-}

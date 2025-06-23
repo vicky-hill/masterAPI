@@ -85,7 +85,8 @@ const createReq = (data, featureId, userId) => __awaiter(void 0, void 0, void 0,
         return (0, throwError_1.default)(`Feature with _id ${featureId} does not exist, can't create req for non existing feature`);
     const allProjectReqs = yield reqs_model_1.default.find({ project: feature.project, changed_req: { $exists: false } });
     const keyNumber = allProjectReqs.length + 1;
-    const requirement = yield reqs_model_1.default.create(Object.assign(Object.assign({}, data), { key: `${feature.project.key}-${keyNumber.toString().padStart(3, '0')}`, sort: reqs.length, project: feature.project }));
+    const newReq = yield reqs_model_1.default.create(Object.assign(Object.assign({}, data), { key: `${feature.project.key}-${keyNumber.toString().padStart(3, '0')}`, sort: reqs.length, project: feature.project }));
+    const requirement = yield (0, reqs_utils_1.findReqByID)(newReq._id);
     yield (0, features_utils_1.invalidateFeatureCache)(featureId);
     return requirement;
 });
