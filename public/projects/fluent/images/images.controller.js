@@ -32,31 +32,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-
-exports.createAdjectives = exports.getAllWords = void 0;
-const Word = __importStar(require("./words.functions"));
-const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteImage = exports.updateImage = exports.createImage = exports.getImage = exports.getImages = void 0;
+const Image = __importStar(require("./images.functions"));
+const getImages = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const language = req.query.language;
-        const words = yield Word.getAllWords(language);
-        res.json(words);
+        const images = yield Image.getImages();
+        res.json(images);
     }
     catch (err) {
         next(err);
     }
 });
-
-exports.getAllWords = getAllWords;
-const createAdjectives = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getImages = getImages;
+const getImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const words = yield Word.createAdjectives(req.body);
-        res.json(words);
-
+        const { imageId } = req.params;
+        const image = yield Image.getImage(imageId);
+        res.json(image);
     }
     catch (err) {
         next(err);
     }
 });
-
-exports.createAdjectives = createAdjectives;
-
+exports.getImage = getImage;
+const createImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const image = yield Image.createImage(req.body);
+        res.json(image);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createImage = createImage;
+const updateImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { imageId } = req.params;
+        const image = yield Image.updateImage(req.body, imageId);
+        res.json(image);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.updateImage = updateImage;
+const deleteImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { imageId } = req.params;
+        const image = yield Image.deleteImage(imageId);
+        res.json(image);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.deleteImage = deleteImage;

@@ -10,4 +10,5 @@ const router = express.Router()
 router.get('/', getAllGroups);
 router.get('/neat', getNeatGroups)
 
+
 export default router;
