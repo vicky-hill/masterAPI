@@ -32,7 +32,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-
 exports.getNeatGroups = exports.getAllGroups = void 0;
 const Group = __importStar(require("./groups.functions"));
 const getAllGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,19 +44,15 @@ const getAllGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(err);
     }
 });
-
 exports.getAllGroups = getAllGroups;
 const getNeatGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const language = req.query.language;
         const groups = yield Group.getNeatGroups(language);
         res.json(groups);
-
     }
     catch (err) {
         next(err);
     }
 });
-
 exports.getNeatGroups = getNeatGroups;
-

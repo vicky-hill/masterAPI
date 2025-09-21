@@ -11,5 +11,4 @@ const router = express_1.default.Router();
 ==================================== */
 router.get('/', words_controller_1.getAllWords);
 router.post('/adjectives', words_controller_1.createAdjectives);
-
 exports.default = router;
