@@ -60,20 +60,33 @@ const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* (
             };
         });
     }
-    //     return groups.map(groupInstance => {
-    //         const group = groupInstance.get({ plain: true });
-    // 
-    //         group.categories?.forEach(category => {
-    //             category.words?.forEach((word: any) => {
-    //                 word.translations?.forEach((translation: any) => (
-    //                     word[translation.language] = translation
-    //                 ))
-    //             })
-    //         })
-    //       
-    //         return group;
-    //     })
-    return groups;
+    return groups.map(groupInstance => {
+        var _a;
+        const group = groupInstance.get({ plain: true });
+        const words = [...group.words || []];
+        (_a = group.categories) === null || _a === void 0 ? void 0 : _a.forEach((category) => {
+            var _a;
+            (_a = category.words) === null || _a === void 0 ? void 0 : _a.forEach((word) => {
+                var _a;
+                (_a = word.translations) === null || _a === void 0 ? void 0 : _a.forEach((translation) => (word[translation.language] = translation));
+            });
+        });
+        group.words = {
+            spanish: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "spanish")
+                .map((word) => word.base),
+            french: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "french")
+                .map((word) => word.base),
+            italian: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "italian")
+                .map((word) => word.base)
+        };
+        return group;
+    });
 });
 exports.getAllGroups = getAllGroups;
 const getNeatGroups = (language) => __awaiter(void 0, void 0, void 0, function* () {
