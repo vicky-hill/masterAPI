@@ -51,19 +51,35 @@ export const getAllGroups = async (language?: string) => {
             })
     }
 
-        return groups.map(groupInstance => {
-            const group = groupInstance.get({ plain: true });
-    
-            group.categories?.forEach(category => {
-                category.words?.forEach((word: any) => {
-                    word.translations?.forEach((translation: any) => (
-                        word[translation.language] = translation
-                    ))
-                })
+    return groups.map(groupInstance => {
+        const group: any = groupInstance.get({ plain: true });
+        const words = [...group.words || []];
+
+        group.categories?.forEach((category: any) => {
+            category.words?.forEach((word: any) => {
+                word.translations?.forEach((translation: any) => (
+                    word[translation.language] = translation
+                ))
             })
-          
-            return group;
         })
+
+        group.words = {
+            spanish: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "spanish")
+                .map((word) => word.base),
+            french: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "french")
+                .map((word) => word.base),
+            italian: words.map((word) => word.translations)
+                .flat()
+                .filter((word) => word.language === "italian")
+                .map((word) => word.base)
+        }
+
+        return group;
+    })
 }
 
 export const getNeatGroups = async (language?: string) => {
