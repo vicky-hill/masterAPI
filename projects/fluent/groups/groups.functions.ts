@@ -51,21 +51,19 @@ export const getAllGroups = async (language?: string) => {
             })
     }
 
-    //     return groups.map(groupInstance => {
-    //         const group = groupInstance.get({ plain: true });
-    // 
-    //         group.categories?.forEach(category => {
-    //             category.words?.forEach((word: any) => {
-    //                 word.translations?.forEach((translation: any) => (
-    //                     word[translation.language] = translation
-    //                 ))
-    //             })
-    //         })
-    //       
-    //         return group;
-    //     })
-
-    return groups
+        return groups.map(groupInstance => {
+            const group = groupInstance.get({ plain: true });
+    
+            group.categories?.forEach(category => {
+                category.words?.forEach((word: any) => {
+                    word.translations?.forEach((translation: any) => (
+                        word[translation.language] = translation
+                    ))
+                })
+            })
+          
+            return group;
+        })
 }
 
 export const getNeatGroups = async (language?: string) => {
