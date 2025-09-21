@@ -11,5 +11,4 @@ const router = express_1.default.Router();
 ==================================== */
 router.get('/', groups_controller_1.getAllGroups);
 router.get('/neat', groups_controller_1.getNeatGroups);
-
 exports.default = router;

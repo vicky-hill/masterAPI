@@ -32,7 +32,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-
 exports.createAdjectives = exports.getAllWords = void 0;
 const Word = __importStar(require("./words.functions"));
 const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,18 +44,14 @@ const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(err);
     }
 });
-
 exports.getAllWords = getAllWords;
 const createAdjectives = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const words = yield Word.createAdjectives(req.body);
         res.json(words);
-
     }
     catch (err) {
         next(err);
     }
 });
-
 exports.createAdjectives = createAdjectives;
-

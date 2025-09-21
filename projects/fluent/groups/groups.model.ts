@@ -26,7 +26,7 @@ GroupModel.hasMany(WordModel, {
 });
 
 GroupModel.hasMany(CategoryModel, {
-  foreignKey: "categoryId",
+  foreignKey: "groupId",
   as: 'categories'
 });
 

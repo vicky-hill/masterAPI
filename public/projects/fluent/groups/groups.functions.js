@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-
 exports.getNeatGroups = exports.getAllGroups = void 0;
 const words_model_1 = __importDefault(require("../words/words.model"));
 const groups_model_1 = __importDefault(require("./groups.model"));
@@ -61,18 +60,20 @@ const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* (
             };
         });
     }
-    return groups.map(groupInstance => {
-        var _a;
-        const group = groupInstance.get({ plain: true });
-        (_a = group.categories) === null || _a === void 0 ? void 0 : _a.forEach(category => {
-            var _a;
-            (_a = category.words) === null || _a === void 0 ? void 0 : _a.forEach((word) => {
-                var _a;
-                (_a = word.translations) === null || _a === void 0 ? void 0 : _a.forEach((translation) => (word[translation.language] = translation));
-            });
-        });
-        return group;
-    });
+    //     return groups.map(groupInstance => {
+    //         const group = groupInstance.get({ plain: true });
+    // 
+    //         group.categories?.forEach(category => {
+    //             category.words?.forEach((word: any) => {
+    //                 word.translations?.forEach((translation: any) => (
+    //                     word[translation.language] = translation
+    //                 ))
+    //             })
+    //         })
+    //       
+    //         return group;
+    //     })
+    return groups;
 });
 exports.getAllGroups = getAllGroups;
 const getNeatGroups = (language) => __awaiter(void 0, void 0, void 0, function* () {
