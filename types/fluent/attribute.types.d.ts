@@ -1,60 +1,38 @@
-import { Schema, model, Document, ObjectId, LeanDocument } from 'mongoose'
-import {ImageAttributes} from './attribute.types';
+import { Dialect } from 'sequelize'
 
-type Language = { foreign: string, native: string }
+interface WordAttributes {
+    wordId?: number
+    groupId?: number
+    categoryId?: number
+    type: 'adjective' | 'noun' | 'verb' | 'adverb'
+    difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+    base: string
+    sort: number
+    translations?: Translation[]
+}
 
-interface UserAttributes extends Document {
-    _id: ObjectId
-    firebaseId: string
+interface Translation {
+    translationId?: string
+    language: '' | ''
+    word: number
+    base: string
+    masculineSingular: string
+    masculinePlural: string
+    feminineSingular: string
+    femininePlural: string
+}
+
+interface GroupAttributes {
+    groupId?: number
     name: string
-    email: string
-    role: 'user' | 'admin'
-    lists: ListAttributes[]
-    languages: Language[]
-    verbs: Verb[]
+    words?: WordAttributes[]
+    categories?: CategoryAttributes[]
 }
 
-interface WordAttributes extends Document {
-    _id: ObjectId
-    english: string
-    french?: string
-    spanish?: string
-    italian?: string
-    image: ObjectId | ImageAttributes
-}
-
-interface ImageAttributes extends Document {
-    _id: ObjectId
-    url: string
-    file: string
-    name: string
-    source?: string
-}
-
-interface GroupAttributes extends Document {
-    _id: ObjectId
+interface CategoryAttributes {
+    categoryId?: number
+    groupId?: number
     name: string
     sort: number
-    words: objectId[] | Word[]
+    words?: WordAttributes[]
 }
-
-interface Image {
-    _id: ObjectId
-    url: string
-    file: string
-}
-
-interface Word {
-    _id: ObjectId
-    english: string
-    target: string
-    image: ObjectId | Image
-}
-
-interface Group {
-    _id: ObjectId
-    name: string
-    sort: number
-    words:  objectId[] | Word[]
-}
-

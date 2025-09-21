@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { ImageAttributes } from '../../../types/fluent/attribute.types'
+import { ImageAttributes } from '../../../types/fluent-mongoose/attribute.types'
 
 const imageSchema = new mongoose.Schema<ImageAttributes>({
     url: {

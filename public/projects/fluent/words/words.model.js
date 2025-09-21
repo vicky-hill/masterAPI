@@ -3,25 +3,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const wordSchema = new mongoose_1.default.Schema({
-    english: {
-        type: String
+const sequelize_1 = __importDefault(require("sequelize"));
+const fluent_db_config_1 = __importDefault(require("../../../config/fluent.db.config"));
+const translations_model_1 = __importDefault(require("../translations/translations.model"));
+const wordSchema = {
+    wordId: {
+        type: sequelize_1.default.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    french: {
-        type: String
+    groupId: {
+        type: sequelize_1.default.INTEGER
     },
-    italian: {
-        type: String
+    categoryId: {
+        type: sequelize_1.default.INTEGER
     },
-    spanish: {
-        type: String
+    type: {
+        type: sequelize_1.default.ENUM({ values: ['adjective', 'noun', 'verb', 'adverb'] }),
     },
-    image: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Fluent_Image',
+    difficulty: {
+        type: sequelize_1.default.ENUM({ values: ['beginner', 'intermediate', 'advanced', 'expert'] }),
     },
-}, {
-    timestamps: true
+    base: {
+        type: sequelize_1.default.STRING,
+    },
+    sort: {
+        type: sequelize_1.default.INTEGER,
+    }
+};
+const WordModel = fluent_db_config_1.default.define('words', wordSchema, {
+    timestamps: false,
+    freezeTableName: true,
 });
-exports.default = mongoose_1.default.model('Fluent_Word', wordSchema);
+WordModel.hasMany(translations_model_1.default, {
+    foreignKey: "wordId",
+    as: 'translations'
+});
+exports.default = WordModel;

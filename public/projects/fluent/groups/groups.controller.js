@@ -32,59 +32,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteGroup = exports.updateGroup = exports.createGroup = exports.getGroup = exports.getGroups = void 0;
+exports.getNeatGroups = exports.getAllGroups = void 0;
 const Group = __importStar(require("./groups.functions"));
-const getGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const language = req.query.language;
-        const groups = yield Group.getGroups(language);
+        const groups = yield Group.getAllGroups(language);
         res.json(groups);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getGroups = getGroups;
-const getGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllGroups = getAllGroups;
+const getNeatGroups = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { groupId } = req.params;
-        const group = yield Group.getGroup(groupId);
-        res.json(group);
+        const language = req.query.language;
+        const groups = yield Group.getNeatGroups(language);
+        res.json(groups);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getGroup = getGroup;
-const createGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const group = yield Group.createGroup(req.body);
-        res.json(group);
-    }
-    catch (err) {
-        next(err);
-    }
-});
-exports.createGroup = createGroup;
-const updateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { groupId } = req.params;
-        const group = yield Group.updateGroup(req.body, groupId);
-        res.json(group);
-    }
-    catch (err) {
-        next(err);
-    }
-});
-exports.updateGroup = updateGroup;
-const deleteGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { groupId } = req.params;
-        const group = yield Group.deleteGroup(groupId);
-        res.json(group);
-    }
-    catch (err) {
-        next(err);
-    }
-});
-exports.deleteGroup = deleteGroup;
+exports.getNeatGroups = getNeatGroups;

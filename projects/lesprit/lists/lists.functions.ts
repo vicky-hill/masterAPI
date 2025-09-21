@@ -1,22 +1,22 @@
 import { CreateList, UpdateList } from '../../../types/lesprit/payload.types'
 import throwError from '../../../utils/throwError'
-import List from './lists.model'
+import ListModel from './lists.model'
 import Word from '../words/words.model'
 import User from '../users/users.model'
 import { ListAttributes } from '../../../types/lesprit/attribute.types'
-import { ListObject } from '../../../types/lesprit/objects.types'
+import { List } from '../../../types/lesprit/objects.types'
 import getImageUrl from '../utils/getImageUrl'
 
 
-export const createList = async (data: CreateList, userId: string): Promise<ListAttributes> => {
-    const list = await List.create({ ...data, user: userId });
+export const createList = async (data: CreateList, userId: string) => {
+    const list = await ListModel.create({ ...data, user: userId });
     await User.findByIdAndUpdate(userId, { $push: { lists: list._id } }, { new: true });
 
-    return list;
+    return list as ListAttributes;
 }
 
 
-export const getLists = async (userId: string): Promise<ListObject[]> => {
+export const getLists = async (userId: string) => {
     const userInstance = await User.findById(userId).populate({
         path: 'lists',
         options: { sort: { createdAt: -1 } }
@@ -26,17 +26,17 @@ export const getLists = async (userId: string): Promise<ListObject[]> => {
 
     const user = userInstance.toObject();
 
-    const lists = user.lists.map((list: ListObject) => ({
+    const lists = user.lists.map((list: List) => ({
         ...list,
         image: getImageUrl(list.image)
     }))
 
-    return lists;
+    return lists as List[];
 }
 
 
 export const getPublicLists = async (): Promise<any> => {
-    const lists = await List.find({ public: true }).lean();
+    const lists = await ListModel.find({ public: true }).lean();
 
     return lists.map(list => ({
         ...list,
@@ -45,28 +45,28 @@ export const getPublicLists = async (): Promise<any> => {
 }
 
 
-export const getList = async (listId: string): Promise<any> => {
-    const list: any = await List.findById(listId).lean();
+export const getList = async (listId: string) => {
+    const list: any = await ListModel.findById(listId).lean();
 
     if (!list) return throwError('List not found');
 
     list.image = getImageUrl(list.image);
 
-    return list;
+    return list as List;
 }
 
 
-export const updateList = async (data: UpdateList, listId: string): Promise<ListAttributes> => {
-    const list = await List.findByIdAndUpdate(listId, data, { new: true });
+export const updateList = async (data: UpdateList, listId: string) => {
+    const list = await ListModel.findByIdAndUpdate(listId, data, { new: true });
 
     if (!list) return throwError('List not found');
 
-    return list;
+    return list as ListAttributes;
 }
 
 
-export const addListToUser = async (listId: string, userId: string): Promise<ListAttributes> => {
-    const list = await List.findById(listId);
+export const addListToUser = async (listId: string, userId: string) => {
+    const list = await ListModel.findById(listId);
 
     if (!list) return throwError('List not found');
 
@@ -83,33 +83,33 @@ export const addListToUser = async (listId: string, userId: string): Promise<Lis
 
     await User.findByIdAndUpdate(userId, { $addToSet: { lists: listId } }, { new: true });
 
-    return list;
+    return list as ListAttributes;
 }
 
-export const removeListFromUser = async (listId: string, userId: string): Promise<ListAttributes> => {
-    const list = await List.findById(listId);
+export const removeListFromUser = async (listId: string, userId: string) => {
+    const list = await ListModel.findById(listId);
 
     if (!list) return throwError('List not found');
 
     await User.findByIdAndUpdate(userId, { $pull: { lists: listId } }, { new: true });
 
-    return list;
+    return list as ListAttributes;
 }
 
 
-export const deleteList = async (listId: string): Promise<ListAttributes> => {
-    const list = await List.findByIdAndUpdate(listId, { deleted: new Date() }, { new: true });
+export const deleteList = async (listId: string) => {
+    const list = await ListModel.findByIdAndUpdate(listId, { deleted: new Date() }, { new: true });
     if (!list) return throwError('List not found');
 
     await Word.deleteMany({ list: listId });
 
-    return list;
+    return list as ListAttributes;
 }
 
 
 export const deleteUserLists = async (userId: string): Promise<number> => {
     const words = await Word.deleteMany({ user: userId });
-    const lists = await List.deleteMany({ user: userId });
+    const lists = await ListModel.deleteMany({ user: userId });
 
-    return lists.deletedCount;
+    return lists.deletedCount as number;
 }

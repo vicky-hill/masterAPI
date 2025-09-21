@@ -67,10 +67,16 @@ router.use('/api/lesprit/admin/verbs', verbs_routes_admin_1.default);
 /* ===================================
    Fluent
 =================================== */
+// 
+// import fluent_wordRoutes from './projects/fluent-mongoose/words/words.routes'
+// import fluent_imageRoutes from './projects/fluent-mongoose/images/images.routes'
+// import fluent_groupRoutes from './projects/fluent-mongoose/groups/groups.routes'
+// 
+// router.use('/api/fluent/words', fluent_wordRoutes)
+// router.use('/api/fluent/images', fluent_imageRoutes)
+// router.use('/api/fluent/groups', fluent_groupRoutes)
 const words_routes_2 = __importDefault(require("./projects/fluent/words/words.routes"));
-const images_routes_1 = __importDefault(require("./projects/fluent/images/images.routes"));
 const groups_routes_1 = __importDefault(require("./projects/fluent/groups/groups.routes"));
 router.use('/api/fluent/words', words_routes_2.default);
-router.use('/api/fluent/images', images_routes_1.default);
 router.use('/api/fluent/groups', groups_routes_1.default);
 exports.default = router;

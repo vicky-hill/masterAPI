@@ -1,5 +1,5 @@
-import { Image, ImageAttributes } from '../../../types/fluent/attribute.types'
-import { CreateImage, UpdateImage } from '../../../types/fluent/payload.types'
+import { Image, ImageAttributes } from '../../../types/fluent-mongoose/attribute.types'
+import { CreateImage, UpdateImage } from '../../../types/fluent-mongoose/payload.types'
 import ImageModel from './images.model'
 
 export const getImages = async () => {

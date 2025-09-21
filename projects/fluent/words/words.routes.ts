@@ -1,14 +1,13 @@
-import express, { Router } from 'express'
-import { createWord, getWordsByLanguage } from './words.controller'
+import express from 'express'
+import { createAdjectives, getAllWords } from './words.controller'
 
-const router: Router = express.Router()
+const router = express.Router()
 
 /* ====================================
-   @ api/fluent/words
+   @ /fluent/words
 ==================================== */
 
-router.route('/').post(createWord)
-router.route('/:language').get(getWordsByLanguage)
-
+router.get('/', getAllWords);
+router.post('/adjectives', createAdjectives);
 
 export default router;
