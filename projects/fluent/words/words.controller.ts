@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from 'express'
 import * as Word from './words.functions'
 
-export const getWordsByLanguage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { language } = req.params;
+export const getAllWords = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const language = req.query.language as string;
 
-         const words = await Word.getWords(language);
-        res.json(words);
-    } catch (err) {
-        next(err);
-    }
+    const words = await Word.getAllWords(language);
+    res.json(words)
+  } catch (err) {
+    next(err)
+  }
 }
 
-export const createWord = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const word = await Word.createWord(req.body);
-        res.json(word);    
-    } catch (err) {
-        next(err);
-    }
+export const createAdjectives = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const words = await Word.createAdjectives(req.body);
+    res.json(words)
+  } catch (err) {
+    next(err)
+  }
 }

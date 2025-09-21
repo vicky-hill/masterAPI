@@ -32,26 +32,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createWord = exports.getWordsByLanguage = void 0;
+
+exports.createAdjectives = exports.getAllWords = void 0;
 const Word = __importStar(require("./words.functions"));
-const getWordsByLanguage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { language } = req.params;
-        const words = yield Word.getWords(language);
+        const language = req.query.language;
+        const words = yield Word.getAllWords(language);
         res.json(words);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getWordsByLanguage = getWordsByLanguage;
-const createWord = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+
+exports.getAllWords = getAllWords;
+const createAdjectives = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const word = yield Word.createWord(req.body);
-        res.json(word);
+        const words = yield Word.createAdjectives(req.body);
+        res.json(words);
+
     }
     catch (err) {
         next(err);
     }
 });
-exports.createWord = createWord;
+
+exports.createAdjectives = createAdjectives;
+

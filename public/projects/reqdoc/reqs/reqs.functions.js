@@ -22,7 +22,11 @@ const reqs_utils_1 = require("./reqs.utils");
 const projects_model_1 = __importDefault(require("../projects/projects.model"));
 const validation_1 = __importDefault(require("../utils/validation"));
 const delete_1 = require("../utils/delete");
+const features_utils_1 = require("../features/features.utils");
 const getFeatureReqs = (featureId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    // const cacheKey = `reqs:feature:${featureId}`;
+    // const cached = await getValue(cacheKey);
+    // if (cached) return cached;
     yield (0, access_1.checkFeatureAccess)(featureId, userId);
     const feature = yield features_model_1.default.findById(featureId)
         .populate(Object.assign(Object.assign({}, populate_1.subFeatures), { populate: populate_1.reqs }));
@@ -34,6 +38,7 @@ const getFeatureReqs = (featureId, userId) => __awaiter(void 0, void 0, void 0, 
         .populate([populate_1.history])
         .sort({ sort: 1 });
     const subFeatureReqs = feature.sub_features.map(subFeature => subFeature.reqs).flat();
+    // await setValue(cacheKey, [...reqs, ...subFeatureReqs]);
     return { data: [...reqs, ...subFeatureReqs] };
 });
 exports.getFeatureReqs = getFeatureReqs;
@@ -80,7 +85,9 @@ const createReq = (data, featureId, userId) => __awaiter(void 0, void 0, void 0,
         return (0, throwError_1.default)(`Feature with _id ${featureId} does not exist, can't create req for non existing feature`);
     const allProjectReqs = yield reqs_model_1.default.find({ project: feature.project, changed_req: { $exists: false } });
     const keyNumber = allProjectReqs.length + 1;
-    const requirement = yield reqs_model_1.default.create(Object.assign(Object.assign({}, data), { key: `${feature.project.key}-${keyNumber.toString().padStart(3, '0')}`, sort: reqs.length, project: feature.project }));
+    const newReq = yield reqs_model_1.default.create(Object.assign(Object.assign({}, data), { key: `${feature.project.key}-${keyNumber.toString().padStart(3, '0')}`, sort: reqs.length, project: feature.project }));
+    const requirement = yield (0, reqs_utils_1.findReqByID)(newReq._id);
+    yield (0, features_utils_1.invalidateFeatureCache)(featureId);
     return requirement;
 });
 exports.createReq = createReq;
@@ -91,12 +98,14 @@ const updateReq = (data, reqId, userId) => __awaiter(void 0, void 0, void 0, fun
     if (!updatedReq)
         return (0, throwError_1.default)(`Req not found: ${reqId}`);
     const requirement = yield (0, reqs_utils_1.findReqByID)(updatedReq._id);
+    yield (0, features_utils_1.invalidateFeatureCache)(updatedReq.feature.toString());
     return requirement;
 });
 exports.updateReq = updateReq;
 const deleteReq = (reqId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, access_1.checkReqAccess)(reqId, userId);
     const deletedReq = yield (0, delete_1.cascadeDeleteReq)(reqId);
+    yield (0, features_utils_1.invalidateFeatureCache)(deletedReq.feature.toString());
     return deletedReq;
 });
 exports.deleteReq = deleteReq;
@@ -123,6 +132,7 @@ const changeReq = (data, reqId, userId) => __awaiter(void 0, void 0, void 0, fun
     yield reqs_model_1.default.findByIdAndUpdate(reqId, { changed_req: changedReq.key }, { new: true });
     yield reqs_model_1.default.updateMany({ key: changedReq.key, changed_req: { $exists: true } }, { latest_req: _id }, { new: true });
     const latestReq = yield (0, reqs_utils_1.findReqByID)(_id);
+    yield (0, features_utils_1.invalidateFeatureCache)(changedReq.feature.toString());
     return latestReq;
 });
 exports.changeReq = changeReq;
@@ -130,13 +140,17 @@ const sortReqs = (data, userId) => __awaiter(void 0, void 0, void 0, function* (
     data;
     yield validation_1.default.sort(data);
     yield (0, access_1.checkReqAccess)(data[0]._id, userId);
-    const result = [];
+    const reqs = [];
     for (const requirement of data) {
         const { _id, sort } = requirement;
-        const updatedReq = yield reqs_model_1.default.findByIdAndUpdate(_id, { sort }, { new: true });
-        result.push(updatedReq);
+        const updatedReq = yield reqs_model_1.default.findByIdAndUpdate(_id, { sort }, { new: true, populate: 'feature' });
+        updatedReq && reqs.push(updatedReq);
     }
-    return { data: result };
+    const mainFeatureId = reqs[0].feature.main_feature
+        ? reqs[0].feature.main_feature.toString()
+        : reqs[0].feature._id.toString();
+    yield (0, features_utils_1.invalidateFeatureCache)(mainFeatureId);
+    return reqs;
 });
 exports.sortReqs = sortReqs;
 const searchReqs = (projectId, term) => __awaiter(void 0, void 0, void 0, function* () {

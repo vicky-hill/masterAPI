@@ -99,7 +99,7 @@ const updateReq = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const { reqId } = req.params;
         const { userId } = req.user;
         const requirement = yield Req.updateReq(req.body, reqId, userId);
-        res.status(200).json(requirement);
+        res.json(requirement);
     }
     catch (err) {
         next(err);

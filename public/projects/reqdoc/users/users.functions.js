@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUser = exports.updateUser = exports.inviteUser = exports.createUser = exports.getUsers = void 0;
 const users_model_1 = __importDefault(require("./users.model"));
 const teams_model_1 = __importDefault(require("../teams/teams.model"));
+const projects_model_1 = __importDefault(require("../projects/projects.model"));
 const validation_1 = __importDefault(require("../utils/validation"));
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
 const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -58,15 +59,23 @@ const updateUser = (data, userId) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.updateUser = updateUser;
 const getUser = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!token) {
+    if (!token)
         return null;
-    }
     const decodedToken = (0, jwt_decode_1.default)(token);
     const user = yield users_model_1.default.findOne({ firebaseID: decodedToken.user_id })
-        .select('-firebaseID -createdAt -updatedAt -__v');
-    if (!user) {
+        .select('-firebaseID -createdAt -updatedAt -__v')
+        .populate({
+        path: 'team',
+        select: '-createdAt -updatedAt -__v'
+    });
+    if (!user)
         return null;
-    }
-    return user;
+    const projects = yield projects_model_1.default.find({
+        team: user.team,
+        deleted: { $exists: false }
+    })
+        .select('-createdAt -updatedAt -__v')
+        .populate('features');
+    return Object.assign(Object.assign({}, user.toJSON()), { projects });
 });
 exports.getUser = getUser;

@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+// Set strictQuery to true to suppress the deprecation warning
+mongoose_1.default.set('strictQuery', true);
 const uri = process.env.DB_URI;
 if (!uri) {
     throw new Error("DB_URI is not defined in the environment variables");

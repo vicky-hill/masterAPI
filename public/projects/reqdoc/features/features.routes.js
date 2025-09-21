@@ -15,6 +15,6 @@ router.route('/:featureId').get(middleware_1.protect, features_controller_1.getF
 router.route('/:featureId').put(middleware_1.protect, features_controller_1.updateFeature);
 router.route('/:featureId').delete(middleware_1.protect, features_controller_1.deleteFeature);
 router.route('/:featureId/sub').post(middleware_1.protect, features_controller_1.createSubFeature);
-router.route('/:projectId').get(middleware_1.protect, features_controller_1.getFeatures);
+router.route('/project/:projectKey').get(middleware_1.protect, features_controller_1.getFeatures);
 router.route('/').post(middleware_1.protect, features_controller_1.createFeature);
 exports.default = router;

@@ -1,17 +1,14 @@
-import express, { Router } from 'express'
-import { getGroups, getGroup, createGroup, updateGroup, deleteGroup } from './groups.controller'
+import express from 'express'
+import { getAllGroups, getNeatGroups } from './groups.controller'
 
-const router: Router = express.Router();
+const router = express.Router()
 
 /* ====================================
-   @ api/fluent/groups
+   @ /fluent/groups
 ==================================== */
 
-router.route('/').get(getGroups)
-router.route('/').post(createGroup)
+router.get('/', getAllGroups);
+router.get('/neat', getNeatGroups)
 
-router.route('/:groupId').get( getGroup)
-router.route('/:groupId').delete(deleteGroup)
-router.route('/:groupId').put(updateGroup)
 
 export default router;

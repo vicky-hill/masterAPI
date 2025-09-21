@@ -3,9 +3,9 @@ import * as Feature from './features.functions'
 
 export const getFeatures = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { projectId } = req.params;
+        const { projectKey } = req.params;
 
-        const features = Feature.getFeatures(projectId);
+        const features = await Feature.getFeatures(projectKey);
         res.json(features);
     } catch (err: any) {
         next(err);

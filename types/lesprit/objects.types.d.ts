@@ -23,7 +23,7 @@ interface WordObject {
     user: ObjectId | UserAttributes
 }
 
-interface ListObject {
+interface List {
     _id: ObjectId
     title: string
     image: string | null

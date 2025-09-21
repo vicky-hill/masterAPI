@@ -1,50 +1,117 @@
-import { Group, GroupAttributes } from '../../../types/fluent/attribute.types'
-import { CreateGroup, UpdateGroup } from '../../../types/fluent/payload.types'
+import WordModel from '../words/words.model'
 import GroupModel from './groups.model'
+import TranslationModel from '../translations/translations.model'
+import CategoryModel from '../categories/categories.model';
 
-export const getGroups = async (language: string) => {
-    const groupInstances = await GroupModel.find().populate('words').lean();
+export const getAllGroups = async (language?: string) => {
+    const group_where: any = {};
+    const translation_where: any = {};
 
-    const groups = groupInstances.map(groupInstance => ({
-        ...groupInstance,
-        words: language ? groupInstance.words.map((word: any) => ({
-            _id: word._id,
-            english: word.english,
-            target: word[language],
-            image: word.image
-        })) : groupInstance.words
-    }))
+    if (language) {
+        translation_where.language = language;
+    }
 
-    return groups as Group[];
+    const groups = await GroupModel.findAll({
+        include: [{
+            model: CategoryModel,
+            as: 'categories',
+            include: [{
+                model: WordModel,
+                as: 'words',
+                include: [{
+                    model: TranslationModel,
+                    as: 'translations',
+                    where: translation_where
+                }]
+            }]
+        }, {
+            model: WordModel,
+            as: 'words',
+            include: [{
+                model: TranslationModel,
+                as: 'translations',
+                where: translation_where
+            }]
+        }]
+    });
+
+    if (language) {
+        return groups
+            .map(groupInstance => {
+                const group = groupInstance.get({ plain: true });
+                const words = group.words || [];
+
+                return {
+                    groupId: group.groupId,
+                    name: group.name,
+                    words: words
+                        .filter(words => words.translations?.length)
+                        .map(words => words.translations)
+                }
+            })
+    }
+
+    return groups.map(groupInstance => {
+        const group = groupInstance.get({ plain: true });
+
+        group.categories?.forEach(category => {
+            category.words?.forEach((word: any) => {
+                word.translations?.forEach((translation: any) => (
+                    word[translation.language] = translation
+                ))
+            })
+        })
+      
+        return group;
+    })
 }
 
-export const getGroup = async (groupId: string): Promise<any> => {
-    const group = await GroupModel.findById(groupId).lean();
+export const getNeatGroups = async (language?: string) => {
+    const translation_where: any = {};
 
-    if (!group) throw new Error('Group not found');
+    if (language) {
+        translation_where.language = language;
+    }
 
-    return group as Group;
-}
+    const groups = await GroupModel.findAll({
+        include: [{
+            model: WordModel,
+            as: 'words',
+            order: [['sort', 'ASC']],
+            include: [{
+                model: TranslationModel,
+                as: 'translations',
+                where: translation_where
+            }]
+        }]
+    });
 
-export const createGroup = async (data: CreateGroup) => {
-    const groupInstance: GroupAttributes = await GroupModel.create({ ...data });
-    const group = groupInstance.toObject();
+    if (language) {
+        return groups
+            .map(groupInstance => {
+                const group = groupInstance.get({ plain: true });
+                const words = group.words || [];
 
-    return group as Group;
-}
+                const baseWords = words
+                    .filter(words => words.translations?.length)
+                    .map(words => words.translations).flat()
+                    .map(translation => translation?.base)
 
-export const updateGroup = async (data: UpdateGroup, groupId: string) => {
-    const group = await GroupModel.findByIdAndUpdate(groupId, data, { new: true }).lean();
+                return {
+                    groupId: group.groupId,
+                    name: group.name,
+                    language,
+                    words: baseWords,
+                    wordsWithVariations: words
+                        .filter(word => word.translations?.length)
+                        .map(word => {
+                            if (word.translations) {
+                                const translation = word.translations[0];
 
-    if (!group) throw new Error('Group not found');
-
-    return group as Group;
-}
-
-export const deleteGroup = async (groupId: string) => {
-    const group = await GroupModel.findByIdAndDelete(groupId).lean();
-
-    if (!group) throw new Error('Group not found');
-
-    return group as Group;
+                                return `${translation.masculineSingular}, ${translation.masculinePlural}, ${translation.feminineSingular}, ${translation.femininePlural}`
+                            }
+                        }),
+                }
+            })
+    }
 }

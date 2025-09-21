@@ -7,8 +7,9 @@ const express_1 = __importDefault(require("express"));
 const words_controller_1 = require("./words.controller");
 const router = express_1.default.Router();
 /* ====================================
-   @ api/fluent/words
+   @ /fluent/words
 ==================================== */
-router.route('/').post(words_controller_1.createWord);
-router.route('/:language').get(words_controller_1.getWordsByLanguage);
+router.get('/', words_controller_1.getAllWords);
+router.post('/adjectives', words_controller_1.createAdjectives);
+
 exports.default = router;

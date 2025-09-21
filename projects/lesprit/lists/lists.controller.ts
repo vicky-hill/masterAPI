@@ -1,14 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import * as List from './lists.functions'
-import { ListAttributes } from '../../../types/lesprit/attribute.types'
-import { ListObject } from '../../../types/lesprit/objects.types'
-import { LeanDocument } from 'mongoose'
 
 export const createList = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId } = req.user;
 
-        const list: ListAttributes = await List.createList(req.body, userId);
+        const list = await List.createList(req.body, userId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -19,7 +16,7 @@ export const getLists = async (req: Request, res: Response, next: NextFunction) 
     try {
         const { userId } = req.user;
 
-        const lists: ListObject[] = await List.getLists(userId);
+        const lists = await List.getLists(userId);
         res.json(lists);
     } catch (err) {
         next(err);
@@ -28,7 +25,7 @@ export const getLists = async (req: Request, res: Response, next: NextFunction) 
 
 export const getPublicLists = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const lists: LeanDocument<ListAttributes>[] = await List.getPublicLists();
+        const lists = await List.getPublicLists();
         res.json(lists)
     } catch (err) {
         next(err);
@@ -39,7 +36,7 @@ export const getList = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { listId } = req.params;
 
-        const list: ListObject = await List.getList(listId);
+        const list = await List.getList(listId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -50,7 +47,7 @@ export const updateList = async (req: Request, res: Response, next: NextFunction
     try {
         const { listId } = req.params;
 
-        const list: ListAttributes = await List.updateList(req.body, listId);
+        const list = await List.updateList(req.body, listId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -62,7 +59,7 @@ export const addListToUser = async (req: Request, res: Response, next: NextFunct
         const { userId } = req.user;
         const { listId } = req.params;
 
-        const list: ListAttributes = await List.addListToUser(listId, userId);
+        const list = await List.addListToUser(listId, userId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -74,7 +71,7 @@ export const removeListFromUser = async (req: Request, res: Response, next: Next
         const { userId } = req.user;
         const { listId } = req.params;
 
-        const list: ListAttributes = await List.removeListFromUser(listId, userId);
+        const list = await List.removeListFromUser(listId, userId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -85,7 +82,7 @@ export const deleteList = async (req: Request, res: Response, next: NextFunction
     try {
         const { listId } = req.params;
 
-        const list: ListAttributes = await List.deleteList(listId);
+        const list = await List.deleteList(listId);
         res.json(list);
     } catch (err) {
         next(err);
@@ -96,7 +93,7 @@ export const deleteUserLists = async (req: Request, res: Response, next: NextFun
     try {
         const { userId } = req.user;
 
-        const deleted: number = await List.deleteUserLists(userId);
+        const deleted = await List.deleteUserLists(userId);
         res.json({ deleted });
     } catch (err) {
         next(err);

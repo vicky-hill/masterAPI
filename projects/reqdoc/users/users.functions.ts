@@ -2,6 +2,7 @@ import { InviteUser, UpdateUser } from '../../../types/reqdoc/payloads.types'
 import User from './users.model'
 import { UserAttributes, TeamAttributes } from '../../../types/reqdoc/attributes.types'
 import Team from '../teams/teams.model'
+import Project from '../projects/projects.model'
 import validate from '../utils/validation'
 import jwt_decode from 'jwt-decode'
 
@@ -70,20 +71,28 @@ export const updateUser = async (data: UpdateUser, userId: string) => {
 
 
 export const getUser = async (token: string | undefined) => {
-    if (!token) {
-        return null;
-    }
+    if (!token) return null;
 
     const decodedToken: any = jwt_decode(token);
 
     const user: UserAttributes | null = await User.findOne({ firebaseID: decodedToken.user_id })
-        .select('-firebaseID -createdAt -updatedAt -__v');
+        .select('-firebaseID -createdAt -updatedAt -__v')
+        .populate({
+            path: 'team',
+            select: '-createdAt -updatedAt -__v'
+        });
 
-    if (!user) {
-        return null;
-    }
+    if (!user) return null;
 
-    return user;
+    const projects = await Project.find({ 
+        team: user.team,
+        deleted: { $exists: false }
+    })
+    .select('-createdAt -updatedAt -__v')
+    .populate('features');
+
+    return {
+        ...user.toJSON(),
+        projects
+    };
 }
-
-
