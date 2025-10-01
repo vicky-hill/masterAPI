@@ -1,19 +1,28 @@
 import { Dialect } from 'sequelize'
 
-interface WordAttributes {
-    wordId?: number
+type Type = 'adjective' | 'nount' | 'verb' | 'adverb'
+type Language = 'spanish' | 'french' | 'italian'
+type Gender = 'f' | 'm'
+type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert'
+
+interface Word {
+    wordId: number
     groupId?: number
     categoryId?: number
-    type: 'adjective' | 'noun' | 'verb' | 'adverb'
-    difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+    type: Type
+    difficulty: Difficulty
     base: string
     sort: number
-    translations?: Translation[]
+    translations: Translation[]
+    spanish: Translation
+    italian: Translation
+    french: Translation
 }
 
 interface Translation {
-    translationId?: string
-    language: '' | ''
+    translationId: string
+    language: Language
+    gender: Gender
     word: number
     base: string
     masculineSingular: string
@@ -22,17 +31,38 @@ interface Translation {
     femininePlural: string
 }
 
-interface GroupAttributes {
-    groupId?: number
+interface Group {
+    groupId: number
     name: string
-    words?: WordAttributes[]
-    categories?: CategoryAttributes[]
+    words: Word[]
+    categories: Category[]
+    wordsByLanguage: {
+        french: string[]
+        spanish: string[]
+        italian: string[]
+    }
 }
 
-interface CategoryAttributes {
-    categoryId?: number
+interface Category {
+    categoryId: number
     groupId?: number
     name: string
     sort: number
-    words?: WordAttributes[]
+    words: Word[]
+}
+
+interface Lesson {
+    lessonId: string
+    section: number
+    title: string
+    language: Language
+    sort: number
+    phrases: Phrase[]
+}
+
+interface Phrase {
+    phraseId: number
+    lessonId: number
+    text: string
+    sort: number
 }

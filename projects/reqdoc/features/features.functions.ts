@@ -24,9 +24,9 @@ export const getFeatures = async (projectKey: string) => {
 export const getFeature = async (featureId: string, userId: string) => {
     await checkFeatureAccess(featureId, userId);
 
-    const cacheKey = `feature:${featureId}`;
-    const cachedFeature = await getValue(cacheKey);
-    if (cachedFeature) return cachedFeature;
+    // const cacheKey = `feature:${featureId}`;
+    // const cachedFeature = await getValue(cacheKey);
+    // if (cachedFeature) return cachedFeature;
 
     const feature: FeatureAttributes | null = await Feature
         .findById(featureId)
@@ -38,7 +38,7 @@ export const getFeature = async (featureId: string, userId: string) => {
 
     if (!feature) return throwError('Feature not found');
 
-     await setValue(cacheKey, feature);
+    //  await setValue(cacheKey, feature);
 
     return feature;
 }
@@ -57,7 +57,7 @@ export const createFeature = async (data: CreateFeature, projectId: string, user
         sub_features: []
     });
 
-    await updateValue(`features:project:${projectId}`, [...features, feature]);
+    // await updateValue(`features:project:${projectId}`, [...features, feature]);
 
     return [...features, feature];
 }
@@ -117,7 +117,7 @@ export const createSubFeature = async (data: CreateSubFeature, featureId: string
             : feature
     ));
 
-    await updateValue(`features:project:${projectId}`, updatedFeatures);
+    // await updateValue(`features:project:${projectId}`, updatedFeatures);
     await invalidateFeatureCache(featureId);
 
     return updatedFeatures;

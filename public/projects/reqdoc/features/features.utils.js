@@ -33,10 +33,9 @@ const updateProjectFeaturesCache = (projectId) => __awaiter(void 0, void 0, void
 });
 exports.updateProjectFeaturesCache = updateProjectFeaturesCache;
 const getFeaturesByProjectId = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
-    const cacheKey = `features:project:${projectId}`;
-    const cachedFeatures = yield (0, redis_1.getValue)(cacheKey);
-    if (cachedFeatures)
-        return JSON.parse(cachedFeatures);
+    // const cacheKey = `features:project:${projectId}`
+    // const cachedFeatures = await getValue(cacheKey)
+    // if (cachedFeatures) return JSON.parse(cachedFeatures);
     const features = yield features_model_1.default
         .find({ project: projectId, main_feature: { $exists: false }, deleted: { $exists: false } })
         .select('_id name')
@@ -47,7 +46,7 @@ const getFeaturesByProjectId = (projectId) => __awaiter(void 0, void 0, void 0, 
         options: { sort: { sort: 1 } }
     })
         .sort({ sort: 1 });
-    yield (0, redis_1.setValue)(cacheKey, JSON.stringify(features));
+    // await setValue(cacheKey, JSON.stringify(features));
     return features;
 });
 exports.getFeaturesByProjectId = getFeaturesByProjectId;

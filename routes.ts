@@ -22,6 +22,13 @@ router.use('/api/reqdoc/user', reqdoc_users)
 router.use('/api/reqdoc/teams', reqdoc_teams)
 router.use('/api/reqdoc/admin', reqdoc_admin)
 
+import reqdoc_sql_userRoutes from './projects/reqdoc-sql/users/users.routes'
+import reqdoc_sql_teamsRoutes from './projects/reqdoc-sql/teams/teams.routes'
+import reqdoc_sql_featuresRoutes from './projects/reqdoc-sql/features/features.routes'
+
+router.use('/api/reqdoc-sql/users', reqdoc_sql_userRoutes)
+router.use('/api/reqdoc-sql/teams', reqdoc_sql_teamsRoutes)
+router.use('/api/reqdoc-sql/features', reqdoc_sql_featuresRoutes)
 
 /* ===================================
    Hot Key
@@ -82,19 +89,15 @@ router.use('/api/lesprit/admin/verbs', lesprite_admin_verbRoutes)
    Fluent
 =================================== */
 
-// import fluent_wordRoutes from './projects/fluent-mongoose/words/words.routes'
-// import fluent_imageRoutes from './projects/fluent-mongoose/images/images.routes'
-// import fluent_groupRoutes from './projects/fluent-mongoose/groups/groups.routes'
-// 
-// router.use('/api/fluent/words', fluent_wordRoutes)
-// router.use('/api/fluent/images', fluent_imageRoutes)
-// router.use('/api/fluent/groups', fluent_groupRoutes)
-
 import fluent_wordRoutes from './projects/fluent/words/words.routes'
 import fluent_groupRoutes from './projects/fluent/groups/groups.routes'
+import fluent_lessonRoutes from './projects/fluent/lessons/lessons.routes'
+import fluent_phraseRoutes from './projects/fluent/phrases/phrases.routes'
 
 router.use('/api/fluent/words', fluent_wordRoutes);
 router.use('/api/fluent/groups', fluent_groupRoutes);
+router.use('/api/fluent/lessons', fluent_lessonRoutes);
+router.use('/api/fluent/phrases', fluent_phraseRoutes)
 
 
 export default router;

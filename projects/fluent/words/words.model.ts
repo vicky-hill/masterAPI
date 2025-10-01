@@ -1,7 +1,28 @@
-import Sequelize, { Model, ModelStatic } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize';
 import sequelize from '../../../config/fluent.db.config'
-import { WordAttributes } from '../../../types/fluent/attribute.types'
+import { Difficulty, Translation, Type } from '../../../types/fluent/attribute.types'
 import TranslationModel from '../translations/translations.model'
+
+
+class WordModel extends Model<InferAttributes<WordModel>, InferCreationAttributes<WordModel>> {
+  declare wordId: CreationOptional<number>
+  declare groupId: number
+  declare categoryId: number
+  declare type: Type
+  declare difficulty: Difficulty
+  declare base: string
+  declare sort: number
+
+  declare translations?: Translation[]
+
+  declare spanish?: Translation
+  declare french?: Translation
+  declare italian?: Translation
+
+  declare static associations: {
+    translations: Association<WordModel, TranslationModel>
+  }
+}
 
 const wordSchema = {
   wordId: {
@@ -29,9 +50,11 @@ const wordSchema = {
   }
 }
 
-const WordModel: ModelStatic<Model<WordAttributes>> = sequelize.define('words', wordSchema, {
-  timestamps: false,
-  freezeTableName: true,
+WordModel.init(wordSchema, {
+  sequelize,
+  modelName: "Word",
+  tableName: "words",
+  timestamps: false
 })
 
 WordModel.hasMany(TranslationModel, {

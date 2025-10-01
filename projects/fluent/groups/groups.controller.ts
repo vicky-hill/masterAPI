@@ -3,23 +3,11 @@ import * as Group from './groups.functions'
 
 export const getAllGroups = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const language = req.query.language as string;
+    const { language } = req.query;
 
-    const groups = await Group.getAllGroups(language);
+    const groups = await Group.getAllGroups(language as string);
     res.json(groups)
   } catch (err) {
     next(err)
   }
 }
-
-export const getNeatGroups = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const language = req.query.language as string;
-
-    const groups = await Group.getNeatGroups(language);
-    res.json(groups)
-  } catch (err) {
-    next(err)
-  }
-}
-

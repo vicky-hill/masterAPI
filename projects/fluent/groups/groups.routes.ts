@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllGroups, getNeatGroups } from './groups.controller'
+import { getAllGroups } from './groups.controller'
 
 const router = express.Router()
 
@@ -8,7 +8,6 @@ const router = express.Router()
 ==================================== */
 
 router.get('/', getAllGroups);
-router.get('/neat', getNeatGroups)
 
 
 export default router;

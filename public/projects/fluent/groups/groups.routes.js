@@ -10,5 +10,4 @@ const router = express_1.default.Router();
    @ /fluent/groups
 ==================================== */
 router.get('/', groups_controller_1.getAllGroups);
-router.get('/neat', groups_controller_1.getNeatGroups);
 exports.default = router;

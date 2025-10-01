@@ -1,7 +1,20 @@
-import Sequelize, { Model, ModelStatic } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association } from 'sequelize'
 import sequelize from '../../../config/fluent.db.config'
+import { Word } from '../../../types/fluent/attribute.types'
 import WordModel from '../words/words.model'
-import { CategoryAttributes } from '../../../types/fluent/attribute.types'
+
+class CategoryModel extends Model<InferAttributes<CategoryModel>, InferCreationAttributes<CategoryModel>> {
+  declare categoryId: CreationOptional<number>
+  declare groupId: number
+  declare name: string
+  declare sort: number
+
+  declare words?: Word[]
+
+  declare static associations: {
+    words: Association<CategoryModel, WordModel>
+  }
+}
 
 const categorySchema = {
   categoryId: {
@@ -20,9 +33,11 @@ const categorySchema = {
   },
 }
 
-const CategoryModel: ModelStatic<Model<CategoryAttributes>> = sequelize.define('categories', categorySchema, {
-  timestamps: false,
-  freezeTableName: true,
+CategoryModel.init(categorySchema, { 
+  sequelize, 
+  modelName: "Category",
+  tableName: "categories",
+  timestamps: false
 })
 
 CategoryModel.hasMany(WordModel, {

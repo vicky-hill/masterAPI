@@ -1,10 +1,10 @@
 import WordModel from '../words/words.model'
 import GroupModel from './groups.model'
 import TranslationModel from '../translations/translations.model'
-import CategoryModel from '../categories/categories.model';
+import CategoryModel from '../categories/categories.model'
+import { getWordsByLanguage } from '../utils'
 
 export const getAllGroups = async (language?: string) => {
-    const group_where: any = {};
     const translation_where: any = {};
 
     if (language) {
@@ -35,27 +35,11 @@ export const getAllGroups = async (language?: string) => {
         }]
     });
 
-    if (language) {
-        return groups
-            .map(groupInstance => {
-                const group = groupInstance.get({ plain: true });
-                const words = group.words || [];
-
-                return {
-                    groupId: group.groupId,
-                    name: group.name,
-                    words: words
-                        .filter(words => words.translations?.length)
-                        .map(words => words.translations)
-                }
-            })
-    }
-
     return groups.map(groupInstance => {
-        const group: any = groupInstance.get({ plain: true });
-        const words = [...group.words || []];
+        const group = groupInstance.get({ plain: true });
+        const words = group.words || [];
 
-        group.categories?.forEach((category: any) => {
+        group.categories?.forEach((category) => {
             category.words?.forEach((word: any) => {
                 word.translations?.forEach((translation: any) => (
                     word[translation.language] = translation
@@ -63,71 +47,12 @@ export const getAllGroups = async (language?: string) => {
             })
         })
 
-        group.words = {
-            spanish: words.map((word) => word.translations)
-                .flat()
-                .filter((word) => word.language === "spanish")
-                .map((word) => word.base),
-            french: words.map((word) => word.translations)
-                .flat()
-                .filter((word) => word.language === "french")
-                .map((word) => word.base),
-            italian: words.map((word) => word.translations)
-                .flat()
-                .filter((word) => word.language === "italian")
-                .map((word) => word.base)
+        group.wordsByLanguage = {
+            spanish: getWordsByLanguage(words, 'spanish'),
+            french: getWordsByLanguage(words, 'french'),
+            italian: getWordsByLanguage(words, 'italian')
         }
 
         return group;
     })
-}
-
-export const getNeatGroups = async (language?: string) => {
-    const translation_where: any = {};
-
-    if (language) {
-        translation_where.language = language;
-    }
-
-    const groups = await GroupModel.findAll({
-        include: [{
-            model: WordModel,
-            as: 'words',
-            order: [['sort', 'ASC']],
-            include: [{
-                model: TranslationModel,
-                as: 'translations',
-                where: translation_where
-            }]
-        }]
-    });
-
-    if (language) {
-        return groups
-            .map(groupInstance => {
-                const group = groupInstance.get({ plain: true });
-                const words = group.words || [];
-
-                const baseWords = words
-                    .filter(words => words.translations?.length)
-                    .map(words => words.translations).flat()
-                    .map(translation => translation?.base)
-
-                return {
-                    groupId: group.groupId,
-                    name: group.name,
-                    language,
-                    words: baseWords,
-                    wordsWithVariations: words
-                        .filter(word => word.translations?.length)
-                        .map(word => {
-                            if (word.translations) {
-                                const translation = word.translations[0];
-
-                                return `${translation.masculineSingular}, ${translation.masculinePlural}, ${translation.feminineSingular}, ${translation.femininePlural}`
-                            }
-                        }),
-                }
-            })
-    }
 }

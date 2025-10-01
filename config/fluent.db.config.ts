@@ -11,11 +11,11 @@ const config: IWestgatedb = {
   jwtExpiresIn: process.env.JWT_EXPIRY ?? '',
   port: Number(process.env.PORT) ?? 4040,
   db: {
-    username: process.env.DB_USERNAME ?? '',
-    password: process.env.DB_PASSWORD ?? '',
-    dbName: process.env.DB_NAME ?? '',
+    username: process.env.DB_FLUENT_USERNAME ?? '',
+    password: process.env.DB_FLUENT_PASSWORD ?? '',
+    dbName: process.env.DB_FLUENT_NAME ?? '',
     details: {
-      host: process.env.DB_HOST ?? '',
+      host: process.env.DB_FLUENT_HOST ?? '',
       dialect: 'mysql',
       dialectModule: mysql2,
       pool: {

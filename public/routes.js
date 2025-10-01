@@ -22,6 +22,12 @@ router.use('/api/reqdoc/reqs', reqs_routes_1.default);
 router.use('/api/reqdoc/user', users_routes_1.default);
 router.use('/api/reqdoc/teams', teams_routes_1.default);
 router.use('/api/reqdoc/admin', admin_routes_1.default);
+const users_routes_2 = __importDefault(require("./projects/reqdoc-sql/users/users.routes"));
+const teams_routes_2 = __importDefault(require("./projects/reqdoc-sql/teams/teams.routes"));
+const features_routes_2 = __importDefault(require("./projects/reqdoc-sql/features/features.routes"));
+router.use('/api/reqdoc-sql/users', users_routes_2.default);
+router.use('/api/reqdoc-sql/teams', teams_routes_2.default);
+router.use('/api/reqdoc-sql/features', features_routes_2.default);
 /* ===================================
    Hot Key
 =================================== */
@@ -33,11 +39,11 @@ router.use('/api/hotkey/notes', notes_routes_1.default);
 const places_routes_1 = __importDefault(require("./projects/snapplist/places/places.routes"));
 const neighborhoods_routes_1 = __importDefault(require("./projects/snapplist/neighborhoods/neighborhoods.routes"));
 const categories_routes_1 = __importDefault(require("./projects/snapplist/categories/categories.routes"));
-const users_routes_2 = __importDefault(require("./projects/snapplist/users/users.routes"));
+const users_routes_3 = __importDefault(require("./projects/snapplist/users/users.routes"));
 router.use('/api/snapplist/places', places_routes_1.default);
 router.use('/api/snapplist/neighborhoods', neighborhoods_routes_1.default);
 router.use('/api/snapplist/categories', categories_routes_1.default);
-router.use('/api/snapplist/user', users_routes_2.default);
+router.use('/api/snapplist/user', users_routes_3.default);
 /* ===================================
    Hot Sauce
 =================================== */
@@ -50,14 +56,14 @@ router.use('/api/hotsauce/cart', cart_routes_1.default);
 /* ===================================
    Lesprit
 =================================== */
-const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.routes"));
+const users_routes_4 = __importDefault(require("./projects/lesprit/users/users.routes"));
 const words_routes_1 = __importDefault(require("./projects/lesprit/words/words.routes"));
 const words_routes_admin_1 = __importDefault(require("./projects/lesprit/words/words.routes.admin"));
 const lists_routes_1 = __importDefault(require("./projects/lesprit/lists/lists.routes"));
 const test_routes_1 = __importDefault(require("./projects/lesprit/test/test.routes"));
 const verbs_routes_user_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.user"));
 const verbs_routes_admin_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.admin"));
-router.use('/api/lesprit/user', users_routes_3.default);
+router.use('/api/lesprit/user', users_routes_4.default);
 router.use('/api/lesprit/words', words_routes_1.default);
 router.use('/api/lesprit/admin/words', words_routes_admin_1.default);
 router.use('/api/lesprit/lists', lists_routes_1.default);
@@ -67,15 +73,12 @@ router.use('/api/lesprit/admin/verbs', verbs_routes_admin_1.default);
 /* ===================================
    Fluent
 =================================== */
-// import fluent_wordRoutes from './projects/fluent-mongoose/words/words.routes'
-// import fluent_imageRoutes from './projects/fluent-mongoose/images/images.routes'
-// import fluent_groupRoutes from './projects/fluent-mongoose/groups/groups.routes'
-// 
-// router.use('/api/fluent/words', fluent_wordRoutes)
-// router.use('/api/fluent/images', fluent_imageRoutes)
-// router.use('/api/fluent/groups', fluent_groupRoutes)
 const words_routes_2 = __importDefault(require("./projects/fluent/words/words.routes"));
 const groups_routes_1 = __importDefault(require("./projects/fluent/groups/groups.routes"));
+const lessons_routes_1 = __importDefault(require("./projects/fluent/lessons/lessons.routes"));
+const phrases_routes_1 = __importDefault(require("./projects/fluent/phrases/phrases.routes"));
 router.use('/api/fluent/words', words_routes_2.default);
 router.use('/api/fluent/groups', groups_routes_1.default);
+router.use('/api/fluent/lessons', lessons_routes_1.default);
+router.use('/api/fluent/phrases', phrases_routes_1.default);
 exports.default = router;
