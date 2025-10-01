@@ -1,6 +1,6 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/fluent.db.config'
-import { Word, CategoryAttributes } from '../../../types/fluent/attribute.types'
+import { Word, Category } from '../../../types/fluent/attribute.types'
 import CategoryModel from '../categories/categories.model'
 import WordModel from '../words/words.model'
 
@@ -10,7 +10,7 @@ class GroupModel extends Model<InferAttributes<GroupModel>, InferCreationAttribu
   declare name: string
 
   declare words?: Word[]
-  declare categories?: CategoryAttributes[]
+  declare categories?: Category[]
  
   declare wordsByLanguage?: {
     french: string[]

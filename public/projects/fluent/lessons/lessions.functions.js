@@ -13,10 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLessons = void 0;
+const phrases_model_1 = __importDefault(require("../phrases/phrases.model"));
 const lessons_model_1 = __importDefault(require("./lessons.model"));
 const getLessons = () => __awaiter(void 0, void 0, void 0, function* () {
     const lessonInstances = yield lessons_model_1.default.findAll({
-        where: {}
+        where: {},
+        include: [{
+                model: phrases_model_1.default,
+                as: 'phrases'
+            }]
     });
     const lessons = lessonInstances.map((lessonInstance) => {
         const lesson = lessonInstance.get({ plain: true });

@@ -1,11 +1,14 @@
-import { LessonAttributes } from '../../../types/fluent/attribute.types'
+import PhraseModel from '../phrases/phrases.model'
 import LessonModel from './lessons.model'
-import { Model } from 'sequelize'
 
 
 export const getLessons = async () => {
     const lessonInstances = await LessonModel.findAll({
-        where: {} 
+        where: {},
+        include: [{
+            model: PhraseModel,
+            as: 'phrases'
+        }]
     });
 
     const lessons = lessonInstances.map((lessonInstance) => {

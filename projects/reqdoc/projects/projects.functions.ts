@@ -27,10 +27,10 @@ export const getProjects = async (team: any) => {
 export const getProject = async (projectId: string, userId: string) => {
     await checkProjectAccess(projectId, userId);
 
-    const cacheKey = `projects:project:${projectId}`;
-    const cached = await getValue(cacheKey);
+    // const cacheKey = `projects:project:${projectId}`;
+    // const cached = await getValue(cacheKey);
     
-    if (cached) return cached;
+    // if (cached) return cached;
 
     const projectInstance: ProjectAttributes | null = await Project.findById(projectId)
         .populate([{
@@ -64,7 +64,7 @@ export const getProject = async (projectId: string, userId: string) => {
     const features = projectObject.features;
     const data = { project, features, reqs };
 
-    await setValue(cacheKey, data);
+    // await setValue(cacheKey, data);
 
     return data;
 }

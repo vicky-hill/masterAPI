@@ -5,10 +5,10 @@ dotenv.config();
 // Set strictQuery to true to suppress the deprecation warning
 mongoose.set('strictQuery', true);
 
-const uri: string | undefined = process.env.DB_URI;
+const uri: string | undefined = process.env.DB_FLUENT_URI;
 
 if (!uri) {
-    throw new Error("DB_URI is not defined in the environment variables");
+    throw new Error("DB_FLUENT_URI is not defined in the environment variables");
 }
 
 const connectDB = async () => {

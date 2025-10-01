@@ -6,21 +6,21 @@ type Gender = 'f' | 'm'
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert'
 
 interface Word {
-    wordId?: number
+    wordId: number
     groupId?: number
     categoryId?: number
     type: Type
     difficulty: Difficulty
     base: string
     sort: number
-    translations?: Translation[]
-    spanish?: Translation
-    italian?: Translation
-    french?: Translation
+    translations: Translation[]
+    spanish: Translation
+    italian: Translation
+    french: Translation
 }
 
 interface Translation {
-    translationId?: string
+    translationId: string
     language: Language
     gender: Gender
     word: number
@@ -34,8 +34,8 @@ interface Translation {
 interface Group {
     groupId: number
     name: string
-    words?: Word[]
-    categories?: CategoryAttributes[]
+    words: Word[]
+    categories: Category[]
     wordsByLanguage: {
         french: string[]
         spanish: string[]
@@ -43,18 +43,26 @@ interface Group {
     }
 }
 
-interface CategoryAttributes {
-    categoryId?: number
+interface Category {
+    categoryId: number
     groupId?: number
     name: string
     sort: number
-    words?: Word[]
+    words: Word[]
 }
 
-interface LessonAttributes {
-    lessonId?: string
+interface Lesson {
+    lessonId: string
     section: number
     title: string
     language: Language
+    sort: number
+    phrases: Phrase[]
+}
+
+interface Phrase {
+    phraseId: number
+    lessonId: number
+    text: string
     sort: number
 }

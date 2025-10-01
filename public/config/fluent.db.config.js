@@ -14,11 +14,11 @@ const config = {
     jwtExpiresIn: (_b = process.env.JWT_EXPIRY) !== null && _b !== void 0 ? _b : '',
     port: (_c = Number(process.env.PORT)) !== null && _c !== void 0 ? _c : 4040,
     db: {
-        username: (_d = process.env.DB_USERNAME) !== null && _d !== void 0 ? _d : '',
-        password: (_e = process.env.DB_PASSWORD) !== null && _e !== void 0 ? _e : '',
-        dbName: (_f = process.env.DB_NAME) !== null && _f !== void 0 ? _f : '',
+        username: (_d = process.env.DB_FLUENT_USERNAME) !== null && _d !== void 0 ? _d : '',
+        password: (_e = process.env.DB_FLUENT_PASSWORD) !== null && _e !== void 0 ? _e : '',
+        dbName: (_f = process.env.DB_FLUENT_NAME) !== null && _f !== void 0 ? _f : '',
         details: {
-            host: (_g = process.env.DB_HOST) !== null && _g !== void 0 ? _g : '',
+            host: (_g = process.env.DB_FLUENT_HOST) !== null && _g !== void 0 ? _g : '',
             dialect: 'mysql',
             dialectModule: mysql2_1.default,
             pool: {

@@ -4,14 +4,13 @@ import { FeatureAttributes } from '../../../types/reqdoc/attributes.types'
 import { ObjectId } from 'mongoose'
 
 export const invalidateProjectFeaturesCache = async (projectId: string) => {
-    const cacheKey = `features:project:${projectId}`
-    await deleteValue(cacheKey)
+    // const cacheKey = `features:project:${projectId}`
+    // await deleteValue(cacheKey)
 }
 
 export const invalidateFeatureCache = async (featureId: string) => {
-    const cacheKey = `feature:${featureId}`
-    console.log('cacheKey invalidate', cacheKey)
-    await deleteValue(cacheKey)
+    // const cacheKey = `feature:${featureId}`
+    // await deleteValue(cacheKey)
 }
 
 export const updateProjectFeaturesCache = async (projectId: string) => {
@@ -21,10 +20,10 @@ export const updateProjectFeaturesCache = async (projectId: string) => {
 }
 
 export const getFeaturesByProjectId = async (projectId: string | ObjectId) => {
-    const cacheKey = `features:project:${projectId}`
+    // const cacheKey = `features:project:${projectId}`
 
-    const cachedFeatures = await getValue(cacheKey)
-    if (cachedFeatures) return JSON.parse(cachedFeatures);
+    // const cachedFeatures = await getValue(cacheKey)
+    // if (cachedFeatures) return JSON.parse(cachedFeatures);
 
     const features: FeatureAttributes[] = await FeatureModel
         .find({ project: projectId, main_feature: { $exists: false }, deleted: { $exists: false } })
@@ -37,7 +36,7 @@ export const getFeaturesByProjectId = async (projectId: string | ObjectId) => {
         })
         .sort({ sort: 1 })
 
-    await setValue(cacheKey, JSON.stringify(features));
+    // await setValue(cacheKey, JSON.stringify(features));
 
     return features;
 }

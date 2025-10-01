@@ -1,13 +1,20 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/fluent.db.config'
-import { Language } from '../../../types/fluent/attribute.types'
+import { Language, Phrase } from '../../../types/fluent/attribute.types'
+import PhraseModel from '../phrases/phrases.model'
 
 class LessonModel extends Model<InferAttributes<LessonModel>, InferCreationAttributes<LessonModel>> {
-  declare lessonId: CreationOptional<number>
-  declare section: number
-  declare title: string
-  declare language: Language
-  declare sort: number
+    declare lessonId: CreationOptional<number>
+    declare section: number
+    declare title: string
+    declare language: Language
+    declare sort: number
+
+    declare phrases?: Phrase[]
+
+    declare static associations: {
+        phrase: Association<LessonModel, PhraseModel>
+    }
 }
 
 const LessonSchema = {
@@ -30,12 +37,17 @@ const LessonSchema = {
     }
 }
 
-LessonModel.init(LessonSchema, { 
-  sequelize, 
-  modelName: "Lesson",
-  tableName: "lessons",
-  timestamps: false
+LessonModel.init(LessonSchema, {
+    sequelize,
+    modelName: "Lesson",
+    tableName: "lessons",
+    timestamps: false
 })
+
+LessonModel.hasMany(PhraseModel, {
+    foreignKey: "lessonId",
+    as: 'phrases'
+});
 
 
 export default LessonModel;

@@ -65,3 +65,39 @@ interface UserAttributes extends Document {
     type: 'admin' | 'user'
     deleted?: date
 }
+
+interface User {
+    userId: string
+    teamId: number
+    email: string
+    role: 'admin' | 'user'
+    teams: Team[]
+    team: Team
+    deleted?: boolean
+}
+
+interface Team {
+    teamId: number
+    name: string
+    deleted?: boolean
+    users: User[]
+}
+
+interface Project {
+    projectId: number
+    teamId: number
+    name: string
+    slug: string
+    key: string
+    deleted?: boolean
+}
+
+interface Feature {
+    featureId: number
+    projectId: number
+    parentId: number | null
+    name: string
+    sort: number
+    deleted?: boolean
+    subFeatures?: Feature[]
+}
