@@ -36,7 +36,7 @@ exports.createAdjectives = exports.getAllWords = void 0;
 const Word = __importStar(require("./words.functions"));
 const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const language = req.query.language;
+        const { language } = req.query;
         const words = yield Word.getAllWords(language);
         res.json(words);
     }

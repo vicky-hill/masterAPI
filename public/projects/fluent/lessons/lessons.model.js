@@ -28,43 +28,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const fluent_db_config_1 = __importDefault(require("../../../config/fluent.db.config"));
-class TranslationModel extends sequelize_1.Model {
+class LessonModel extends sequelize_1.Model {
 }
-const TranslationSchema = {
-    translationId: {
+const LessonSchema = {
+    lessonId: {
         type: sequelize_1.default.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    language: {
-        type: sequelize_1.default.ENUM({ values: ['english', 'spanish', 'french', 'italian'] })
-    },
-    gender: {
-        type: sequelize_1.default.ENUM({ values: ['m', 'f'] })
-    },
-    wordId: {
+    section: {
         type: sequelize_1.default.INTEGER
     },
-    base: {
+    title: {
         type: sequelize_1.default.STRING
     },
-    masculineSingular: {
-        type: sequelize_1.default.STRING
+    language: {
+        type: sequelize_1.default.ENUM({ values: ['spanish', 'french', 'italian'] })
     },
-    masculinePlural: {
-        type: sequelize_1.default.STRING
-    },
-    feminineSingular: {
-        type: sequelize_1.default.STRING
-    },
-    femininePlural: {
-        type: sequelize_1.default.STRING
+    sort: {
+        type: sequelize_1.default.INTEGER
     }
 };
-TranslationModel.init(TranslationSchema, {
+LessonModel.init(LessonSchema, {
     sequelize: fluent_db_config_1.default,
-    modelName: "Translation",
-    tableName: "translations",
+    modelName: "Lesson",
+    tableName: "lessons",
     timestamps: false
 });
-exports.default = TranslationModel;
+exports.default = LessonModel;

@@ -22,38 +22,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sequelize_1 = __importStar(require("sequelize"));
-const fluent_db_config_1 = __importDefault(require("../../../config/fluent.db.config"));
-const categories_model_1 = __importDefault(require("../categories/categories.model"));
-const words_model_1 = __importDefault(require("../words/words.model"));
-class GroupModel extends sequelize_1.Model {
-}
-const groupSchema = {
-    groupId: {
-        type: sequelize_1.default.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: sequelize_1.default.STRING,
+exports.getLessons = void 0;
+const Lesson = __importStar(require("./lessions.functions"));
+const getLessons = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const lessons = yield Lesson.getLessons();
+        res.json(lessons);
     }
-};
-GroupModel.init(groupSchema, {
-    sequelize: fluent_db_config_1.default,
-    modelName: "Group",
-    tableName: "groups",
-    timestamps: false
+    catch (err) {
+        next(err);
+    }
 });
-GroupModel.hasMany(words_model_1.default, {
-    foreignKey: "groupId",
-    as: 'words'
-});
-GroupModel.hasMany(categories_model_1.default, {
-    foreignKey: "groupId",
-    as: 'categories'
-});
-exports.default = GroupModel;
+exports.getLessons = getLessons;

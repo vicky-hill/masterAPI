@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const groups_controller_1 = require("./groups.controller");
+const lessons_controller_1 = require("./lessons.controller");
 const router = express_1.default.Router();
 /* ====================================
-   @ /fluent/groups
+   @ /api/fluent/lessons
 ==================================== */
-router.get('/', groups_controller_1.getAllGroups);
+router.route('/').get(lessons_controller_1.getLessons);
 exports.default = router;

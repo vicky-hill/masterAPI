@@ -1,6 +1,18 @@
-import Sequelize, { Model, ModelStatic } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/fluent.db.config'
-import { Translation } from '../../../types/fluent/attribute.types'
+import { Gender, Language } from '../../../types/fluent/attribute.types'
+
+class TranslationModel extends Model<InferAttributes<TranslationModel>, InferCreationAttributes<TranslationModel>> {
+  declare translationId: CreationOptional<number>
+  declare language: Language
+  declare gender: Gender
+  declare wordId: number
+  declare base: string
+  declare masculineSingular: string
+  declare masculinePlural: string
+  declare feminineSingular: string
+  declare femininePlural: string
+}
 
 const TranslationSchema = {
     translationId: {
@@ -10,6 +22,9 @@ const TranslationSchema = {
     },
     language: {
         type: Sequelize.ENUM({ values: ['english', 'spanish', 'french', 'italian'] })
+    },
+    gender: {
+        type: Sequelize.ENUM({ values: ['m', 'f'] })
     },
     wordId: {
         type: Sequelize.INTEGER
@@ -31,9 +46,12 @@ const TranslationSchema = {
     }
 }
 
-const TranslationModel: ModelStatic<Model<Translation>> = sequelize.define("translations", TranslationSchema, {
-    freezeTableName: false,
-    timestamps: false
-});
+TranslationModel.init(TranslationSchema, { 
+  sequelize, 
+  modelName: "Translation",
+  tableName: "translations",
+  timestamps: false
+})
+
 
 export default TranslationModel;

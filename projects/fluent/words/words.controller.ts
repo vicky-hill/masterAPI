@@ -3,9 +3,9 @@ import * as Word from './words.functions'
 
 export const getAllWords = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const language = req.query.language as string;
+    const { language } = req.query;
 
-    const words = await Word.getAllWords(language);
+    const words = await Word.getAllWords(language as string);
     res.json(words)
   } catch (err) {
     next(err)
