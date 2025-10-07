@@ -17,9 +17,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 // Set strictQuery to true to suppress the deprecation warning
 mongoose_1.default.set('strictQuery', true);
-const uri = process.env.DB_FLUENT_URI;
+const uri = process.env.DB_URI;
 if (!uri) {
-    throw new Error("DB_FLUENT_URI is not defined in the environment variables");
+    throw new Error("DB_URI is not defined in the environment variables");
 }
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connect(uri, {
