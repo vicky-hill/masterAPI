@@ -55,7 +55,7 @@ const userSchema = {
         type: sequelize_1.default.ENUM({ values: ['admin', 'user'] })
     },
     deleted: {
-        type: sequelize_1.default.BOOLEAN
+        type: sequelize_1.default.DATE
     }
 };
 UserModel.init(userSchema, {

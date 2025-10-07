@@ -10,24 +10,14 @@ router.get('/health-check', (req, res) => { res.send('Great Health'); });
 /* ===================================
    Reqdoc
 =================================== */
-const projects_routes_1 = __importDefault(require("./projects/reqdoc/projects/projects.routes"));
-const features_routes_1 = __importDefault(require("./projects/reqdoc/features/features.routes"));
-const reqs_routes_1 = __importDefault(require("./projects/reqdoc/reqs/reqs.routes"));
-const users_routes_1 = __importDefault(require("./projects/reqdoc/users/users.routes"));
-const teams_routes_1 = __importDefault(require("./projects/reqdoc/teams/teams.routes"));
-const admin_routes_1 = __importDefault(require("./projects/reqdoc/admin/admin.routes"));
-router.use('/api/reqdoc/projects', projects_routes_1.default);
-router.use('/api/reqdoc/features', features_routes_1.default);
-router.use('/api/reqdoc/reqs', reqs_routes_1.default);
-router.use('/api/reqdoc/user', users_routes_1.default);
-router.use('/api/reqdoc/teams', teams_routes_1.default);
-router.use('/api/reqdoc/admin', admin_routes_1.default);
-const users_routes_2 = __importDefault(require("./projects/reqdoc-sql/users/users.routes"));
-const teams_routes_2 = __importDefault(require("./projects/reqdoc-sql/teams/teams.routes"));
-const features_routes_2 = __importDefault(require("./projects/reqdoc-sql/features/features.routes"));
-router.use('/api/reqdoc-sql/users', users_routes_2.default);
-router.use('/api/reqdoc-sql/teams', teams_routes_2.default);
-router.use('/api/reqdoc-sql/features', features_routes_2.default);
+const users_routes_1 = __importDefault(require("./projects/reqdoc-sql/users/users.routes"));
+const teams_routes_1 = __importDefault(require("./projects/reqdoc-sql/teams/teams.routes"));
+const features_routes_1 = __importDefault(require("./projects/reqdoc-sql/features/features.routes"));
+const reqs_routes_1 = __importDefault(require("./projects/reqdoc-sql/reqs/reqs.routes"));
+router.use('/api/reqdoc-sql/users', users_routes_1.default);
+router.use('/api/reqdoc-sql/teams', teams_routes_1.default);
+router.use('/api/reqdoc-sql/features', features_routes_1.default);
+router.use('/api/reqdoc-sql/reqs', reqs_routes_1.default);
 /* ===================================
    Hot Key
 =================================== */
@@ -39,11 +29,11 @@ router.use('/api/hotkey/notes', notes_routes_1.default);
 const places_routes_1 = __importDefault(require("./projects/snapplist/places/places.routes"));
 const neighborhoods_routes_1 = __importDefault(require("./projects/snapplist/neighborhoods/neighborhoods.routes"));
 const categories_routes_1 = __importDefault(require("./projects/snapplist/categories/categories.routes"));
-const users_routes_3 = __importDefault(require("./projects/snapplist/users/users.routes"));
+const users_routes_2 = __importDefault(require("./projects/snapplist/users/users.routes"));
 router.use('/api/snapplist/places', places_routes_1.default);
 router.use('/api/snapplist/neighborhoods', neighborhoods_routes_1.default);
 router.use('/api/snapplist/categories', categories_routes_1.default);
-router.use('/api/snapplist/user', users_routes_3.default);
+router.use('/api/snapplist/user', users_routes_2.default);
 /* ===================================
    Hot Sauce
 =================================== */
@@ -56,14 +46,14 @@ router.use('/api/hotsauce/cart', cart_routes_1.default);
 /* ===================================
    Lesprit
 =================================== */
-const users_routes_4 = __importDefault(require("./projects/lesprit/users/users.routes"));
+const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.routes"));
 const words_routes_1 = __importDefault(require("./projects/lesprit/words/words.routes"));
 const words_routes_admin_1 = __importDefault(require("./projects/lesprit/words/words.routes.admin"));
 const lists_routes_1 = __importDefault(require("./projects/lesprit/lists/lists.routes"));
 const test_routes_1 = __importDefault(require("./projects/lesprit/test/test.routes"));
 const verbs_routes_user_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.user"));
 const verbs_routes_admin_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.admin"));
-router.use('/api/lesprit/user', users_routes_4.default);
+router.use('/api/lesprit/user', users_routes_3.default);
 router.use('/api/lesprit/words', words_routes_1.default);
 router.use('/api/lesprit/admin/words', words_routes_admin_1.default);
 router.use('/api/lesprit/lists', lists_routes_1.default);

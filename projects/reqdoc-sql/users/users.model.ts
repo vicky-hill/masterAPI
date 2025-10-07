@@ -1,6 +1,6 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Team } from '../../../types/reqdoc/attributes.types'
+import { Team } from '../../../types/reqdoc/attribute.types'
 
 
 class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
@@ -8,7 +8,7 @@ class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttribute
     declare teamId: number
     declare email: string
     declare role: 'admin' | 'user'
-    declare deleted: boolean
+    declare deleted: Date | null
     
     declare teams?: Team[]
     declare team?: Team
@@ -29,7 +29,7 @@ const userSchema = {
         type: Sequelize.ENUM({ values: ['admin', 'user'] })
     },
     deleted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.DATE
     }
 }
 

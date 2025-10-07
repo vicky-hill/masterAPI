@@ -5,15 +5,13 @@ declare global {
     namespace Express {
         interface Request {
             user: {
-                _id: string
                 userId: string
+                teamId: number
                 email: string
-                firebaseID: string
-                name?: string
-                team: ObjectId
                 role: 'admin' | 'user'
-                type: 'admin' | 'user'
-                deleted?: date
+                teams: Team[]
+                team: Team
+                deleted?: string | null
             }
         }
     }

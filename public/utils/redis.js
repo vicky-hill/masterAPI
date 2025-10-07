@@ -16,6 +16,7 @@ exports.deleteValue = deleteValue;
 exports.flushAll = flushAll;
 exports.updateValue = updateValue;
 const redis_1 = require("redis");
+const constants_1 = require("./constants");
 const client = (0, redis_1.createClient)({
     url: "redis://default:uQ9W5y3lfgOph0pa6JTqbkxR88YXXqNg@redis-14878.c11.us-east-1-3.ec2.redns.redis-cloud.com:14878",
     socket: {
@@ -46,6 +47,8 @@ client.on("ready", () => {
 });
 function pullFromCache(key) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         try {
             yield connectClient();
             const reply = yield client.get(key);
@@ -59,6 +62,8 @@ function pullFromCache(key) {
 }
 function getValue(key) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         try {
             yield connectClient();
             const res = yield pullFromCache(key);
@@ -72,6 +77,8 @@ function getValue(key) {
 }
 function setValue(key, value) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         try {
             yield connectClient();
             const stringifiedValue = JSON.stringify(value);
@@ -85,6 +92,8 @@ function setValue(key, value) {
 }
 function deleteValue(key) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         try {
             yield connectClient();
             yield client.del(key);
@@ -96,19 +105,21 @@ function deleteValue(key) {
 }
 function flushAll() {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         try {
             yield connectClient();
             yield client.flushAll();
-            return "All redis cache has been flushed.";
         }
         catch (err) {
             console.error("Error flushing all:", err);
-            return "Error flushing all.";
         }
     });
 }
 function updateValue(key, newValue) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!constants_1.REDIS)
+            return;
         yield connectClient();
         yield setValue(key, JSON.stringify(newValue));
     });

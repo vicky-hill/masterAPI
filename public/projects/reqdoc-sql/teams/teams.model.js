@@ -50,7 +50,7 @@ const teamSchema = {
         type: sequelize_1.default.STRING
     },
     deleted: {
-        type: sequelize_1.default.BOOLEAN
+        type: sequelize_1.default.DATE
     }
 };
 TeamModel.init(teamSchema, {

@@ -52,14 +52,14 @@ const projectSchema = {
     name: {
         type: sequelize_1.default.STRING
     },
-    slug: {
+    projectKey: {
         type: sequelize_1.default.STRING
     },
     key: {
         type: sequelize_1.default.STRING
     },
     deleted: {
-        type: sequelize_1.default.BOOLEAN
+        type: sequelize_1.default.DATE
     }
 };
 ProjectModel.init(projectSchema, {

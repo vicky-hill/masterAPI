@@ -1,13 +1,13 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Project, User } from '../../../types/reqdoc/attributes.types'
-import { ProjectModel, UserModel } from '../associations'
+import { Project, User } from '../../../types/reqdoc/attribute.types'
+import { ProjectModel, UserModel } from '../models'
 
 
 class TeamModel extends Model<InferAttributes<TeamModel>, InferCreationAttributes<TeamModel>> {
     declare teamId: CreationOptional<number>
     declare name: string
-    declare deleted: boolean
+    declare deleted: Date | null
 
     declare users?: User[]
     declare projects?: Project[]
@@ -28,7 +28,7 @@ const teamSchema = {
         type: Sequelize.STRING
     },
     deleted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.DATE
     }
 }
 

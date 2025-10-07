@@ -1,4 +1,5 @@
 import { createClient, RedisClientType } from 'redis';
+import { REDIS } from './constants';
 
 const client: RedisClientType = createClient({
     url: "redis://default:uQ9W5y3lfgOph0pa6JTqbkxR88YXXqNg@redis-14878.c11.us-east-1-3.ec2.redns.redis-cloud.com:14878",
@@ -33,6 +34,8 @@ client.on("ready", () => {
 });
 
 async function pullFromCache(key: string): Promise<any> {
+    if (!REDIS) return;
+
     try {
         await connectClient();
         const reply = await client.get(key);
@@ -44,6 +47,8 @@ async function pullFromCache(key: string): Promise<any> {
 }
 
 export async function getValue(key: string): Promise<any> {
+    if (!REDIS) return;
+
     try {
         await connectClient();
         const res = await pullFromCache(key);
@@ -55,6 +60,7 @@ export async function getValue(key: string): Promise<any> {
 }
 
 export async function setValue(key: string, value: any): Promise<void> {
+    if (!REDIS) return;
 
     try {
         await connectClient();
@@ -68,6 +74,8 @@ export async function setValue(key: string, value: any): Promise<void> {
 }
 
 export async function deleteValue(key: string): Promise<void> {
+    if (!REDIS) return;
+
     try {
         await connectClient();
         await client.del(key);
@@ -76,18 +84,20 @@ export async function deleteValue(key: string): Promise<void> {
     }
 }
 
-export async function flushAll(): Promise<string> {
+export async function flushAll(): Promise<void> {
+    if (!REDIS) return ;
+
     try {
         await connectClient();
         await client.flushAll();
-        return "All redis cache has been flushed.";
     } catch (err) {
         console.error("Error flushing all:", err);
-        return "Error flushing all.";
     }
 }
 
 export async function updateValue(key: string, newValue: any): Promise<void> {
+    if (!REDIS) return;
+
     await connectClient();
     await setValue(key, JSON.stringify(newValue));
 }
