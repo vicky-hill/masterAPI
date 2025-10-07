@@ -1,6 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Feature } from '../../../types/reqdoc/attributes.types'
+import { Feature, Project } from '../../../types/reqdoc/attribute.types'
+import { ProjectModel } from '../models'
 
 class FeatureModel extends Model<InferAttributes<FeatureModel>, InferCreationAttributes<FeatureModel>> {
     declare featureId: CreationOptional<number>
@@ -8,12 +9,16 @@ class FeatureModel extends Model<InferAttributes<FeatureModel>, InferCreationAtt
     declare parentId: number | null
     declare name: string
     declare sort: number
-    declare deleted: boolean
+    declare deleted: Date | null
 
     declare subFeatures?: Feature[]
+    declare project?: Project
+    declare mainFeature?: Feature
 
     declare static associations: {
         subFeatures: Association<FeatureModel, FeatureModel>
+        mainFeature: Association<FeatureModel, FeatureModel>
+        project: Association<FeatureModel, ProjectModel>
     }
 }
 
@@ -37,7 +42,7 @@ const featureSchema = {
         type: Sequelize.INTEGER
     },
     deleted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.DATE
     }
 }
 

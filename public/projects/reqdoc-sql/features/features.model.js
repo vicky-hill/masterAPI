@@ -60,7 +60,7 @@ const featureSchema = {
         type: sequelize_1.default.INTEGER
     },
     deleted: {
-        type: sequelize_1.default.BOOLEAN
+        type: sequelize_1.default.DATE
     }
 };
 FeatureModel.init(featureSchema, {

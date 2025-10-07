@@ -1,4 +1,4 @@
-import { TeamModel, UserModel } from '../associations'
+import { TeamModel, UserModel } from '../models'
 
 export const getUser = async (userId: string): Promise<any> => {
     const userInstance = await UserModel.findOne({

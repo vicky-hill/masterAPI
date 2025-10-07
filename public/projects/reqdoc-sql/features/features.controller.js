@@ -42,16 +42,86 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFeatures = void 0;
+exports.sortFeatures = exports.createSubFeature = exports.deleteFeature = exports.updateFeature = exports.createFeature = exports.getFeature = exports.getProjectFeatures = void 0;
 const Feature = __importStar(require("./features.functions"));
-const getFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getProjectFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { projectId } = req.params;
-        const features = yield Feature.getFeatures(projectId);
+        const { projectKey } = req.params;
+        const features = yield Feature.getProjectFeatures(projectKey);
         res.json(features);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getFeatures = getFeatures;
+exports.getProjectFeatures = getProjectFeatures;
+const getFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const feature = yield Feature.getFeature(featureId, userId);
+        res.json(feature);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.getFeature = getFeature;
+const createFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.user;
+        const feature = yield Feature.createFeature(req.body, userId);
+        res.json(feature);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createFeature = createFeature;
+const updateFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const feature = yield Feature.updateFeature(req.body, featureId, userId);
+        res.json(feature);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.updateFeature = updateFeature;
+const deleteFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const deletedFeature = yield Feature.deleteFeature(featureId, userId);
+        res.json(deletedFeature);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.deleteFeature = deleteFeature;
+const createSubFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { featureId } = req.params;
+        const { userId } = req.user;
+        const subFeature = yield Feature.createSubFeature(req.body, featureId, userId);
+        res.json(subFeature);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createSubFeature = createSubFeature;
+const sortFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.user;
+        const data = yield Feature.sortFeatures(req.body, userId);
+        res.json(data);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.sortFeatures = sortFeatures;

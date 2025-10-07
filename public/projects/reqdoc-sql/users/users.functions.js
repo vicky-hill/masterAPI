@@ -10,16 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUser = void 0;
-const associations_1 = require("../associations");
+const models_1 = require("../models");
 const getUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    const userInstance = yield associations_1.UserModel.findOne({
+    const userInstance = yield models_1.UserModel.findOne({
         where: { userId },
         include: [{
-                model: associations_1.TeamModel,
+                model: models_1.TeamModel,
                 as: 'teams'
             }, {
-                model: associations_1.TeamModel,
+                model: models_1.TeamModel,
                 as: 'team'
             }]
     });

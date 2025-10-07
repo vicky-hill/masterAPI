@@ -1,4 +1,4 @@
-import { ProjectModel } from '../associations'
+import { ProjectModel } from '../models'
 import TeamModel from './teams.model'
 
 export const getTeams = async () => {
