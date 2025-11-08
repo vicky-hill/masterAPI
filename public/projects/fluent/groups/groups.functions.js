@@ -18,18 +18,25 @@ const groups_model_1 = __importDefault(require("./groups.model"));
 const translations_model_1 = __importDefault(require("../translations/translations.model"));
 const categories_model_1 = __importDefault(require("../categories/categories.model"));
 const utils_1 = require("../utils");
+const redis_1 = require("../../../utils/redis");
 const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* () {
     const translation_where = {};
+    const cacheKey = `groups:all`;
+    const cached = yield (0, redis_1.getValue)(cacheKey);
+    if (cached && !language)
+        return cached;
     if (language) {
         translation_where.language = language;
     }
-    const groups = yield groups_model_1.default.findAll({
+    const groupInstances = yield groups_model_1.default.findAll({
         include: [{
                 model: categories_model_1.default,
                 as: 'categories',
+                separate: true,
                 include: [{
                         model: words_model_1.default,
                         as: 'words',
+                        separate: true,
                         include: [{
                                 model: translations_model_1.default,
                                 as: 'translations',
@@ -39,14 +46,16 @@ const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* (
             }, {
                 model: words_model_1.default,
                 as: 'words',
+                separate: true,
                 include: [{
                         model: translations_model_1.default,
                         as: 'translations',
-                        where: translation_where
+                        where: translation_where,
+                        separate: true
                     }]
             }]
     });
-    return groups.map(groupInstance => {
+    const groups = groupInstances.map(groupInstance => {
         var _a;
         const group = groupInstance.get({ plain: true });
         const words = group.words || [];
@@ -64,5 +73,7 @@ const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* (
         };
         return group;
     });
+    yield (0, redis_1.setValue)(cacheKey, groups);
+    return groups;
 });
 exports.getAllGroups = getAllGroups;

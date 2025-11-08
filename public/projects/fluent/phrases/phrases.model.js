@@ -54,6 +54,21 @@ const phraseSchema = {
     },
     sort: {
         type: sequelize_1.default.INTEGER
+    },
+    originalSort: {
+        type: sequelize_1.default.INTEGER
+    },
+    color: {
+        type: sequelize_1.default.STRING,
+        allowNull: true
+    },
+    pair: {
+        type: sequelize_1.default.BOOLEAN,
+        allowNull: true
+    },
+    grammar: {
+        type: sequelize_1.default.STRING,
+        allowNull: true
     }
 };
 PhraseModel.init(phraseSchema, {

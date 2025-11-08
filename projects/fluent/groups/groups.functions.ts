@@ -3,21 +3,29 @@ import GroupModel from './groups.model'
 import TranslationModel from '../translations/translations.model'
 import CategoryModel from '../categories/categories.model'
 import { getWordsByLanguage } from '../utils'
+import { getValue, setValue } from '../../../utils/redis';
 
 export const getAllGroups = async (language?: string) => {
     const translation_where: any = {};
+
+    const cacheKey = `groups:all`;
+    const cached = await getValue(cacheKey);
+    if (cached && !language) return cached;
+
 
     if (language) {
         translation_where.language = language;
     }
 
-    const groups = await GroupModel.findAll({
+    const groupInstances = await GroupModel.findAll({
         include: [{
             model: CategoryModel,
             as: 'categories',
+            separate: true,
             include: [{
                 model: WordModel,
                 as: 'words',
+                separate: true,
                 include: [{
                     model: TranslationModel,
                     as: 'translations',
@@ -27,15 +35,17 @@ export const getAllGroups = async (language?: string) => {
         }, {
             model: WordModel,
             as: 'words',
+            separate: true,
             include: [{
                 model: TranslationModel,
                 as: 'translations',
-                where: translation_where
+                where: translation_where,
+                separate: true
             }]
         }]
     });
 
-    return groups.map(groupInstance => {
+    const groups = groupInstances.map(groupInstance => {
         const group = groupInstance.get({ plain: true });
         const words = group.words || [];
 
@@ -55,4 +65,8 @@ export const getAllGroups = async (language?: string) => {
 
         return group;
     })
+
+    await setValue(cacheKey, groups);
+
+    return groups;
 }

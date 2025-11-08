@@ -88,4 +88,15 @@ router.use('/api/fluent/lessons', fluent_lessonRoutes);
 router.use('/api/fluent/phrases', fluent_phraseRoutes)
 
 
+/* ===================================
+   False Idol
+=================================== */
+
+import falseidol_drinkRoutes from './projects/falseidol/drinks/drinks.routes'
+import falseidol_userRoutes from './projects/falseidol/users/users.routes'
+
+router.use('/api/falseidol/drinks', falseidol_drinkRoutes)
+router.use('/api/falseidol/users', falseidol_userRoutes)
+
+
 export default router;

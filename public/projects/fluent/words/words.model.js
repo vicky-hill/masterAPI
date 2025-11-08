@@ -53,8 +53,11 @@ const wordSchema = {
     categoryId: {
         type: sequelize_1.default.INTEGER
     },
+    // type: {
+    //   type: Sequelize.ENUM({ values: ['adjective', 'noun', 'verb', 'adverb'] }),
+    // },
     type: {
-        type: sequelize_1.default.ENUM({ values: ['adjective', 'noun', 'verb', 'adverb'] }),
+        type: sequelize_1.default.STRING
     },
     difficulty: {
         type: sequelize_1.default.ENUM({ values: ['beginner', 'intermediate', 'advanced', 'expert'] }),

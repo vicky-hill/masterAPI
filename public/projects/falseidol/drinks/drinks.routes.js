@@ -4,14 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const notes_dashboard_1 = require("./notes.dashboard");
+const drinks_controller_1 = require("./drinks.controller");
 const router = express_1.default.Router();
 /* ====================================
-   Notes @ api/dashboard/hotkey/notes
+   @ /drinks
 ==================================== */
-router.route('/notes').get(notes_dashboard_1.getNotes);
-router.route('/notes').post(notes_dashboard_1.createNote);
-router.route('/notes/:noteId').get(notes_dashboard_1.getNote);
-router.route('/notes/:noteId').delete(notes_dashboard_1.deleteNote);
-router.route('/notes/:noteId').put(notes_dashboard_1.updateNote);
+router.route('/').get(drinks_controller_1.getDrinks);
+router.route('/sync').get(drinks_controller_1.syncDrinks);
 exports.default = router;

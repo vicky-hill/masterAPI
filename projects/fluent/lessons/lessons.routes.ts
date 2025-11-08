@@ -1,5 +1,5 @@
 import express, { Router } from 'express'
-import { getLessons } from './lessons.controller'
+import { createLessons, getLessons } from './lessons.controller'
 
 const router: Router = express.Router();
 
@@ -8,6 +8,7 @@ const router: Router = express.Router();
 ==================================== */
 
 router.route('/').get(getLessons)
+router.route('/').post(createLessons)
 
 
 export default router;

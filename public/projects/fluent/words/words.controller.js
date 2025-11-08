@@ -42,7 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAdjectives = exports.getAllWords = void 0;
+exports.createWords = exports.createAdjectives = exports.getAllWords = void 0;
 const Word = __importStar(require("./words.functions"));
 const getAllWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -65,3 +65,13 @@ const createAdjectives = (req, res, next) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.createAdjectives = createAdjectives;
+const createWords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const words = yield Word.createWords(req.body);
+        res.json(words);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createWords = createWords;

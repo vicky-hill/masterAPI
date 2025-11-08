@@ -4,6 +4,7 @@ type Type = 'adjective' | 'nount' | 'verb' | 'adverb'
 type Language = 'spanish' | 'french' | 'italian'
 type Gender = 'f' | 'm'
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert'
+type Color = 'aliceblue' | 'blue' | 'blueviolet' | 'brown' | 'burlywood' | 'cadetblue' | 'chocolate' | 'coral' | 'cornflowerblue' | 'crimson' | 'darkblue' | 'darkcyan' | 'darkgoldenrod' | 'darkgreen' | 'darkkhaki' | 'darkmagenta' | 'darkolivegreen' | 'darkorange' | 'darkorchid' | 'darkred' | 'darksalmon' | 'darkseagreen' | 'darkslateblue' | 'darkturquoise' | 'darkviolet' | 'deeppink' | 'deepskyblue' | 'dodgerblue' | 'firebrick' | 'forestgreen' | 'fuchsia' | 'gainsboro' | 'gold' | 'goldenrod' | 'green' | 'hotpink' | 'indianred' | 'indigo' | 'lightblue' | 'lightcoral' | 'lightgreen' | 'lightpink' | 'lightsalmon' | 'lightseagreen' | 'lightskyblue' | 'lightsteelblue' | 'limegreen' | 'magenta' | 'maroon' | 'mediumaquamarine' | 'mediumblue' | 'mediumorchid' | 'mediumpurple' | 'mediumseagreen' | 'mediumslateblue' | 'mediumturquoise' | 'mediumvioletred' | 'midnightblue' | 'navy' | 'olive' | 'olivedrab' | 'orange' | 'orchid'| 'palevioletred' | 'peru' | 'pink' | 'plum' | 'purple' | 'rebeccapurple' | 'rosybrown' | 'royalblue' | 'saddlebrown' | 'salmon' | 'sandybrown' | 'seagreen' | 'sienna' | 'skyblue' | 'slateblue' | 'steelblue' | 'tan' | 'teal' | 'thistle' | 'turquoise' | 'violet' | 'yellowgreen'
 
 interface Word {
     wordId: number
@@ -61,8 +62,12 @@ interface Lesson {
 }
 
 interface Phrase {
-    phraseId: number
+    phraseId?: number
     lessonId: number
     text: string
     sort: number
+    originalSort: number
+    pair?: boolean | null
+    color?: Color | null
+    grammar?: string | null
 }
