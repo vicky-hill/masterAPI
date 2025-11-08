@@ -11,6 +11,9 @@ class DrinkModel extends Model<InferAttributes<DrinkModel>, InferCreationAttribu
     declare country: string
     declare current: boolean
     declare price: number
+    declare image?: string
+    declare onMenu?: boolean
+    declare happyHour?: boolean
     
     declare userInfo?: User
     
@@ -35,11 +38,20 @@ const drinkSchema = {
     country: {
         type: Sequelize.STRING
     },
+    image: {
+        type: Sequelize.STRING
+    },
     current: {
         type: Sequelize.BOOLEAN
     },
     price: {
         type: Sequelize.DECIMAL
+    },
+    onMenu: {
+        type: Sequelize.BOOLEAN
+    },
+    happyHour: {
+        type: Sequelize.BOOLEAN
     }
 }
 

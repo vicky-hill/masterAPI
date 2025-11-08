@@ -57,11 +57,20 @@ const drinkSchema = {
     country: {
         type: sequelize_1.default.STRING
     },
+    image: {
+        type: sequelize_1.default.STRING
+    },
     current: {
         type: sequelize_1.default.BOOLEAN
     },
     price: {
         type: sequelize_1.default.DECIMAL
+    },
+    onMenu: {
+        type: sequelize_1.default.BOOLEAN
+    },
+    happyHour: {
+        type: sequelize_1.default.BOOLEAN
     }
 };
 DrinkModel.init(drinkSchema, {

@@ -24,6 +24,9 @@ interface Drink {
     current: boolean
     price: number
     user: User
+    onMenu?: boolean
+    happyHour?: boolean
+    image?: string
 }
 
 interface UserInfo {
