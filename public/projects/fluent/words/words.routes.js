@@ -10,5 +10,6 @@ const router = express_1.default.Router();
    @ /fluent/words
 ==================================== */
 router.get('/', words_controller_1.getAllWords);
+router.post('/', words_controller_1.createWords);
 router.post('/adjectives', words_controller_1.createAdjectives);
 exports.default = router;

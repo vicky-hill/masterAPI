@@ -20,3 +20,12 @@ export const createAdjectives = async (req: Request, res: Response, next: NextFu
     next(err)
   }
 }
+
+export const createWords = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const words = await Word.createWords(req.body);
+    res.json(words)
+  } catch (err) {
+    next(err)
+  }
+}

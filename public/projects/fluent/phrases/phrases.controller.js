@@ -42,7 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePhrase = exports.updatePhrase = exports.createPhrase = exports.getPhrase = exports.getPhrases = void 0;
+exports.resetPhraseSort = exports.sortPhrases = exports.deletePhrase = exports.updatePhrase = exports.createPhrases = exports.createPhrase = exports.getPhrase = exports.getPhrases = void 0;
 const Phrase = __importStar(require("./phrases.functions"));
 const getPhrases = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -75,6 +75,16 @@ const createPhrase = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.createPhrase = createPhrase;
+const createPhrases = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const phrase = yield Phrase.createPhrases(req.body);
+        res.json(phrase);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createPhrases = createPhrases;
 const updatePhrase = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { phraseId } = req.params;
@@ -97,3 +107,24 @@ const deletePhrase = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.deletePhrase = deletePhrase;
+const sortPhrases = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const phrases = yield Phrase.sortPhrases(req.body);
+        res.json(phrases);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.sortPhrases = sortPhrases;
+const resetPhraseSort = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { lessonId } = req.params;
+        const phrases = yield Phrase.resetPhraseSort(Number(lessonId));
+        res.json(phrases);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.resetPhraseSort = resetPhraseSort;

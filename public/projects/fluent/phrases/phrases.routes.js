@@ -10,7 +10,9 @@ const router = express_1.default.Router();
    @ /phrases
 ==================================== */
 router.route('/').get(phrases_controller_1.getPhrases);
-router.route('/').post(phrases_controller_1.createPhrase);
+router.route('/').post(phrases_controller_1.createPhrases);
+router.route('/reset/:lessonId').put(phrases_controller_1.resetPhraseSort);
+router.route('/sort').put(phrases_controller_1.sortPhrases);
 router.route('/:phraseId').get(phrases_controller_1.getPhrase);
 router.route('/:phraseId').put(phrases_controller_1.updatePhrase);
 router.route('/:phraseId').delete(phrases_controller_1.deletePhrase);

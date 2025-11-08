@@ -18,7 +18,7 @@ exports.updateValue = updateValue;
 const redis_1 = require("redis");
 const constants_1 = require("./constants");
 const client = (0, redis_1.createClient)({
-    url: "redis://default:uQ9W5y3lfgOph0pa6JTqbkxR88YXXqNg@redis-14878.c11.us-east-1-3.ec2.redns.redis-cloud.com:14878",
+    url: "redis://redis-16514.c331.us-west1-1.gce.redns.redis-cloud.com:16514",
     socket: {
         reconnectStrategy: (retries) => {
             console.log('Redis reconnect attempt:', retries);

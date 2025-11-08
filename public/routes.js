@@ -71,4 +71,11 @@ router.use('/api/fluent/words', words_routes_2.default);
 router.use('/api/fluent/groups', groups_routes_1.default);
 router.use('/api/fluent/lessons', lessons_routes_1.default);
 router.use('/api/fluent/phrases', phrases_routes_1.default);
+/* ===================================
+   False Idol
+=================================== */
+const drinks_routes_1 = __importDefault(require("./projects/falseidol/drinks/drinks.routes"));
+const users_routes_4 = __importDefault(require("./projects/falseidol/users/users.routes"));
+router.use('/api/falseidol/drinks', drinks_routes_1.default);
+router.use('/api/falseidol/users', users_routes_4.default);
 exports.default = router;

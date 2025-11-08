@@ -1,4 +1,3 @@
-import { Req } from '../../../types/reqdoc/attribute.types'
 import ReqModel from './reqs.model'
 
 export const getReqs = async () => {

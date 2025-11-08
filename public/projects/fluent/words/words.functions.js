@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAdjectives = exports.getAllWords = void 0;
+exports.createWords = exports.createAdjectives = exports.getAllWords = void 0;
 const translations_model_1 = __importDefault(require("../translations/translations.model"));
 const words_model_1 = __importDefault(require("./words.model"));
 const getAllWords = (language) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,3 +105,63 @@ const createAdjectives = (data) => __awaiter(void 0, void 0, void 0, function* (
     };
 });
 exports.createAdjectives = createAdjectives;
+const createWords = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const allWords = yield words_model_1.default.count();
+    let count = allWords;
+    let createdWords = [];
+    let createdTranslations = [];
+    for (let i = 0; i < data.length; i++) {
+        const wordData = data[i];
+        const existingWord = yield words_model_1.default.findOne({ where: { base: wordData.english } });
+        let wordId;
+        if (existingWord) {
+            wordId = existingWord.getDataValue('wordId');
+        }
+        else {
+            const createdWord = yield words_model_1.default.create({
+                groupId: wordData.groupId,
+                categoryId: wordData.categoryId,
+                type: wordData.type,
+                base: wordData.english,
+                difficulty: 'beginner',
+                sort: count + 1
+            });
+            createdWords.push(createdWord);
+            wordId = createdWord.getDataValue('wordId');
+        }
+        const translations = wordData.translations.map((translation) => {
+            if (wordData.type === 'adjective') {
+                const variations = translation.word.split(',');
+                return {
+                    wordId,
+                    language: translation.language,
+                    base: variations[0],
+                    masculineSingular: variations[0],
+                    masculinePlural: variations[1],
+                    feminineSingular: variations[2],
+                    femininePlural: variations[3],
+                };
+            }
+            return {
+                wordId,
+                language: translation.language,
+                base: translation.word,
+                gender: translation.gender
+            };
+        });
+        const translationBaseWords = translations.map((translation) => translation.base);
+        const existingTranslations = yield translations_model_1.default.findAll({
+            where: { base: translationBaseWords }
+        });
+        const existingTranslationBaseWords = existingTranslations.map(translationInstance => (translationInstance.getDataValue('base')));
+        const uniqueTranslations = translations.filter((translation) => !existingTranslationBaseWords.includes(translation.base));
+        const createdTranslation = yield translations_model_1.default.bulkCreate(uniqueTranslations);
+        createdTranslations.push(createdTranslation);
+        count = count + 1;
+    }
+    return {
+        createdWords,
+        createdTranslations
+    };
+});
+exports.createWords = createWords;

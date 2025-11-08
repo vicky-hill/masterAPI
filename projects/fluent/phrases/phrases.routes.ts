@@ -1,5 +1,5 @@
 import express, { Router } from 'express'
-import { getPhrases, getPhrase, createPhrase, updatePhrase, deletePhrase } from './phrases.controller'
+import { getPhrases, getPhrase, createPhrase, updatePhrase, deletePhrase, createPhrases, resetPhraseSort, sortPhrases } from './phrases.controller'
 
 const router: Router = express.Router();
 
@@ -8,7 +8,10 @@ const router: Router = express.Router();
 ==================================== */
 
 router.route('/').get(getPhrases)
-router.route('/').post(createPhrase)
+router.route('/').post(createPhrases)
+
+router.route('/reset/:lessonId').put(resetPhraseSort);
+router.route('/sort').put(sortPhrases);
 
 router.route('/:phraseId').get(getPhrase)
 router.route('/:phraseId').put(updatePhrase)

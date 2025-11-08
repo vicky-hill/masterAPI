@@ -10,4 +10,5 @@ const router = express_1.default.Router();
    @ /api/fluent/lessons
 ==================================== */
 router.route('/').get(lessons_controller_1.getLessons);
+router.route('/').post(lessons_controller_1.createLessons);
 exports.default = router;

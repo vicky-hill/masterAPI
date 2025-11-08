@@ -1,4 +1,5 @@
 import { Schema, model, Document, ObjectId, LeanDocument } from 'mongoose'
+import { Language } from './attribute.types'
 
 
 interface CreateImage {
@@ -25,4 +26,16 @@ interface CreateGroup {
 
 interface UpdateGroup {
     name: string
+}
+
+interface CreatePhrase {
+    lessonId: number
+    phrases: string[]
+}
+
+interface CreateLesson {
+    section: number
+    title: string
+    language: Language
+    sort: number
 }

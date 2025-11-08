@@ -1,5 +1,5 @@
 import express from 'express'
-import { createAdjectives, getAllWords } from './words.controller'
+import { createAdjectives, createWords, getAllWords } from './words.controller'
 
 const router = express.Router()
 
@@ -8,6 +8,8 @@ const router = express.Router()
 ==================================== */
 
 router.get('/', getAllWords);
+router.post('/', createWords)
 router.post('/adjectives', createAdjectives);
+
 
 export default router;

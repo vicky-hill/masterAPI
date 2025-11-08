@@ -42,11 +42,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLessons = void 0;
+exports.createLessons = exports.getLessons = void 0;
 const Lesson = __importStar(require("./lessions.functions"));
 const getLessons = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const lessons = yield Lesson.getLessons();
+        const { language, section } = req.query;
+        const lessons = yield Lesson.getLessons(language, Number(section));
         res.json(lessons);
     }
     catch (err) {
@@ -54,3 +55,13 @@ const getLessons = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getLessons = getLessons;
+const createLessons = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const lessons = yield Lesson.createLessons(req.body);
+        res.json(lessons);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createLessons = createLessons;
