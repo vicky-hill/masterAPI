@@ -76,6 +76,8 @@ router.use('/api/fluent/phrases', phrases_routes_1.default);
 =================================== */
 const drinks_routes_1 = __importDefault(require("./projects/falseidol/drinks/drinks.routes"));
 const users_routes_4 = __importDefault(require("./projects/falseidol/users/users.routes"));
+const images_routes_1 = __importDefault(require("./projects/falseidol/images/images.routes"));
 router.use('/api/falseidol/drinks', drinks_routes_1.default);
 router.use('/api/falseidol/users', users_routes_4.default);
+router.use('/api/falseidol/images', images_routes_1.default);
 exports.default = router;

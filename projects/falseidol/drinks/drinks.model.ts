@@ -52,6 +52,9 @@ const drinkSchema = {
     },
     happyHour: {
         type: Sequelize.BOOLEAN
+    },
+    sort: {
+        type: Sequelize.INTEGER
     }
 }
 

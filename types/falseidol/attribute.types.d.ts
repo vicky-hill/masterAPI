@@ -27,6 +27,7 @@ interface Drink {
     onMenu?: boolean
     happyHour?: boolean
     image?: string
+    sort?: number
 }
 
 interface UserInfo {
@@ -41,4 +42,10 @@ interface User {
     userId: number
     name: string
     email: string
+}
+
+interface Image {
+    imageId: number
+    name: string
+    url: string
 }

@@ -38,53 +38,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-const user_drink_model_1 = __importDefault(require("./user.drink.model"));
-class DrinkModel extends sequelize_1.Model {
+class ImagesModel extends sequelize_1.Model {
 }
-const drinkSchema = {
-    drinkId: {
+const imagesSchema = {
+    imageId: {
         type: sequelize_1.default.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    type: {
-        type: sequelize_1.default.ENUM({ values: ['cocktail', 'bowl', 'neat'] })
-    },
     name: {
-        type: sequelize_1.default.STRING,
-        unique: true
-    },
-    country: {
         type: sequelize_1.default.STRING
     },
-    image: {
+    url: {
         type: sequelize_1.default.STRING
-    },
-    current: {
-        type: sequelize_1.default.BOOLEAN
-    },
-    price: {
-        type: sequelize_1.default.DECIMAL
-    },
-    onMenu: {
-        type: sequelize_1.default.BOOLEAN
-    },
-    happyHour: {
-        type: sequelize_1.default.BOOLEAN
-    },
-    sort: {
-        type: sequelize_1.default.INTEGER
     }
 };
-DrinkModel.init(drinkSchema, {
+ImagesModel.init(imagesSchema, {
     sequelize: falseidol_db_config_1.default,
-    modelName: "Drink",
-    tableName: "drinks",
+    modelName: "Images",
+    tableName: "images",
     timestamps: false
 });
-DrinkModel.hasOne(user_drink_model_1.default, {
-    foreignKey: 'drinkId',
-    sourceKey: 'drinkId',
-    as: 'userInfo'
-});
-exports.default = DrinkModel;
+exports.default = ImagesModel;

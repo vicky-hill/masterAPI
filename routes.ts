@@ -94,9 +94,11 @@ router.use('/api/fluent/phrases', fluent_phraseRoutes)
 
 import falseidol_drinkRoutes from './projects/falseidol/drinks/drinks.routes'
 import falseidol_userRoutes from './projects/falseidol/users/users.routes'
+import falseidol_imageRoutes from './projects/falseidol/images/images.routes'
 
 router.use('/api/falseidol/drinks', falseidol_drinkRoutes)
 router.use('/api/falseidol/users', falseidol_userRoutes)
+router.use('/api/falseidol/images', falseidol_imageRoutes)
 
 
 export default router;
