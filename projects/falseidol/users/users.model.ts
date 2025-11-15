@@ -1,11 +1,11 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
-
 
 class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
     declare userId: CreationOptional<number>
     declare name: string
     declare email: string
+    declare verified: boolean
 }
 
 const userSchema = {
@@ -19,6 +19,10 @@ const userSchema = {
     },
     email: {
         type: Sequelize.STRING
+    },
+    verified: {
+        type: Sequelize.BOOLEAN,
+        defaultType: false
     }
 }
 

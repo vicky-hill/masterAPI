@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express'
 import jwt_decode from 'jwt-decode'
 import User from '../users/users.model'
 
+
 // Protect all routes 
 export const protect = async (req: any, res: Response, next: NextFunction) => {
     // Get token in the header
@@ -13,7 +14,7 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
 
         const user = await User.findByPk(decoded.user_id);
 
-        if (!user) {
+        if (!user || !user?.getDataValue('verified')) {
             return res.status(401).json({ msg: 'No user found' });
         }
 

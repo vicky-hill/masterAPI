@@ -23,7 +23,7 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const decoded = (0, jwt_decode_1.default)(token);
         const user = yield users_model_1.default.findByPk(decoded.user_id);
-        if (!user) {
+        if (!user || !(user === null || user === void 0 ? void 0 : user.getDataValue('verified'))) {
             return res.status(401).json({ msg: 'No user found' });
         }
         req.user = user;

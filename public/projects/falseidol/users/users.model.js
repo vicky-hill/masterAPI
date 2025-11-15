@@ -51,6 +51,10 @@ const userSchema = {
     },
     email: {
         type: sequelize_1.default.STRING
+    },
+    verified: {
+        type: sequelize_1.default.BOOLEAN,
+        defaultType: false
     }
 };
 UserModel.init(userSchema, {
