@@ -1,4 +1,5 @@
 import { Setting } from '../../../types/falseidol/attribute.types'
+import LogModel from '../logs/logs.model';
 import SettingModel from './settings.model'
 
 export const getSettings = async () => {
@@ -9,6 +10,10 @@ export const getSettings = async () => {
     const settings = settingInstances.map((settingInstance) => {
         const setting = settingInstance.get({ plain: true });
         return { ...setting };
+    })
+
+    await LogModel.create({
+        request: 'getting settings' 
     })
 
     return settings;
