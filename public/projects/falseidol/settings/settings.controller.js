@@ -32,39 +32,36 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sequelize_1 = __importStar(require("sequelize"));
-const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-class UserModel extends sequelize_1.Model {
-}
-const userSchema = {
-    userId: {
-        type: sequelize_1.default.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: sequelize_1.default.STRING
-    },
-    email: {
-        type: sequelize_1.default.STRING
-    },
-    verified: {
-        type: sequelize_1.default.BOOLEAN,
-        defaultType: false
-    },
-    isAdmin: {
-        type: sequelize_1.default.BOOLEAN,
-        defaultType: false
+exports.updateSetting = exports.getSettings = void 0;
+const Setting = __importStar(require("./settings.functions"));
+const getSettings = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const settings = yield Setting.getSettings();
+        res.json(settings);
     }
-};
-UserModel.init(userSchema, {
-    sequelize: falseidol_db_config_1.default,
-    modelName: "User",
-    tableName: "users",
-    timestamps: false
+    catch (err) {
+        next(err);
+    }
 });
-exports.default = UserModel;
+exports.getSettings = getSettings;
+const updateSetting = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { settingId } = req.params;
+        const setting = yield Setting.updateSetting(req.body, settingId);
+        res.json(setting);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.updateSetting = updateSetting;

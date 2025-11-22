@@ -10,10 +10,10 @@ const router = express_1.default.Router();
 /* ====================================
    @ /users
 ==================================== */
-router.route('/').get(users_controller_1.getUsers);
+router.route('/').get(middleware_1.protect, middleware_1.isAdmin, users_controller_1.getUsers);
 router.route('/').post(users_controller_1.createUser);
 router.route('/current').get(middleware_1.protect, users_controller_1.getCurrentUser);
 router.route('/:userId').get(users_controller_1.getUser);
-router.route('/:userId').put(users_controller_1.updateUser);
+router.route('/:userId').put(middleware_1.protect, middleware_1.isAdmin, users_controller_1.updateUser);
 router.route('/:userId').delete(users_controller_1.deleteUser);
 exports.default = router;

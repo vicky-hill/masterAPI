@@ -6,6 +6,7 @@ class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttribute
     declare name: string
     declare email: string
     declare verified: boolean
+    declare isAdmin: boolean
 }
 
 const userSchema = {
@@ -21,6 +22,10 @@ const userSchema = {
         type: Sequelize.STRING
     },
     verified: {
+        type: Sequelize.BOOLEAN,
+        defaultType: false
+    },
+    isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultType: false
     }

@@ -28,6 +28,7 @@ interface Drink {
     happyHour?: boolean
     image?: string
     sort?: number
+    description?: string
 }
 
 interface UserInfo {
@@ -43,10 +44,17 @@ interface User {
     name: string
     email: string
     verified: boolean
+    isAdmin: boolean
 }
 
 interface Image {
     imageId: number
     name: string
     url: string
+}
+
+interface Setting {
+    settingId: number
+    name: string
+    active: boolean
 }

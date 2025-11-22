@@ -74,6 +74,9 @@ const drinkSchema = {
     },
     sort: {
         type: sequelize_1.default.INTEGER
+    },
+    description: {
+        type: sequelize_1.default.STRING
     }
 };
 DrinkModel.init(drinkSchema, {

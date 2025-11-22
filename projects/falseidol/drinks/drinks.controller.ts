@@ -13,6 +13,19 @@ export const getDrinks = async (req: Request, res: Response, next: NextFunction)
 }
 
 
+export const updateDrink = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { drinkId } = req.params;
+
+        const drink = await Drink.updateDrink(Number(drinkId), req.body);
+        res.json(drink);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+
 export const syncDrinks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const drinks = await Drink.syncDrinks();

@@ -33,9 +33,11 @@ export const createUser = async (data: User) => {
 }
 
 export const updateUser = async (data: User, userId: string) => {
-    const user = await UserModel.update(data,
+    await UserModel.update(data,
         { where: { userId } }
     );
+
+    const user = await UserModel.findByPk(userId);
 
     if (!user) throw new Error('User not found');
 

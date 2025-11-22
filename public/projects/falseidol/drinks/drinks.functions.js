@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syncDrinks = exports.getDrinks = void 0;
+exports.syncDrinks = exports.updateDrink = exports.getDrinks = void 0;
 const drinks_model_1 = __importDefault(require("./drinks.model"));
 const getDrinks = (type, current) => __awaiter(void 0, void 0, void 0, function* () {
-    const where = {};
+    const where = { current: true };
     if (type)
-        where.type = type;
+        where.type = type.split(',');
     if (current === 'true')
         where.current = true;
     const drinkInstances = yield drinks_model_1.default.findAll({
@@ -30,6 +30,12 @@ const getDrinks = (type, current) => __awaiter(void 0, void 0, void 0, function*
     return drinks;
 });
 exports.getDrinks = getDrinks;
+const updateDrink = (drinkId, data) => __awaiter(void 0, void 0, void 0, function* () {
+    yield drinks_model_1.default.update(data, { where: { drinkId } });
+    const drink = yield drinks_model_1.default.findByPk(drinkId);
+    return drink;
+});
+exports.updateDrink = updateDrink;
 const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
     const data = [
         {
@@ -839,11 +845,11 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "approvedBy": null
         },
         {
-            "id": 4722,
+            "id": 1726,
             "programId": 3,
-            "name": "Corn & Oil (BW/Diplo '23)",
-            "price": "13.00",
-            "country": "Cocktail",
+            "name": "Dos Maderas 5 + 5",
+            "price": "14",
+            "country": "Regional Blends",
             "notes": null,
             "current": false,
             "immortal": false,
@@ -852,13 +858,13 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "approvedBy": null
         },
         {
-            "id": 1726,
+            "id": 4722,
             "programId": 3,
-            "name": "Dos Maderas 5 + 5",
-            "price": "14",
-            "country": "Regional Blends",
+            "name": "Corn & Oil (BW/Diplo '23)",
+            "price": "13.00",
+            "country": "Cocktail",
             "notes": null,
-            "current": true,
+            "current": false,
             "immortal": false,
             "requested": false,
             "requestedOn": null,
@@ -4843,6 +4849,19 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "approvedBy": null
         },
         {
+            "id": 1880,
+            "programId": 3,
+            "name": "Chairman's Reserve Forgotten Casks",
+            "price": "15.00",
+            "country": "St. Lucia",
+            "notes": null,
+            "current": false,
+            "immortal": false,
+            "requested": false,
+            "requestedOn": null,
+            "approvedBy": null
+        },
+        {
             "id": 5053,
             "programId": 3,
             "name": "Mount Gay Port Cask",
@@ -4861,19 +4880,6 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "name": "Luau Scorpion (Bowl)",
             "price": "58.00",
             "country": "Cocktail",
-            "notes": null,
-            "current": true,
-            "immortal": false,
-            "requested": false,
-            "requestedOn": null,
-            "approvedBy": null
-        },
-        {
-            "id": 1880,
-            "programId": 3,
-            "name": "Chairman's Reserve Forgotten Casks",
-            "price": "15.00",
-            "country": "St. Lucia",
             "notes": null,
             "current": true,
             "immortal": false,
@@ -5395,7 +5401,7 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "price": "12.00",
             "country": "Regional Blends",
             "notes": null,
-            "current": true,
+            "current": false,
             "immortal": false,
             "requested": false,
             "requestedOn": null,
@@ -7137,7 +7143,7 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "price": "25.00",
             "country": "Peru",
             "notes": null,
-            "current": true,
+            "current": false,
             "immortal": false,
             "requested": false,
             "requestedOn": null,
@@ -13481,7 +13487,7 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
             "price": "13.00",
             "country": "Haiti",
             "notes": null,
-            "current": true,
+            "current": false,
             "immortal": false,
             "requested": false,
             "requestedOn": null,
@@ -15010,10 +15016,11 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
         name: drink.name,
         country: !drink.country.toLocaleLowerCase().includes('cockt') ? drink.country : null,
         current: drink.current,
-        price: Number(drink.price)
+        price: Number(drink.price),
+        happyHour: drink.country.toLocaleLowerCase().includes('happy') && drink.current
     }));
     const drinks = yield drinks_model_1.default.bulkCreate(payload, {
-        updateOnDuplicate: ['type', 'country', 'current', 'price'],
+        updateOnDuplicate: ['type', 'country', 'current', 'happyHour'],
         conflictAttributes: ['name']
     });
     return drinks;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protect = void 0;
+exports.isAdmin = exports.protect = void 0;
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
 const users_model_1 = __importDefault(require("../users/users.model"));
 // Protect all routes 
@@ -23,8 +23,11 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const decoded = (0, jwt_decode_1.default)(token);
         const user = yield users_model_1.default.findByPk(decoded.user_id);
-        if (!user || !(user === null || user === void 0 ? void 0 : user.getDataValue('verified'))) {
+        if (!user) {
             return res.status(401).json({ msg: 'No user found' });
+        }
+        if (req.route.path !== '/current' && !user.verified) {
+            return res.status(401).json({ msg: 'User is not verified' });
         }
         req.user = user;
         next();
@@ -34,3 +37,16 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.protect = protect;
+const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = req.user;
+        if (!(user === null || user === void 0 ? void 0 : user.isAdmin)) {
+            res.status(401).json({ msg: 'Admin access required' });
+        }
+        next();
+    }
+    catch (err) {
+        res.status(401).json({ msg: 'Admin access required' });
+    }
+});
+exports.isAdmin = isAdmin;

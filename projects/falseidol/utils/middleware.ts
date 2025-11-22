@@ -14,8 +14,12 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
 
         const user = await User.findByPk(decoded.user_id);
 
-        if (!user || !user?.getDataValue('verified')) {
+        if (!user) {
             return res.status(401).json({ msg: 'No user found' });
+        }
+
+        if (req.route.path !== '/current' && !user.verified) {
+            return res.status(401).json({ msg: 'User is not verified' });
         }
 
         req.user = user;
@@ -24,3 +28,17 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
         res.status(401).json({ msg: 'Token is not valid' });
     }
 };
+
+export const isAdmin = async (req: any, res: Response, next: NextFunction) => {
+    try {
+        const user = req.user;
+
+        if (!user?.isAdmin) {
+            res.status(401).json({ msg: 'Admin access required' });
+        }
+
+        next();
+    } catch (err) {
+        res.status(401).json({ msg: 'Admin access required' });
+    }
+}

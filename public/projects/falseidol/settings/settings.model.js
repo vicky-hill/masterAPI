@@ -38,10 +38,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-class UserModel extends sequelize_1.Model {
+class SettingModel extends sequelize_1.Model {
 }
-const userSchema = {
-    userId: {
+const settingSchema = {
+    settingId: {
         type: sequelize_1.default.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -49,22 +49,14 @@ const userSchema = {
     name: {
         type: sequelize_1.default.STRING
     },
-    email: {
-        type: sequelize_1.default.STRING
-    },
-    verified: {
-        type: sequelize_1.default.BOOLEAN,
-        defaultType: false
-    },
-    isAdmin: {
-        type: sequelize_1.default.BOOLEAN,
-        defaultType: false
+    active: {
+        type: sequelize_1.default.BOOLEAN
     }
 };
-UserModel.init(userSchema, {
+SettingModel.init(settingSchema, {
     sequelize: falseidol_db_config_1.default,
-    modelName: "User",
-    tableName: "users",
+    modelName: "Settings",
+    tableName: "settings",
     timestamps: false
 });
-exports.default = UserModel;
+exports.default = SettingModel;

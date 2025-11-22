@@ -41,7 +41,8 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.createUser = createUser;
 const updateUser = (data, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield users_model_1.default.update(data, { where: { userId } });
+    yield users_model_1.default.update(data, { where: { userId } });
+    const user = yield users_model_1.default.findByPk(userId);
     if (!user)
         throw new Error('User not found');
     return user;
