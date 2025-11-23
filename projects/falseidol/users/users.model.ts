@@ -23,11 +23,11 @@ const userSchema = {
     },
     verified: {
         type: Sequelize.BOOLEAN,
-        defaultType: false
+        defaultValue: false
     },
     isAdmin: {
         type: Sequelize.BOOLEAN,
-        defaultType: false
+        defaultValue: false
     }
 }
 
