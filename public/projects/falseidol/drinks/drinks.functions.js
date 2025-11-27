@@ -13,9 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.syncDrinks = exports.updateDrink = exports.getDrinks = void 0;
+const settings_model_1 = __importDefault(require("../settings/settings.model"));
 const drinks_model_1 = __importDefault(require("./drinks.model"));
 const getDrinks = (type, current) => __awaiter(void 0, void 0, void 0, function* () {
     const where = { current: true };
+    const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort'];
+    const descriptionSetting = yield settings_model_1.default.findByPk(3);
+    if (descriptionSetting === null || descriptionSetting === void 0 ? void 0 : descriptionSetting.getDataValue('active')) {
+        attributes.push('description');
+    }
     if (type)
         where.type = type.split(',');
     if (current === 'true')

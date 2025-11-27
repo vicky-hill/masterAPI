@@ -1,5 +1,5 @@
 import { Setting } from '../../../types/falseidol/attribute.types'
-import LogModel from '../logs/logs.model';
+import LogModel from '../logs/logs.model'
 import SettingModel from './settings.model'
 
 export const getSettings = async () => {

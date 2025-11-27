@@ -1,9 +1,17 @@
 import { Drink, FalseIdolDrink } from '../../../types/falseidol/attribute.types'
+import SettingModel from '../settings/settings.model';
 import DrinkModel from './drinks.model'
 
 
 export const getDrinks = async (type: string, current: string) => {
     const where: any = { current: true };
+    const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
+
+    const descriptionSetting = await SettingModel.findByPk(3);
+
+    if (descriptionSetting?.getDataValue('active')) {
+        attributes.push('description');
+    }
 
     if (type) where.type = type.split(',');
     if (current === 'true') where.current = true;
