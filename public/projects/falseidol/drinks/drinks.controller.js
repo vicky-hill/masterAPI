@@ -42,7 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syncDrinks = exports.updateDrink = exports.getDrinks = void 0;
+exports.syncDrinks = exports.createDrink = exports.updateDrink = exports.getDrinks = void 0;
 const Drink = __importStar(require("./drinks.functions"));
 const getDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -66,6 +66,16 @@ const updateDrink = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.updateDrink = updateDrink;
+const createDrink = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const drink = yield Drink.createDrink(req.body);
+        res.json(drink);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.createDrink = createDrink;
 const syncDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drinks = yield Drink.syncDrinks();

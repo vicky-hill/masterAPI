@@ -24,6 +24,16 @@ export const updateDrink = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export const createDrink = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const drink = await Drink.createDrink(req.body);
+        res.json(drink);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 
 
 export const syncDrinks = async (req: Request, res: Response, next: NextFunction) => {
