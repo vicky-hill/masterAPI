@@ -60,7 +60,6 @@ import lesprit_userRoutes from './projects/lesprit/users/users.routes'
 import lesprit_wordRoutes from './projects/lesprit/words/words.routes'
 import lesprit_admin_wordRoutes from './projects/lesprit/words/words.routes.admin'
 import lesprit_listRoutes from './projects/lesprit/lists/lists.routes'
-import lesprit_testRoutes from './projects/lesprit/test/test.routes'
 import lesprite_user_verbRoutes from './projects/lesprit/verbs/verbs.routes.user'
 import lesprite_admin_verbRoutes from './projects/lesprit/verbs/verbs.routes.admin'
 
@@ -68,7 +67,6 @@ router.use('/api/lesprit/user', lesprit_userRoutes)
 router.use('/api/lesprit/words', lesprit_wordRoutes)
 router.use('/api/lesprit/admin/words', lesprit_admin_wordRoutes)
 router.use('/api/lesprit/lists', lesprit_listRoutes)
-router.use('/api/lesprit/test', lesprit_testRoutes)
 router.use('/api/lesprit/user/verbs', lesprite_user_verbRoutes)
 router.use('/api/lesprit/admin/verbs', lesprite_admin_verbRoutes)
 
@@ -92,15 +90,23 @@ router.use('/api/fluent/phrases', fluent_phraseRoutes)
    False Idol
 =================================== */
 
-import falseidol_drinkRoutes from './projects/falseidol/drinks/drinks.routes'
-import falseidol_userRoutes from './projects/falseidol/users/users.routes'
-import falseidol_imageRoutes from './projects/falseidol/images/images.routes'
-import falseidol_settingsRoutes from './projects/falseidol/settings/settings.routes'
+import falseidol_drinkRoutes from './projects/falseIdol/drinks/drinks.routes'
+import falseidol_userRoutes from './projects/falseIdol/users/users.routes'
+import falseidol_imageRoutes from './projects/falseIdol/images/images.routes'
+import falseidol_settingsRoutes from './projects/falseIdol/settings/settings.routes'
 
 router.use('/api/falseidol/drinks', falseidol_drinkRoutes)
 router.use('/api/falseidol/users', falseidol_userRoutes)
 router.use('/api/falseidol/images', falseidol_imageRoutes)
 router.use('/api/falseidol/settings', falseidol_settingsRoutes)
 
+
+/* ===================================
+   Sandbox
+=================================== */
+
+// import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
+// 
+// router.use('/api/sandbox/posts', sandbox_postRoutes)
 
 export default router;

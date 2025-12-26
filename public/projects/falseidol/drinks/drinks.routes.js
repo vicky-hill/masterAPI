@@ -10,7 +10,7 @@ const router = express_1.default.Router();
 /* ====================================
    @ /drinks
 ==================================== */
-router.route('/').get(drinks_controller_1.getDrinks);
+router.route('/').get(middleware_1.protect, drinks_controller_1.getDrinks);
 router.route('/').post(drinks_controller_1.createDrink);
 router.route('/:drinkId').put(middleware_1.protect, middleware_1.isAdmin, drinks_controller_1.updateDrink);
 router.route('/sync').get(drinks_controller_1.syncDrinks);

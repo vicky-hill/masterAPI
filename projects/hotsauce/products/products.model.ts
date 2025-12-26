@@ -34,3 +34,4 @@ const ProductSchema = new mongoose.Schema<ProductAttributes>({
 });
 
 export default mongoose.model<ProductAttributes>('HOTSAUCE_Product', ProductSchema);
+

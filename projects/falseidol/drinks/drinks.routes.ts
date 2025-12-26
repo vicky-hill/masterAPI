@@ -8,7 +8,7 @@ const router: Router = express.Router();
    @ /drinks
 ==================================== */
 
-router.route('/').get(getDrinks)
+router.route('/').get(protect, getDrinks)
 router.route('/').post(createDrink)
 
 router.route('/:drinkId').put(protect, isAdmin, updateDrink)

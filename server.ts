@@ -5,6 +5,7 @@ import logger from 'morgan'
 import cors from 'cors'
 import routes from './routes'
 import onError from './middleware/errors'
+// import { addCascadeConstraint } from './projects/sandbox/posts/posts.functions'
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app = express();
 const PORT = 4000;
 
 connectDB();
+// addCascadeConstraint();
 
 app.use(express.json());
 app.use(logger("dev"));

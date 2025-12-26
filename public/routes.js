@@ -50,14 +50,12 @@ const users_routes_3 = __importDefault(require("./projects/lesprit/users/users.r
 const words_routes_1 = __importDefault(require("./projects/lesprit/words/words.routes"));
 const words_routes_admin_1 = __importDefault(require("./projects/lesprit/words/words.routes.admin"));
 const lists_routes_1 = __importDefault(require("./projects/lesprit/lists/lists.routes"));
-const test_routes_1 = __importDefault(require("./projects/lesprit/test/test.routes"));
 const verbs_routes_user_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.user"));
 const verbs_routes_admin_1 = __importDefault(require("./projects/lesprit/verbs/verbs.routes.admin"));
 router.use('/api/lesprit/user', users_routes_3.default);
 router.use('/api/lesprit/words', words_routes_1.default);
 router.use('/api/lesprit/admin/words', words_routes_admin_1.default);
 router.use('/api/lesprit/lists', lists_routes_1.default);
-router.use('/api/lesprit/test', test_routes_1.default);
 router.use('/api/lesprit/user/verbs', verbs_routes_user_1.default);
 router.use('/api/lesprit/admin/verbs', verbs_routes_admin_1.default);
 /* ===================================
@@ -74,12 +72,18 @@ router.use('/api/fluent/phrases', phrases_routes_1.default);
 /* ===================================
    False Idol
 =================================== */
-const drinks_routes_1 = __importDefault(require("./projects/falseidol/drinks/drinks.routes"));
-const users_routes_4 = __importDefault(require("./projects/falseidol/users/users.routes"));
-const images_routes_1 = __importDefault(require("./projects/falseidol/images/images.routes"));
-const settings_routes_1 = __importDefault(require("./projects/falseidol/settings/settings.routes"));
+const drinks_routes_1 = __importDefault(require("./projects/falseIdol/drinks/drinks.routes"));
+const users_routes_4 = __importDefault(require("./projects/falseIdol/users/users.routes"));
+const images_routes_1 = __importDefault(require("./projects/falseIdol/images/images.routes"));
+const settings_routes_1 = __importDefault(require("./projects/falseIdol/settings/settings.routes"));
 router.use('/api/falseidol/drinks', drinks_routes_1.default);
 router.use('/api/falseidol/users', users_routes_4.default);
 router.use('/api/falseidol/images', images_routes_1.default);
 router.use('/api/falseidol/settings', settings_routes_1.default);
+/* ===================================
+   Sandbox
+=================================== */
+// import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
+// 
+// router.use('/api/sandbox/posts', sandbox_postRoutes)
 exports.default = router;

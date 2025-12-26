@@ -35,8 +35,8 @@ interface UserInfo {
     userDrinkId: number
     drinkId: number
     userId: number
-    notes?: string
-    order?: boolean
+    notes: string
+    ordered: number
 }
 
 interface User {

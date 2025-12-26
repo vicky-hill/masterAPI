@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,7 +26,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.syncDrinks = exports.createDrink = exports.updateDrink = exports.getDrinks = void 0;
 const settings_model_1 = __importDefault(require("../settings/settings.model"));
 const drinks_model_1 = __importDefault(require("./drinks.model"));
-const getDrinks = (type, current) => __awaiter(void 0, void 0, void 0, function* () {
+const user_drink_model_1 = __importDefault(require("./user.drink.model"));
+const getDrinks = (type, current, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const where = { current: true };
     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort'];
     const descriptionSetting = yield settings_model_1.default.findByPk(3);
@@ -27,11 +39,17 @@ const getDrinks = (type, current) => __awaiter(void 0, void 0, void 0, function*
     if (current === 'true')
         where.current = true;
     const drinkInstances = yield drinks_model_1.default.findAll({
-        where
+        where,
+        include: [{
+                model: user_drink_model_1.default,
+                as: 'userInfo',
+                where: { userId },
+                required: false
+            }]
     });
     const drinks = drinkInstances.map((drinkInstance) => {
-        const drink = drinkInstance.get({ plain: true });
-        return Object.assign({}, drink);
+        const _a = drinkInstance.get({ plain: true }), { userInfo } = _a, drink = __rest(_a, ["userInfo"]);
+        return Object.assign(Object.assign({}, drink), { notes: (userInfo === null || userInfo === void 0 ? void 0 : userInfo.notes) || null, ordered: (userInfo === null || userInfo === void 0 ? void 0 : userInfo.ordered) || 0 });
     });
     return drinks;
 });

@@ -47,7 +47,8 @@ const Drink = __importStar(require("./drinks.functions"));
 const getDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { type, current } = req.query;
-        const drinks = yield Drink.getDrinks(type, current);
+        const { userId } = req.user;
+        const drinks = yield Drink.getDrinks(type, current, userId);
         res.json(drinks);
     }
     catch (err) {

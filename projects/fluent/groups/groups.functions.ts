@@ -3,7 +3,9 @@ import GroupModel from './groups.model'
 import TranslationModel from '../translations/translations.model'
 import CategoryModel from '../categories/categories.model'
 import { getWordsByLanguage } from '../utils'
-import { getValue, setValue } from '../../../utils/redis';
+import { getValue, setValue } from '../../../utils/redis'
+
+
 
 export const getAllGroups = async (language?: string) => {
     const translation_where: any = {};

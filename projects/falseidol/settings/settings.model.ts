@@ -1,6 +1,11 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
+export interface Setting {
+    settingId: number
+    name: string
+    active: boolean
+}
 
 class SettingModel extends Model<InferAttributes<SettingModel>, InferCreationAttributes<SettingModel>> {
     declare settingId: CreationOptional<number>

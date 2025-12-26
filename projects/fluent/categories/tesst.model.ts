@@ -1,7 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/fluent.db.config'
 import { Category, Group } from '../../../types/fluent/attribute.types'
-import CategoryModel from '../categories/categories.model'
+import CategoryModel from './categories.model'
 import GroupModel from '../groups/groups.model'
 
 
@@ -54,6 +54,8 @@ TestModel.hasMany(GroupModel, {
     foreignKey: "testId",
     as: 'groups'
 });
+
+
             
 
 export default TestModel;

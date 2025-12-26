@@ -56,14 +56,14 @@ const userDrinkSchema = {
         type: sequelize_1.default.STRING
     },
     ordered: {
-        type: sequelize_1.default.BOOLEAN,
+        type: sequelize_1.default.INTEGER,
         defaultValue: false
     }
 };
 UserDrinkModel.init(userDrinkSchema, {
     sequelize: falseidol_db_config_1.default,
     modelName: "",
-    tableName: "drinks",
+    tableName: "userDrinks",
     timestamps: false
 });
 exports.default = UserDrinkModel;

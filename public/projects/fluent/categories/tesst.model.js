@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const fluent_db_config_1 = __importDefault(require("../../../config/fluent.db.config"));
-const categories_model_1 = __importDefault(require("../categories/categories.model"));
+const categories_model_1 = __importDefault(require("./categories.model"));
 const groups_model_1 = __importDefault(require("../groups/groups.model"));
 class TestModel extends sequelize_1.Model {
 }

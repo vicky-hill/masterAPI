@@ -1,6 +1,13 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
+export interface UserInfo {
+    userDrinkId: number
+    drinkId: number
+    userId: number
+    notes: string
+    ordered: number
+}
 
 class UserDrinkModel extends Model<InferAttributes<UserDrinkModel>, InferCreationAttributes<UserDrinkModel>> {
     declare userDrinkId: CreationOptional<number>
@@ -26,7 +33,7 @@ const userDrinkSchema = {
         type: Sequelize.STRING
     },
     ordered: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.INTEGER,
         defaultValue: false
     }
 }
@@ -34,7 +41,7 @@ const userDrinkSchema = {
 UserDrinkModel.init(userDrinkSchema, {
   sequelize,
   modelName: "",
-  tableName: "drinks",
+  tableName: "userDrinks",
   timestamps: false
 })
 

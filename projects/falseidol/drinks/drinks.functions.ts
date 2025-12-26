@@ -1,9 +1,10 @@
 import { Drink, FalseIdolDrink } from '../../../types/falseidol/attribute.types'
-import SettingModel from '../settings/settings.model';
+import SettingModel from '../settings/settings.model'
 import DrinkModel from './drinks.model'
+import UserDrinkModel from './user.drink.model'
 
 
-export const getDrinks = async (type: string, current: string) => {
+export const getDrinks = async (type: string, current: string, userId: string) => {
     const where: any = { current: true };
     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
 
@@ -17,12 +18,23 @@ export const getDrinks = async (type: string, current: string) => {
     if (current === 'true') where.current = true;
 
     const drinkInstances = await DrinkModel.findAll({
-        where
+        where,
+        include: [{
+            model: UserDrinkModel,
+            as: 'userInfo',
+            where: { userId },
+            required: false
+        }]
     });
 
     const drinks = drinkInstances.map((drinkInstance) => {
-        const drink = drinkInstance.get({ plain: true });
-        return { ...drink };
+        const { userInfo, ...drink } = drinkInstance.get({ plain: true });
+
+        return {
+            ...drink,
+            notes: userInfo?.notes || null,
+            ordered: userInfo?.ordered || 0
+        };
     })
 
     return drinks;

@@ -4,8 +4,9 @@ import * as Drink from './drinks.functions'
 export const getDrinks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { type, current } = req.query;
+        const { userId } = req.user;
 
-        const drinks = await Drink.getDrinks(type as string, current as string);
+        const drinks = await Drink.getDrinks(type as string, current as string, userId);
         res.json(drinks);
     } catch (err) {
         next(err);

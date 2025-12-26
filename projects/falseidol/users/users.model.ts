@@ -1,6 +1,14 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
+export interface User {
+    userId: number
+    name: string
+    email: string
+    verified: boolean
+    isAdmin: boolean
+}
+
 class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
     declare userId: CreationOptional<number>
     declare name: string
