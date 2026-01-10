@@ -4,8 +4,6 @@ import { controllers } from '../utils/controllers'
 const onError = (err: any, req: any, res: any, next: any) => {
     const notFoundStrings = ['not found', 'not find', 'cannot be found', 'does not exist'];
 
-    err.statusCode = err.statusCode || 500;
-
     // check if message includes any of the above and set status to 404
     if (notFoundStrings.some(string => err.message.includes(string))) {
         err.statusCode = 404;
@@ -42,15 +40,12 @@ const onError = (err: any, req: any, res: any, next: any) => {
 
     let payload: any = {
         name: err.name && err.name !== "Error" ? err.name : null,
-        error: error.error,
         message: error.message,
         debug: error.debug,
         validation: error.validation,
-        status: error.statusCode,
-        errorCode: error.errorCode,
         controller: controller?.controller,
-        endpoint: req.originalUrl,
-        method: req.method
+        endpoint: `${req.method} ${req.originalUrl}`,
+        error: err,
     }
 
     Object.keys(payload).forEach(key => {
@@ -59,7 +54,7 @@ const onError = (err: any, req: any, res: any, next: any) => {
         }
     })
 
-    res.status(err.statusCode).json(payload);
+    res.json(payload);
 }
 
 export default onError; 

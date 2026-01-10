@@ -1,65 +1,69 @@
 import TeamModel from './teams/teams.model'
 import UserModel from './users/users.model'
-import TeamUserModel from './teams/teams.users.model'
 import ProjectModel from './projects/projects.model'
 import FeatureModel from './features/features.model'
 import ReqModel from './reqs/reqs.model'
 
-TeamModel.belongsToMany(UserModel, {
-  through: TeamUserModel,
-  foreignKey: 'teamId',
-  otherKey: 'userId',
-  as: 'users'
-})
+export type omit = { omit: 'createdAt' | 'updatedAt' | 'deletedAt' };
 
 UserModel.belongsToMany(TeamModel, {
-  through: TeamUserModel,
+  through: 'teamUsers',
   foreignKey: 'userId',
-  otherKey: 'teamId',
-  as: 'teams'
+  otherKey: 'teamId'
 })
 
-UserModel.hasOne(TeamModel, {
+TeamModel.belongsToMany(UserModel, {
+  through: 'teamUsers',
   foreignKey: 'teamId',
-  sourceKey: 'teamId',
-  as: 'team'
-});
-
-TeamModel.hasMany(ProjectModel, {
-  foreignKey: "teamId",
-  as: 'projects'
-});
-
-FeatureModel.hasMany(FeatureModel, {
-  foreignKey: 'parentId',
-  as: 'subFeatures'
-});
-
-FeatureModel.belongsTo(FeatureModel, {
-  foreignKey: 'parentId',
-  as: 'mainFeature'
+  otherKey: 'userId'
 })
 
-FeatureModel.belongsTo(ProjectModel, {
-  foreignKey: 'projectId',
-  as: 'project'
+UserModel.belongsTo(TeamModel, {
+  foreignKey: 'teamId'
 });
 
-FeatureModel.hasMany(ReqModel, {
-  foreignKey: 'featureId',
-  as: 'reqs'
-})
 
-ProjectModel.belongsTo(TeamModel, {
-  foreignKey: 'teamId',
-  as: 'team'
-})
 
-ReqModel.hasMany(ReqModel, {
-  sourceKey: 'changedReq',
-  foreignKey: 'key',
-  as: 'history'
-})
+
+
+
+
+
+// TeamModel.hasMany(ProjectModel, {
+//   foreignKey: "teamId",
+//   as: 'projects'
+// });
+// 
+// FeatureModel.hasMany(FeatureModel, {
+//   foreignKey: 'parentId',
+//   as: 'subFeatures'
+// });
+// 
+// FeatureModel.belongsTo(FeatureModel, {
+//   foreignKey: 'parentId',
+//   as: 'mainFeature'
+// })
+// 
+// FeatureModel.belongsTo(ProjectModel, {
+//   foreignKey: 'projectId',
+//   as: 'project'
+// });
+// 
+// FeatureModel.hasMany(ReqModel, {
+//   foreignKey: 'featureId',
+//   as: 'reqs'
+// })
+// 
+// ProjectModel.belongsTo(TeamModel, {
+//   foreignKey: 'teamId',
+//   as: 'team'
+// })
+// 
+// ReqModel.hasMany(ReqModel, {
+//   sourceKey: 'changedReq',
+//   foreignKey: 'key',
+//   as: 'history'
+// })
 
 
 
@@ -67,7 +71,6 @@ ReqModel.hasMany(ReqModel, {
 export {
   TeamModel,
   UserModel,
-  TeamUserModel,
   ProjectModel,
   FeatureModel,
   ReqModel

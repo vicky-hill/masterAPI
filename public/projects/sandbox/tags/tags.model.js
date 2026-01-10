@@ -37,26 +37,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
-const reqdoc_db_config_1 = __importDefault(require("../../../config/reqdoc.db.config"));
-class TeamUserModel extends sequelize_1.Model {
+const sandbox_db_config_1 = __importDefault(require("../../../config/sandbox.db.config"));
+class TagModel extends sequelize_1.Model {
 }
-const teamUserSchema = {
-    teamUserId: {
+const tagSchema = {
+    tagId: {
         type: sequelize_1.default.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    teamId: {
+    name: {
         type: sequelize_1.default.STRING
-    },
-    userId: {
-        type: sequelize_1.default.INTEGER
     }
 };
-TeamUserModel.init(teamUserSchema, {
-    sequelize: reqdoc_db_config_1.default,
-    modelName: "TeamUser",
-    tableName: "teamUsers",
+TagModel.init(tagSchema, {
+    sequelize: sandbox_db_config_1.default,
+    modelName: "tag",
+    tableName: "tags",
     timestamps: false
 });
-exports.default = TeamUserModel;
+exports.default = TagModel;

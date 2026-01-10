@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+require("./projects/sandbox/utils/models");
 const router = express_1.default.Router();
 // Check backend health
 router.get('/health-check', (req, res) => { res.send('Great Health'); });
@@ -83,7 +84,6 @@ router.use('/api/falseidol/settings', settings_routes_1.default);
 /* ===================================
    Sandbox
 =================================== */
-// import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
-// 
-// router.use('/api/sandbox/posts', sandbox_postRoutes)
+const posts_routes_1 = __importDefault(require("./projects/sandbox/posts/posts.routes"));
+router.use('/api/sandbox/posts', posts_routes_1.default);
 exports.default = router;

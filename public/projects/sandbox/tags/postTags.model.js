@@ -37,32 +37,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
-const reqdoc_db_config_1 = __importDefault(require("../../../config/reqdoc.db.config"));
-class UserModel extends sequelize_1.Model {
+const sandbox_db_config_1 = __importDefault(require("../../../config/sandbox.db.config"));
+class PostTagModel extends sequelize_1.Model {
 }
-const userSchema = {
-    userId: {
-        type: sequelize_1.default.STRING,
-        primaryKey: true
+const postTagSchema = {
+    id: {
+        type: sequelize_1.default.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    teamId: {
+    postId: {
         type: sequelize_1.default.INTEGER
     },
-    email: {
-        type: sequelize_1.default.STRING
+    tagId: {
+        type: sequelize_1.default.INTEGER
     },
-    role: {
-        type: sequelize_1.default.ENUM({ values: ['admin', 'user'] })
+    status: {
+        type: sequelize_1.default.STRING
     }
 };
-UserModel.init(userSchema, {
-    sequelize: reqdoc_db_config_1.default,
-    modelName: "user",
-    tableName: "users",
-    timestamps: true,
-    paranoid: true,
-    defaultScope: {
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
-    }
+PostTagModel.init(postTagSchema, {
+    sequelize: sandbox_db_config_1.default,
+    modelName: "postTag",
+    tableName: "postTags",
+    timestamps: false
 });
-exports.default = UserModel;
+exports.default = PostTagModel;

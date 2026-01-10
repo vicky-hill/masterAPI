@@ -12,26 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUser = void 0;
 const models_1 = require("../models");
 const getUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
-    const userInstance = yield models_1.UserModel.findOne({
-        where: { userId },
+    const user = yield models_1.UserModel.findByPk(userId, {
+        rejectOnEmpty: new Error('User not found'),
         include: [{
                 model: models_1.TeamModel,
-                as: 'teams'
+                through: { attributes: [] }
             }, {
                 model: models_1.TeamModel,
                 as: 'team'
             }]
     });
-    if (!userInstance)
-        throw new Error('User not found');
-    const user = userInstance.get({ plain: true });
-    return Object.assign(Object.assign({}, user), { teams: (_a = user.teams) === null || _a === void 0 ? void 0 : _a.map(team => ({
-            teamId: team.teamId,
-            name: team.name
-        })), team: {
-            teamId: (_b = user.team) === null || _b === void 0 ? void 0 : _b.teamId,
-            name: (_c = user.team) === null || _c === void 0 ? void 0 : _c.name
-        } });
+    return user;
 });
 exports.getUser = getUser;

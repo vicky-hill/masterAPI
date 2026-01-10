@@ -1,21 +1,18 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Project, User } from '../../../types/reqdoc/attribute.types'
-import { ProjectModel, UserModel } from '../models'
+import { Project } from '../../../types/reqdoc/attribute.types'
+import { omit, ProjectModel, UserModel } from '../models'
 
 
-class TeamModel extends Model<InferAttributes<TeamModel>, InferCreationAttributes<TeamModel>> {
+class TeamModel extends Model<InferAttributes<TeamModel, omit>, InferCreationAttributes<TeamModel, omit>> {
     declare teamId: CreationOptional<number>
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
+    declare deletedAt: CreationOptional<Date | null>
     declare name: string
-    declare deleted: Date | null
 
-    declare users?: User[]
+    declare users?: NonAttribute<UserModel>[]
     declare projects?: Project[]
-
-    declare static associations: {
-        users: Association<TeamModel, UserModel>
-        resource: Association<TeamModel, ProjectModel>
-    }
 }
 
 const teamSchema = {
@@ -26,17 +23,18 @@ const teamSchema = {
     },
     name: {
         type: Sequelize.STRING
-    },
-    deleted: {
-        type: Sequelize.DATE
     }
 }
 
 TeamModel.init(teamSchema, {
     sequelize,
-    modelName: "Team",
+    modelName: "team",
     tableName: "teams",
-    timestamps: false
+    timestamps: true,
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt']}
+    }
 })
 
 export default TeamModel;

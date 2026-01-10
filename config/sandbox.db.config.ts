@@ -35,7 +35,10 @@ const sequelize = new Sequelize(
   config.db.dbName,
   config.db.username,
   config.db.password,
-  config.db.details,
+  config.db.details
 )
+
+
+
 
 export default sequelize

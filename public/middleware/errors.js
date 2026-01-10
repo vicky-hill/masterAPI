@@ -7,7 +7,6 @@ const errorHandler_1 = __importDefault(require("../utils/errorHandler"));
 const controllers_1 = require("../utils/controllers");
 const onError = (err, req, res, next) => {
     const notFoundStrings = ['not found', 'not find', 'cannot be found', 'does not exist'];
-    err.statusCode = err.statusCode || 500;
     // check if message includes any of the above and set status to 404
     if (notFoundStrings.some(string => err.message.includes(string))) {
         err.statusCode = 404;
@@ -33,21 +32,18 @@ const onError = (err, req, res, next) => {
     const controller = controllers_1.controllers.find((ctrl) => req.originalUrl.startsWith(ctrl.endpoint) && req.method === ctrl.method);
     let payload = {
         name: err.name && err.name !== "Error" ? err.name : null,
-        error: error.error,
         message: error.message,
         debug: error.debug,
         validation: error.validation,
-        status: error.statusCode,
-        errorCode: error.errorCode,
         controller: controller === null || controller === void 0 ? void 0 : controller.controller,
-        endpoint: req.originalUrl,
-        method: req.method
+        endpoint: `${req.method} ${req.originalUrl}`,
+        error: err,
     };
     Object.keys(payload).forEach(key => {
         if (payload[key] === 'null' || !payload[key]) {
             delete payload[key];
         }
     });
-    res.status(err.statusCode).json(payload);
+    res.json(payload);
 };
 exports.default = onError;

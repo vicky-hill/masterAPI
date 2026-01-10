@@ -1,5 +1,8 @@
 import express, { Router} from 'express'
+import './projects/sandbox/utils/models'
+
 const router: Router = express.Router()
+
 
 // Check backend health
 router.get('/health-check', (req, res) => { res.send('Great Health')})
@@ -105,8 +108,8 @@ router.use('/api/falseidol/settings', falseidol_settingsRoutes)
    Sandbox
 =================================== */
 
-// import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
-// 
-// router.use('/api/sandbox/posts', sandbox_postRoutes)
+import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
+
+router.use('/api/sandbox/posts', sandbox_postRoutes)
 
 export default router;

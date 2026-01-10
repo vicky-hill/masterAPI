@@ -1,17 +1,18 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Team } from '../../../types/reqdoc/attribute.types'
+import { omit, TeamModel } from '../models'
 
-
-class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
-    declare userId: CreationOptional<number>
+class UserModel extends Model<InferAttributes<UserModel, omit>, InferCreationAttributes<UserModel, omit>> {
+    declare userId: CreationOptional<string>
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
+    declare deletedAt: CreationOptional<Date | null>
     declare teamId: number
     declare email: string
     declare role: 'admin' | 'user'
-    declare deleted: Date | null
-    
-    declare teams?: Team[]
-    declare team?: Team
+
+    declare teams?: NonAttribute<TeamModel>[]
+    declare team?: NonAttribute<TeamModel>
 }
 
 const userSchema = {
@@ -27,17 +28,18 @@ const userSchema = {
     },
     role: {
         type: Sequelize.ENUM({ values: ['admin', 'user'] })
-    },
-    deleted: {
-        type: Sequelize.DATE
     }
 }
 
 UserModel.init(userSchema, {
-  sequelize,
-  modelName: "User",
-  tableName: "users",
-  timestamps: false
+    sequelize,
+    modelName: "user",
+    tableName: "users",
+    timestamps: true,
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt']}
+    }
 })
-            
+
 export default UserModel;

@@ -1,30 +1,16 @@
 import { TeamModel, UserModel } from '../models'
 
 export const getUser = async (userId: string): Promise<any> => {
-    const userInstance = await UserModel.findOne({
-        where: { userId },
+    const user = await UserModel.findByPk(userId, {
+        rejectOnEmpty: new Error('User not found'),
         include: [{
             model: TeamModel,
-            as: 'teams'
+            through: { attributes: [] }
         }, {
             model: TeamModel,
             as: 'team'
         }]
     });
 
-    if (!userInstance) throw new Error('User not found');
-
-    const user = userInstance.get({ plain: true });
-
-    return {
-        ...user,
-        teams: user.teams?.map(team => ({
-            teamId: team.teamId,
-            name: team.name
-        })),
-        team: {
-            teamId: user.team?.teamId,
-            name: user.team?.name
-        }
-    };
+    return user;
 }

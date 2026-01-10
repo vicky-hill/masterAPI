@@ -48,15 +48,16 @@ const teamSchema = {
     },
     name: {
         type: sequelize_1.default.STRING
-    },
-    deleted: {
-        type: sequelize_1.default.DATE
     }
 };
 TeamModel.init(teamSchema, {
     sequelize: reqdoc_db_config_1.default,
-    modelName: "Team",
+    modelName: "team",
     tableName: "teams",
-    timestamps: false
+    timestamps: true,
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+    }
 });
 exports.default = TeamModel;

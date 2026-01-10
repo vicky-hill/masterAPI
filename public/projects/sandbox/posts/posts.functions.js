@@ -1,62 +1,37 @@
 "use strict";
-// export const addOrUpdateForeignKey = async (
-//     tableName: string,
-//     columnName: string,
-//     referencedTable: string,
-//     referencedColumn: string,
-//     onDelete: 'CASCADE' | 'SET NULL' | 'NO ACTION' | 'RESTRICT' = 'CASCADE',
-//     onUpdate: 'CASCADE' | 'SET NULL' | 'NO ACTION' | 'RESTRICT' = 'CASCADE'
-// ) => {
-// 
-//     return null;
-// 
-//     // Step 1: Find the current foreign key constraint name
-//     const [constraints] = await sequelize.query(`
-//         SELECT CONSTRAINT_NAME 
-//         FROM information_schema.KEY_COLUMN_USAGE 
-//         WHERE TABLE_SCHEMA = DATABASE()
-//         AND TABLE_NAME = '${tableName}' 
-//         AND COLUMN_NAME = '${columnName}'
-//         AND REFERENCED_TABLE_NAME = '${referencedTable}'
-//     `);
-// 
-//     const newConstraintName = `${tableName}_${columnName}_fk`;
-// 
-//     if (constraints.length === 0) {
-//         // No constraint exists, create a new one
-//         console.log(`No foreign key constraint found on ${tableName}.${columnName}, creating new one...`);
-//         await sequelize.query(`
-//             ALTER TABLE ${tableName}
-//             ADD CONSTRAINT ${newConstraintName}
-//             FOREIGN KEY (${columnName}) REFERENCES ${referencedTable}(${referencedColumn})
-//             ON DELETE ${onDelete}
-//             ON UPDATE ${onUpdate}
-//         `);
-//         console.log(`Successfully created ${onDelete} constraint on ${tableName}.${columnName}`);
-//         return;
-//     }
-// 
-//     const constraintName = (constraints[0] as any).CONSTRAINT_NAME;
-//     console.log(`Found constraint: ${constraintName} on ${tableName}.${columnName}`);
-// 
-//     // Step 2: Drop the old constraint
-//     await sequelize.query(`
-//         ALTER TABLE ${tableName} 
-//         DROP FOREIGN KEY ${constraintName}
-//     `);
-// 
-//     // Step 3: Add new constraint with specified behavior
-//     await sequelize.query(`
-//         ALTER TABLE ${tableName}
-//         ADD CONSTRAINT ${constraintName}
-//         FOREIGN KEY (${columnName}) REFERENCES ${referencedTable}(${referencedColumn})
-//         ON DELETE ${onDelete}
-//         ON UPDATE ${onUpdate}
-//     `);
-// 
-//     console.log(`Successfully updated ${onDelete} constraint on ${tableName}.${columnName}`);
-// }
-// 
-// export const addCascadeConstraint = async () => {
-//     await addOrUpdateForeignKey('profiles', 'userId', 'users', 'userId', 'CASCADE', 'CASCADE');
-// }
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPosts = void 0;
+const posts_model_1 = __importDefault(require("./posts.model"));
+const users_model_1 = __importDefault(require("../users/users.model"));
+const getPosts = () => __awaiter(void 0, void 0, void 0, function* () {
+    const post = yield posts_model_1.default.getPostById(1);
+    const userInstance = yield users_model_1.default.findByPk('abc', {
+        include: [posts_model_1.default]
+    });
+    if (userInstance) {
+        // const user = userInstance.get({ plain: true });
+        if (userInstance) {
+            const id = userInstance;
+        }
+    }
+    return post;
+});
+exports.getPosts = getPosts;
+// This will cause the "beforeDestroy" and "afterDestroy"
+users_model_1.default.hasMany(posts_model_1.default, {
+    onDelete: 'cascade',
+    hooks: true
+});
+// https://www.youtube.com/watch?v=qfK6H714moc
