@@ -19,15 +19,19 @@ const redis_1 = require("../../../utils/redis");
 const models_1 = require("../models");
 const validation_1 = __importDefault(require("../utils/validation"));
 const getProjects = (teamId) => __awaiter(void 0, void 0, void 0, function* () {
-    const projectInstances = yield models_1.ProjectModel.findAll({
-        where: { teamId, deleted: null },
-        include: [include_1.includeFeatures]
-    });
-    return projectInstances.map(projectInstance => {
-        var _a;
-        const project = projectInstance.get({ plain: true });
-        return Object.assign(Object.assign({}, project), { firstFeatureId: ((_a = project.features) === null || _a === void 0 ? void 0 : _a.length) && project.features[0].featureId });
-    });
+    //     const projectInstances = await ProjectModel.findAll({
+    //         where: { teamId, deleted: null },
+    //         include: [includeFeatures]
+    //     })
+    // 
+    //     return projectInstances.map(projectInstance => {
+    //         const project = projectInstance.get({ plain: true });
+    // 
+    //         return {
+    //             ...project,
+    //             firstFeatureId: project.features?.length && project.features[0].featureId
+    //         }
+    //     })
 });
 exports.getProjects = getProjects;
 const getProject = (projectId, userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,11 +48,12 @@ const getProject = (projectId, userId) => __awaiter(void 0, void 0, void 0, func
     });
     if (!projectInstance)
         throw new Error('No project found');
-    const project = projectInstance.get({ plain: true });
-    const reqs = yield models_1.ReqModel.findAll({
-        where: { projectId, changedReq: null, deleted: null },
-        order: ['sort', 'ASC']
-    });
+    //     const project = projectInstance.get({ plain: true });
+    // 
+    //     const reqs = await ReqModel.findAll({
+    //         where: { projectId, changedReq: null, deleted: null },
+    //         order: ['sort', 'ASC']
+    //     })
     // const project = {
     //     _id: project._id,
     //     id: project.id,
@@ -58,10 +63,11 @@ const getProject = (projectId, userId) => __awaiter(void 0, void 0, void 0, func
     //     mame: project.name,
     //     first_feature: project.first_feature
     // }
-    const features = project.features;
-    const data = { project, features, reqs };
-    yield (0, redis_1.setValue)(cacheKey, data);
-    return data;
+    //     const features = project.features;
+    //     const data = { project, features, reqs };
+    // 
+    //     await setValue(cacheKey, data);
+    // return data;
 });
 exports.getProject = getProject;
 const createProject = (data, teamId) => __awaiter(void 0, void 0, void 0, function* () {

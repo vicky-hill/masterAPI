@@ -14,18 +14,33 @@ async function removeUniqueRestraint(queryInterface: QueryInterface): Promise<vo
 }
 
 async function addForeignKey(queryInterface: QueryInterface): Promise<void> {
-  await queryInterface.addConstraint('users', {
-    fields: ['teamId'],
+  await queryInterface.addConstraint('comments', {
+    fields: ['userId'],
     type: 'foreign key',
-    name: 'users_teamId_fk',
+    name: 'comments_userId_fk',
     references: {
-      table: 'teams',
-      field: 'teamId'
+      table: 'users',
+      field: 'userId'
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  });
+}
+
+async function addForeignKeySameTable(queryInterface: QueryInterface): Promise<void> {
+  await queryInterface.addConstraint('features', {
+    fields: ['parentId'],
+    type: 'foreign key',
+    name: 'features_parentId_fk',
+    references: {
+      table: 'features',
+      field: 'featureId'
     },
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   });
 }
+
 
 async function removeForeignKey(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.removeConstraint('posts', 'posts_userId_fk');

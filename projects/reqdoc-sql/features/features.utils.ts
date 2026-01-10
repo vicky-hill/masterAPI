@@ -36,15 +36,15 @@ export const getFeaturesByProjectId = async (projectId: string) => {
     const cachedFeatures = await getValue(cacheKey)
     if (cachedFeatures) return JSON.parse(cachedFeatures);
 
-    const features = await FeatureModel.findAll({
-        where: { projectId, parentId: null, deleted: null },
-        attributes: featureAttributes,
-        include: [
-            includeSubFeatures
-        ]
-    });
+    // const features = await FeatureModel.findAll({
+    //     where: { projectId, parentId: null, deleted: null },
+    //     attributes: featureAttributes,
+    //     include: [
+    //         includeSubFeatures
+    //     ]
+    // });
 
-    await setValue(cacheKey, JSON.stringify(features));
-
-    return features;
+//     await setValue(cacheKey, JSON.stringify(features));
+// 
+//     return features;
 }

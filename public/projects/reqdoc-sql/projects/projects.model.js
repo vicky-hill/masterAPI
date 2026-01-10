@@ -58,13 +58,17 @@ const projectSchema = {
     key: {
         type: sequelize_1.default.STRING
     },
-    deleted: {
-        type: sequelize_1.default.DATE
+    firstFeature: {
+        type: sequelize_1.default.VIRTUAL,
+        get() {
+            var _a;
+            return ((_a = this.features) === null || _a === void 0 ? void 0 : _a.length) && this.features[0].featureId;
+        }
     }
 };
 ProjectModel.init(projectSchema, {
     sequelize: reqdoc_db_config_1.default,
-    modelName: "Project",
+    modelName: "project",
     tableName: "projects",
     timestamps: false
 });

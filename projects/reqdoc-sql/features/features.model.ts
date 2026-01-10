@@ -1,25 +1,21 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Feature, Project } from '../../../types/reqdoc/attribute.types'
-import { ProjectModel } from '../models'
+import { omit, ProjectModel, ReqModel } from '../models'
 
-class FeatureModel extends Model<InferAttributes<FeatureModel>, InferCreationAttributes<FeatureModel>> {
+class FeatureModel extends Model<InferAttributes<FeatureModel, omit>, InferCreationAttributes<FeatureModel, omit>> {
     declare featureId: CreationOptional<number>
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
+    declare deletedAt: CreationOptional<Date | null>
     declare projectId: number
-    declare parentId: number | null
+    declare parentId?: number
     declare name: string
     declare sort: number
-    declare deleted: Date | null
 
-    declare subFeatures?: Feature[]
-    declare project?: Project
-    declare mainFeature?: Feature
-
-    declare static associations: {
-        subFeatures: Association<FeatureModel, FeatureModel>
-        mainFeature: Association<FeatureModel, FeatureModel>
-        project: Association<FeatureModel, ProjectModel>
-    }
+    declare reqs?: NonAttribute<ReqModel>[]
+    declare project?: NonAttribute<ProjectModel>
+    declare subFeatures?: NonAttribute<FeatureModel>[]
+    declare mainFeature?: NonAttribute<FeatureModel>
 }
 
 const featureSchema = {
@@ -40,17 +36,18 @@ const featureSchema = {
     },
     sort: {
         type: Sequelize.INTEGER
-    },
-    deleted: {
-        type: Sequelize.DATE
     }
 }
 
 FeatureModel.init(featureSchema, {
     sequelize,
-    modelName: "Feature",
+    modelName: "feature",
     tableName: "features",
-    timestamps: false
+    timestamps: true,
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+    }
 })
 
 

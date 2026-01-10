@@ -30,13 +30,28 @@ function removeUniqueRestraint(queryInterface) {
 }
 function addForeignKey(queryInterface) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield queryInterface.addConstraint('users', {
-            fields: ['teamId'],
+        yield queryInterface.addConstraint('comments', {
+            fields: ['userId'],
             type: 'foreign key',
-            name: 'users_teamId_fk',
+            name: 'comments_userId_fk',
             references: {
-                table: 'teams',
-                field: 'teamId'
+                table: 'users',
+                field: 'userId'
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+        });
+    });
+}
+function addForeignKeySameTable(queryInterface) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield queryInterface.addConstraint('features', {
+            fields: ['parentId'],
+            type: 'foreign key',
+            name: 'features_parentId_fk',
+            references: {
+                table: 'features',
+                field: 'featureId'
             },
             onDelete: 'SET NULL',
             onUpdate: 'CASCADE'

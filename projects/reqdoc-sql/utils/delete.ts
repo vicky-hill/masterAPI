@@ -10,18 +10,18 @@ import ReqModel from '../reqs/reqs.model'
 // }
 
 export const cascadeDeleteFeature = async (featureId: string) => {
-    const feature = await Feature.findByPk(featureId);
-    if (!feature) throw new Error('Feature not found');
-
-    feature.deleted = new Date();
-    await feature.save();
-
-    await ReqModel.update(
-        { deleted: new Date() },
-        { where: { featureId }}
-    )
-
-    return feature;
+//     const feature = await Feature.findByPk(featureId);
+//     if (!feature) throw new Error('Feature not found');
+// 
+//     feature.deleted = new Date();
+//     await feature.save();
+// 
+//     await ReqModel.update(
+//         { deleted: new Date() },
+//         { where: { featureId }}
+//     )
+// 
+//     return feature;
 }
 
 // export const cascadeDeleteProject = async (projectId: string) => {

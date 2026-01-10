@@ -46,9 +46,9 @@ const reqSchema = {
         primaryKey: true,
         autoIncrement: true
     },
-    projectId: {
-        type: sequelize_1.default.INTEGER
-    },
+    // projectId: {
+    //     type: Sequelize.INTEGER
+    // },
     featureId: {
         type: sequelize_1.default.INTEGER
     },
@@ -75,21 +75,13 @@ const reqSchema = {
     },
     sort: {
         type: sequelize_1.default.INTEGER
-    },
-    deleted: {
-        type: sequelize_1.default.DATE
-    },
-    createdAt: {
-        type: sequelize_1.default.DATE
-    },
-    updatedAt: {
-        type: sequelize_1.default.DATE
     }
 };
 ReqModel.init(reqSchema, {
     sequelize: reqdoc_db_config_1.default,
-    modelName: "Req",
+    modelName: "req",
     tableName: "reqs",
-    timestamps: false
+    timestamps: true,
+    paranoid: true
 });
 exports.default = ReqModel;

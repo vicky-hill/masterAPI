@@ -6,19 +6,19 @@ import { CreateProject } from '../../../types/reqdoc/payload.types'
 import validate from '../utils/validation'
 
 export const getProjects = async (teamId: any) => {
-    const projectInstances = await ProjectModel.findAll({
-        where: { teamId, deleted: null },
-        include: [includeFeatures]
-    })
-
-    return projectInstances.map(projectInstance => {
-        const project = projectInstance.get({ plain: true });
-
-        return {
-            ...project,
-            firstFeatureId: project.features?.length && project.features[0].featureId
-        }
-    })
+//     const projectInstances = await ProjectModel.findAll({
+//         where: { teamId, deleted: null },
+//         include: [includeFeatures]
+//     })
+// 
+//     return projectInstances.map(projectInstance => {
+//         const project = projectInstance.get({ plain: true });
+// 
+//         return {
+//             ...project,
+//             firstFeatureId: project.features?.length && project.features[0].featureId
+//         }
+//     })
 }
 
 export const getProject = async (projectId: string, userId: string) => {
@@ -37,12 +37,12 @@ export const getProject = async (projectId: string, userId: string) => {
     
     if (!projectInstance) throw new Error('No project found');
 
-    const project = projectInstance.get({ plain: true });
-
-    const reqs = await ReqModel.findAll({
-        where: { projectId, changedReq: null, deleted: null },
-        order: ['sort', 'ASC']
-    })
+//     const project = projectInstance.get({ plain: true });
+// 
+//     const reqs = await ReqModel.findAll({
+//         where: { projectId, changedReq: null, deleted: null },
+//         order: ['sort', 'ASC']
+//     })
 
     // const project = {
     //     _id: project._id,
@@ -54,12 +54,12 @@ export const getProject = async (projectId: string, userId: string) => {
     //     first_feature: project.first_feature
     // }
 
-    const features = project.features;
-    const data = { project, features, reqs };
+//     const features = project.features;
+//     const data = { project, features, reqs };
+// 
+//     await setValue(cacheKey, data);
 
-    await setValue(cacheKey, data);
-
-    return data;
+    // return data;
 }
 
 

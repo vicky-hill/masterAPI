@@ -58,15 +58,13 @@ const featureSchema = {
     },
     sort: {
         type: sequelize_1.default.INTEGER
-    },
-    deleted: {
-        type: sequelize_1.default.DATE
     }
 };
 FeatureModel.init(featureSchema, {
     sequelize: reqdoc_db_config_1.default,
-    modelName: "Feature",
+    modelName: "feature",
     tableName: "features",
-    timestamps: false
+    timestamps: true,
+    paranoid: true
 });
 exports.default = FeatureModel;

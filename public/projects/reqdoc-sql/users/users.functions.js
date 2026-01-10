@@ -14,13 +14,13 @@ const models_1 = require("../models");
 const getUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.UserModel.findByPk(userId, {
         rejectOnEmpty: new Error('User not found'),
-        include: [{
+        include: [
+            {
                 model: models_1.TeamModel,
                 through: { attributes: [] }
-            }, {
-                model: models_1.TeamModel,
-                as: 'team'
-            }]
+            },
+            models_1.TeamModel
+        ]
     });
     return user;
 });

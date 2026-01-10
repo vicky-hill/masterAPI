@@ -1,26 +1,20 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Feature, Team } from '../../../types/reqdoc/attribute.types'
-import { FeatureModel, TeamModel } from '../models'
+import { FeatureModel, omit, TeamModel } from '../models'
 
-
-class ProjectModel extends Model<InferAttributes<ProjectModel>, InferCreationAttributes<ProjectModel>> {
+class ProjectModel extends Model<InferAttributes<ProjectModel, omit>, InferCreationAttributes<ProjectModel, omit>> {
     declare projectId: CreationOptional<number>
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
+    declare deletedAt: CreationOptional<Date | null>
     declare teamId: number
     declare name: string
     declare projectKey: string
     declare key: string
-    declare deleted?: Date | null
 
-    declare team?: Team
-    declare features?: Feature[]
-
-    declare firstFeature?: Feature
-
-    declare static associations: {
-        team: Association<ProjectModel, TeamModel>
-        features: Association<ProjectModel, FeatureModel>
-    }
+    declare team?: NonAttribute<TeamModel>
+    declare features?: NonAttribute<FeatureModel>[]
+    declare firstFeature?: NonAttribute<number> | null
 }
 
 const projectSchema = {
@@ -41,16 +35,22 @@ const projectSchema = {
     key: {
         type: Sequelize.STRING
     },
-    deleted: {
-        type: Sequelize.DATE
+    firstFeature: {
+        type: Sequelize.VIRTUAL,
+        get(this: ProjectModel) {
+            return this.features?.length && this.features[0].featureId
+        }
     }
 }
 
 ProjectModel.init(projectSchema, {
     sequelize,
-    modelName: "Project",
+    modelName: "project",
     tableName: "projects",
-    timestamps: false
+    timestamps: false,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+    }
 })
 
 

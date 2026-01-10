@@ -8,13 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cascadeDeleteFeature = void 0;
-const features_model_1 = __importDefault(require("../features/features.model"));
-const reqs_model_1 = __importDefault(require("../reqs/reqs.model"));
 // export const cascadeDeleteReq = async (reqId: string) => {
 //     const deletedReq: ReqAttributes | null = await Req.findByIdAndUpdate(reqId, { deleted: new Date() }, { new: true });
 //     if (!deletedReq) return throwError('Req not found');
@@ -23,13 +18,18 @@ const reqs_model_1 = __importDefault(require("../reqs/reqs.model"));
 //     return deletedReq;
 // }
 const cascadeDeleteFeature = (featureId) => __awaiter(void 0, void 0, void 0, function* () {
-    const feature = yield features_model_1.default.findByPk(featureId);
-    if (!feature)
-        throw new Error('Feature not found');
-    feature.deleted = new Date();
-    yield feature.save();
-    yield reqs_model_1.default.update({ deleted: new Date() }, { where: { featureId } });
-    return feature;
+    //     const feature = await Feature.findByPk(featureId);
+    //     if (!feature) throw new Error('Feature not found');
+    // 
+    //     feature.deleted = new Date();
+    //     await feature.save();
+    // 
+    //     await ReqModel.update(
+    //         { deleted: new Date() },
+    //         { where: { featureId }}
+    //     )
+    // 
+    //     return feature;
 });
 exports.cascadeDeleteFeature = cascadeDeleteFeature;
 // export const cascadeDeleteProject = async (projectId: string) => {

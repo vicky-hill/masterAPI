@@ -1,21 +1,24 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
+import { omit } from '../models'
 
-class ReqModel extends Model<InferAttributes<ReqModel>, InferCreationAttributes<ReqModel>> {
+class ReqModel extends Model<InferAttributes<ReqModel, omit>, InferCreationAttributes<ReqModel, omit>> {
     declare reqId: CreationOptional<number>
-    declare projectId: number
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
+    declare deletedAt: CreationOptional<Date | null>
+    // declare projectId: number
     declare featureId: number
     declare changedReq?: string | null
     declare latestReqId?: number
     declare key: string
-    declare title: string
+    declare title?: string
     declare text: string
     declare details?: string
     declare status?: 'passed' | 'failed' | null
     declare sort: number
-    declare deleted: Date | null
-    declare createdAt: string
-    declare updatedAt: string
+
+    declare history?: NonAttribute<ReqModel>[]
 }
 
 const reqSchema = {
@@ -24,9 +27,9 @@ const reqSchema = {
         primaryKey: true,
         autoIncrement: true
     },
-    projectId: {
-        type: Sequelize.INTEGER
-    },
+    // projectId: {
+    //     type: Sequelize.INTEGER
+    // },
     featureId: {
         type: Sequelize.INTEGER
     },
@@ -53,23 +56,18 @@ const reqSchema = {
     },
     sort: {
         type: Sequelize.INTEGER
-    },
-    deleted: {
-        type: Sequelize.DATE
-    },
-    createdAt: {
-         type: Sequelize.DATE
-    },
-    updatedAt: {
-        type: Sequelize.DATE
     }
 }
 
 ReqModel.init(reqSchema, {
     sequelize,
-    modelName: "Req",
+    modelName: "req",
     tableName: "reqs",
-    timestamps: false
+    timestamps: true,
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+    }
 })
 
 

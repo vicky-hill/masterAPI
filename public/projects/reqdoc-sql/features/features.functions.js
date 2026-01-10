@@ -20,7 +20,6 @@ const access_1 = require("../utils/access");
 const include_1 = require("../utils/include");
 const features_utils_1 = require("./features.utils");
 const validation_1 = __importDefault(require("../utils/validation"));
-const delete_1 = require("../utils/delete");
 const getProjectFeatures = (projectKey) => __awaiter(void 0, void 0, void 0, function* () {
     const features = yield (0, features_utils_1.getFeatureByProjectKey)(projectKey);
     return features;
@@ -46,8 +45,6 @@ const getFeature = (featureId, userId) => __awaiter(void 0, void 0, void 0, func
     });
     if (!feature)
         return (0, throwError_1.default)('Feature not found');
-    if (feature.deleted)
-        return (0, throwError_1.default)('Feature was deleted');
     yield (0, redis_1.setValue)(cacheKey, feature);
     return feature;
 });
@@ -78,11 +75,14 @@ const updateFeature = (data, featureId, userId) => __awaiter(void 0, void 0, voi
 });
 exports.updateFeature = updateFeature;
 const deleteFeature = (featureId, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, access_1.checkFeatureAccess)(featureId, userId);
-    const deletedFeature = yield (0, delete_1.cascadeDeleteFeature)(featureId);
-    const features = yield (0, features_utils_1.updateProjectFeaturesCache)(deletedFeature.projectId.toString());
-    yield (0, features_utils_1.invalidateFeatureCache)(featureId);
-    return features;
+    //     await checkFeatureAccess(featureId, userId);
+    // 
+    //     const deletedFeature = await cascadeDeleteFeature(featureId);
+    // 
+    //     const features: Feature[] = await updateProjectFeaturesCache(deletedFeature.projectId.toString());
+    //     await invalidateFeatureCache(featureId);
+    // 
+    //     return features;
 });
 exports.deleteFeature = deleteFeature;
 const createSubFeature = (data, featureId, userId) => __awaiter(void 0, void 0, void 0, function* () {

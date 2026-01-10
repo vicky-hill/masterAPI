@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFeaturesByProjectId = exports.getFeatureByProjectKey = exports.updateProjectFeaturesCache = exports.invalidateFeatureCache = exports.invalidateProjectFeaturesCache = void 0;
-const include_1 = require("../utils/include");
 const redis_1 = require("../../../utils/redis");
 const models_1 = require("../models");
 const invalidateProjectFeaturesCache = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,14 +43,15 @@ const getFeaturesByProjectId = (projectId) => __awaiter(void 0, void 0, void 0, 
     const cachedFeatures = yield (0, redis_1.getValue)(cacheKey);
     if (cachedFeatures)
         return JSON.parse(cachedFeatures);
-    const features = yield models_1.FeatureModel.findAll({
-        where: { projectId, parentId: null, deleted: null },
-        attributes: include_1.featureAttributes,
-        include: [
-            include_1.includeSubFeatures
-        ]
-    });
-    yield (0, redis_1.setValue)(cacheKey, JSON.stringify(features));
-    return features;
+    // const features = await FeatureModel.findAll({
+    //     where: { projectId, parentId: null, deleted: null },
+    //     attributes: featureAttributes,
+    //     include: [
+    //         includeSubFeatures
+    //     ]
+    // });
+    //     await setValue(cacheKey, JSON.stringify(features));
+    // 
+    //     return features;
 });
 exports.getFeaturesByProjectId = getFeaturesByProjectId;

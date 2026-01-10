@@ -16,15 +16,8 @@ exports.getTeams = void 0;
 const models_1 = require("../models");
 const teams_model_1 = __importDefault(require("./teams.model"));
 const getTeams = () => __awaiter(void 0, void 0, void 0, function* () {
-    const teamInstances = yield teams_model_1.default.findAll({
-        include: [{
-                model: models_1.ProjectModel,
-                as: 'projects'
-            }]
-    });
-    const teams = teamInstances.map((teamInstance) => {
-        const team = teamInstance.get({ plain: true });
-        return Object.assign({}, team);
+    const teams = yield teams_model_1.default.findAll({
+        include: [models_1.ProjectModel]
     });
     return teams;
 });

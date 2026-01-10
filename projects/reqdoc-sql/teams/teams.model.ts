@@ -1,6 +1,5 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association, NonAttribute } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { Project } from '../../../types/reqdoc/attribute.types'
 import { omit, ProjectModel, UserModel } from '../models'
 
 
@@ -12,7 +11,7 @@ class TeamModel extends Model<InferAttributes<TeamModel, omit>, InferCreationAtt
     declare name: string
 
     declare users?: NonAttribute<UserModel>[]
-    declare projects?: Project[]
+    declare projects?: NonAttribute<ProjectModel>[]
 }
 
 const teamSchema = {

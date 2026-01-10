@@ -35,7 +35,6 @@ export const getFeature = async (featureId: string, userId: string) => {
     })
 
     if (!feature) return throwError('Feature not found');
-    if (feature.deleted) return throwError('Feature was deleted');
 
     await setValue(cacheKey, feature);
 
@@ -78,14 +77,14 @@ export const updateFeature = async (data: UpdateFeature, featureId: string, user
 }
 
 export const deleteFeature = async (featureId: string, userId: string) => {
-    await checkFeatureAccess(featureId, userId);
-
-    const deletedFeature = await cascadeDeleteFeature(featureId);
-
-    const features: Feature[] = await updateProjectFeaturesCache(deletedFeature.projectId.toString());
-    await invalidateFeatureCache(featureId);
-
-    return features;
+//     await checkFeatureAccess(featureId, userId);
+// 
+//     const deletedFeature = await cascadeDeleteFeature(featureId);
+// 
+//     const features: Feature[] = await updateProjectFeaturesCache(deletedFeature.projectId.toString());
+//     await invalidateFeatureCache(featureId);
+// 
+//     return features;
 }
 
 export const createSubFeature = async (data: CreateSubFeature, featureId: string, userId: string) => {

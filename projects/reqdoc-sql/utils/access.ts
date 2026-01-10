@@ -2,43 +2,43 @@ import throwError from '../../../utils/throwError'
 import { TeamModel, UserModel, ProjectModel, FeatureModel } from '../models'
 
 export const checkFeatureAccess = async (featureId: string, userId: string) => {
-    const feature = await FeatureModel.findByPk(featureId, {
-        include: [{
-            model: ProjectModel,
-            as: 'project',
-            include: [{
-                model: TeamModel,
-                as: 'team',
-                include: [{
-                    model: UserModel,
-                    as: 'users',
-                    attributes: ['userId']
-                }]
-            }]
-        }]
-    })
-
-    if (!feature) return throwError('Feature not found');
-    if (feature.deleted) throwError('Feature was deleted');
-    if (!feature.get({ plain: true }).project?.team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
+//     const feature = await FeatureModel.findByPk(featureId, {
+//         include: [{
+//             model: ProjectModel,
+//             as: 'project',
+//             include: [{
+//                 model: TeamModel,
+//                 as: 'team',
+//                 include: [{
+//                     model: UserModel,
+//                     as: 'users',
+//                     attributes: ['userId']
+//                 }]
+//             }]
+//         }]
+//     })
+// 
+//     if (!feature) return throwError('Feature not found');
+//     if (feature.deleted) throwError('Feature was deleted');
+//     if (!feature.get({ plain: true }).project?.team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
 }
 
 export const checkProjectAccess = async (projectId: string, userId: string) => {
-    const project = await ProjectModel.findByPk(projectId, {
-        include: [{
-            model: TeamModel,
-            as: 'team',
-            include: [{
-                model: UserModel,
-                as: 'users',
-                attributes: ['userId']
-            }]
-        }]
-    })
-
-    if (!project) return throwError('Project not found');
-    if (project.deleted) throwError('Project was deleted');
-   if (!project.get({ plain: true }).team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
+//     const project = await ProjectModel.findByPk(projectId, {
+//         include: [{
+//             model: TeamModel,
+//             as: 'team',
+//             include: [{
+//                 model: UserModel,
+//                 as: 'users',
+//                 attributes: ['userId']
+//             }]
+//         }]
+//     })
+// 
+//     if (!project) return throwError('Project not found');
+//     if (project.deleted) throwError('Project was deleted');
+//    if (!project.get({ plain: true }).team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
 }
 
 // export const checkReqAccess = async (reqId: string, userId: string) => {

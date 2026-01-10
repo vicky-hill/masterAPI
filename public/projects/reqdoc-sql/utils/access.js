@@ -8,57 +8,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProjectAccess = exports.checkFeatureAccess = void 0;
-const throwError_1 = __importDefault(require("../../../utils/throwError"));
-const models_1 = require("../models");
 const checkFeatureAccess = (featureId, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    const feature = yield models_1.FeatureModel.findByPk(featureId, {
-        include: [{
-                model: models_1.ProjectModel,
-                as: 'project',
-                include: [{
-                        model: models_1.TeamModel,
-                        as: 'team',
-                        include: [{
-                                model: models_1.UserModel,
-                                as: 'users',
-                                attributes: ['userId']
-                            }]
-                    }]
-            }]
-    });
-    if (!feature)
-        return (0, throwError_1.default)('Feature not found');
-    if (feature.deleted)
-        (0, throwError_1.default)('Feature was deleted');
-    if (!((_b = (_a = feature.get({ plain: true }).project) === null || _a === void 0 ? void 0 : _a.team) === null || _b === void 0 ? void 0 : _b.users.map(user => user.userId).includes(userId)))
-        (0, throwError_1.default)('User is not part of project team', { status: 401 });
+    //     const feature = await FeatureModel.findByPk(featureId, {
+    //         include: [{
+    //             model: ProjectModel,
+    //             as: 'project',
+    //             include: [{
+    //                 model: TeamModel,
+    //                 as: 'team',
+    //                 include: [{
+    //                     model: UserModel,
+    //                     as: 'users',
+    //                     attributes: ['userId']
+    //                 }]
+    //             }]
+    //         }]
+    //     })
+    // 
+    //     if (!feature) return throwError('Feature not found');
+    //     if (feature.deleted) throwError('Feature was deleted');
+    //     if (!feature.get({ plain: true }).project?.team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
 });
 exports.checkFeatureAccess = checkFeatureAccess;
 const checkProjectAccess = (projectId, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const project = yield models_1.ProjectModel.findByPk(projectId, {
-        include: [{
-                model: models_1.TeamModel,
-                as: 'team',
-                include: [{
-                        model: models_1.UserModel,
-                        as: 'users',
-                        attributes: ['userId']
-                    }]
-            }]
-    });
-    if (!project)
-        return (0, throwError_1.default)('Project not found');
-    if (project.deleted)
-        (0, throwError_1.default)('Project was deleted');
-    if (!((_a = project.get({ plain: true }).team) === null || _a === void 0 ? void 0 : _a.users.map(user => user.userId).includes(userId)))
-        (0, throwError_1.default)('User is not part of project team', { status: 401 });
+    //     const project = await ProjectModel.findByPk(projectId, {
+    //         include: [{
+    //             model: TeamModel,
+    //             as: 'team',
+    //             include: [{
+    //                 model: UserModel,
+    //                 as: 'users',
+    //                 attributes: ['userId']
+    //             }]
+    //         }]
+    //     })
+    // 
+    //     if (!project) return throwError('Project not found');
+    //     if (project.deleted) throwError('Project was deleted');
+    //    if (!project.get({ plain: true }).team?.users.map(user => user.userId).includes(userId)) throwError('User is not part of project team', { status: 401 });
 });
 exports.checkProjectAccess = checkProjectAccess;
 // export const checkReqAccess = async (reqId: string, userId: string) => {
