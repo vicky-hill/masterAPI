@@ -11,4 +11,6 @@ const router = express_1.default.Router();
    @ /teams
 ==================================== */
 router.route('/').get(middleware_1.protect, teams_controller_1.getTeams);
+router.route('/add/:userId').put(middleware_1.protect, teams_controller_1.addUserToCurrentTeam);
+router.route('/remove/:userId').put(middleware_1.protect, teams_controller_1.removeUserFromCurrentTeam);
 exports.default = router;

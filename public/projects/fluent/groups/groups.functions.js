@@ -18,13 +18,11 @@ const groups_model_1 = __importDefault(require("./groups.model"));
 const translations_model_1 = __importDefault(require("../translations/translations.model"));
 const categories_model_1 = __importDefault(require("../categories/categories.model"));
 const utils_1 = require("../utils");
-const redis_1 = require("../../../utils/redis");
 const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* () {
     const translation_where = {};
-    const cacheKey = `groups:all`;
-    const cached = yield (0, redis_1.getValue)(cacheKey);
-    if (cached && !language)
-        return cached;
+    // const cacheKey = `groups:all`;
+    // const cached = await getValue(cacheKey);
+    // if (cached && !language) return cached;
     if (language) {
         translation_where.language = language;
     }
@@ -73,7 +71,7 @@ const getAllGroups = (language) => __awaiter(void 0, void 0, void 0, function* (
         };
         return group;
     });
-    yield (0, redis_1.setValue)(cacheKey, groups);
+    // await setValue(cacheKey, groups);
     return groups;
 });
 exports.getAllGroups = getAllGroups;

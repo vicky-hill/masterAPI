@@ -1,4 +1,4 @@
-import { getProjectFeatures, getFeature, updateFeature, deleteFeature, createSubFeature, createFeature } from './features.controller'
+import {getProjectFeatures, getFeatureById, updateFeature, deleteFeature, createSubFeature, createFeature} from './features.controller'
 import { protect } from '../utils/middleware'
 import express, { Router } from 'express'
 
@@ -10,7 +10,7 @@ const router: Router = express.Router();
 
 // router.route('/sort').put(protect, sortFeatures)
 
-router.route('/:featureId').get(protect, getFeature)
+router.route('/:featureId').get(protect, getFeatureById)
 router.route('/:featureId').put(protect, updateFeature)
 router.route('/:featureId').delete(protect, deleteFeature)
 

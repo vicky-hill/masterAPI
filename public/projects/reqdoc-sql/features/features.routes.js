@@ -11,7 +11,7 @@ const router = express_1.default.Router();
    Features @ api/reqdoc-sql/features
 ==================================== */
 // router.route('/sort').put(protect, sortFeatures)
-router.route('/:featureId').get(middleware_1.protect, features_controller_1.getFeature);
+router.route('/:featureId').get(middleware_1.protect, features_controller_1.getFeatureById);
 router.route('/:featureId').put(middleware_1.protect, features_controller_1.updateFeature);
 router.route('/:featureId').delete(middleware_1.protect, features_controller_1.deleteFeature);
 router.route('/:featureId/sub').post(middleware_1.protect, features_controller_1.createSubFeature);

@@ -1,74 +1,72 @@
-import { includeFeatures, includeTeam } from '../utils/include'
-import { checkProjectAccess } from '../utils/access'
-import { getValue, setValue } from '../../../utils/redis'
-import { ReqModel, ProjectModel } from '../models'
-import { CreateProject } from '../../../types/reqdoc/payload.types'
+import { includeFeatures, includeTeam, includeReqs } from '../utils/include'
+import { ProjectModel, TeamModel } from '../models'
 import validate from '../utils/validation'
 
-export const getProjects = async (teamId: any) => {
-//     const projectInstances = await ProjectModel.findAll({
-//         where: { teamId, deleted: null },
-//         include: [includeFeatures]
-//     })
-// 
-//     return projectInstances.map(projectInstance => {
-//         const project = projectInstance.get({ plain: true });
-// 
-//         return {
-//             ...project,
-//             firstFeatureId: project.features?.length && project.features[0].featureId
-//         }
-//     })
+interface CreateProject {
+    name: string
+    projectKey: string
+    reqKey: string
 }
 
-export const getProject = async (projectId: string, userId: string) => {
-    await checkProjectAccess(projectId, userId);
+interface UpdateProject {
+    name?: string
+    projectKey?: string
+}
 
-    const cacheKey = `projects:project:${projectId}`;
-    const cached = await getValue(cacheKey);
-    if (cached) return cached;
+export const getProjectsByTeam = async (teamId: any) => {
+    const projects = await ProjectModel.findAll({
+        where: { teamId },
+        include: [includeFeatures]
+    })
 
-    const projectInstance = await ProjectModel.findByPk(projectId, {
+    return projects;
+}
+
+export const getProjectById = async (projectId: string, userId: string) => {
+    const project = await ProjectModel.findByPk(projectId, {
+        rejectOnEmpty: new Error('No project found'),
         include: [
             includeFeatures,
-            includeTeam
+            includeTeam,
+            includeReqs
         ]
     })
-    
-    if (!projectInstance) throw new Error('No project found');
 
-//     const project = projectInstance.get({ plain: true });
-// 
-//     const reqs = await ReqModel.findAll({
-//         where: { projectId, changedReq: null, deleted: null },
-//         order: ['sort', 'ASC']
-//     })
+    await project.checkAccess(userId);
 
-    // const project = {
-    //     _id: project._id,
-    //     id: project.id,
-    //     key: project.key,
-    //     team: project.team,
-    //     slug: project.slug,
-    //     mame: project.name,
-    //     first_feature: project.first_feature
-    // }
-
-//     const features = project.features;
-//     const data = { project, features, reqs };
-// 
-//     await setValue(cacheKey, data);
-
-    // return data;
+    return project;
 }
 
-
-export const createProject = async (data: CreateProject, teamId: any) => {
-    await validate.createProject({ data, teamId });
+export const createProject = async (data: CreateProject, teamId: number, userId: string) => {
+    await validate.createProject(data);
+    await TeamModel.checkAccess(teamId, userId);
 
     const project = await ProjectModel.create({
         ...data, teamId
     });
+
+    return project;
+}
+
+export const deleteProject = async (projectId: string, userId: string) => {
+    const project = await ProjectModel.findByPk(projectId, {
+        rejectOnEmpty: new Error('Project not found')
+    })
+
+    await project.checkAccess(userId);
+    await project.destroy();
+
+    return project;
+}
+
+export const updateProject = async (data: UpdateProject, projectId: string, userId: string) => {
+    const project = await ProjectModel.findByPk(projectId, {
+        rejectOnEmpty: new Error('Project not found')
+    })
+
+    await validate.updateProject(data);
+    await project.checkAccess(userId);
+    await project.update(data, { fields: ['name', 'projectKey'] });
 
     return project;
 }

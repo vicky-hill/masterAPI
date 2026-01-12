@@ -1,27 +1,40 @@
-import throwError from '../../../utils/throwError'
-import { getValue, setValue, updateValue } from '../../../utils/redis'
-import { FeatureModel, ProjectModel } from '../models'
-import { checkFeatureAccess, checkProjectAccess } from '../utils/access'
+import { FeatureModel, ProjectModel, TeamModel, UserModel } from '../models'
 import { includeSubFeatures, includeMainFeature, includeReqs, orderSubFeatures, orderReqs, featureAttributes } from '../utils/include'
-import { getFeatureByProjectKey, getFeaturesByProjectId, invalidateFeatureCache, invalidateProjectFeaturesCache, updateProjectFeaturesCache } from './features.utils'
-import { CreateFeature, CreateSubFeature, SortFeature, UpdateFeature } from '../../../types/reqdoc/payload.types'
 import validate from '../utils/validation'
-import { Feature } from '../../../types/reqdoc/attribute.types'
-import { cascadeDeleteFeature } from '../utils/delete'
+import { Op } from 'sequelize'
 
-export const getProjectFeatures = async (projectKey: string) => {
-    const features = await getFeatureByProjectKey(projectKey);
-    return features;
+interface CreateFeature {
+    name: string
+    projectId: string
 }
 
-export const getFeature = async (featureId: string, userId: string) => {
-    await checkFeatureAccess(featureId, userId);
+export const getProjectFeatures = async (projectKey: string, userId: string) => {
+    const project = await ProjectModel.findOne({
+        rejectOnEmpty: new Error('No project found'),
+        where: { projectKey },
+        include: [{
+            model: TeamModel,
+            include: [{
+                model: UserModel,
+                where: { userId }
+            }, {
+                model: FeatureModel,
+                where: { parentId: { [Op.ne]: null } },
+                required: false,
+                include: [includeSubFeatures]
+            }]
+        }]
+    })
 
-    const cacheKey = `feature:${featureId}`;
-    const cachedFeature = await getValue(cacheKey);
-    if (cachedFeature) return cachedFeature;
+    return project.features;
+}
+
+export const getFeatureById = async (featureId: string, userId: string) => {
+    const cached = await FeatureModel.getCache(featureId, userId);
+    if (cached) return cached;
 
     const feature = await FeatureModel.findByPk(featureId, {
+        rejectOnEmpty: new Error('Feature not found'),
         attributes: featureAttributes,
         include: [
             includeSubFeatures,
@@ -34,96 +47,94 @@ export const getFeature = async (featureId: string, userId: string) => {
         ]
     })
 
-    if (!feature) return throwError('Feature not found');
-
-    await setValue(cacheKey, feature);
+    await feature.setCache(feature);
 
     return feature;
 }
 
 export const createFeature = async ({ name, projectId }: CreateFeature, userId: string) => {
-    await checkProjectAccess(projectId, userId);
-
     await validate.createFeature({ name, projectId });
+    await ProjectModel.checkAccess(projectId, userId);
 
-    const features: Feature[] = await getFeaturesByProjectId(projectId);
-
-    const feature = await FeatureModel.create({
-        projectId: Number(projectId),
-        name: name,
-        sort: features.length + 1
+    const featureCount = await FeatureModel.count({
+        where: { projectId, parentId: null }
     });
 
-    await updateValue(`features:project:${projectId}`, [...features, feature]);
+    await FeatureModel.create(
+        {
+            projectId: Number(projectId),
+            name: name,
+            sort: featureCount + 1
+        },
+        {
+            fields: ['name', 'projectId']
+        }
+    );
 
-    return [...features, feature];
+    const features = await FeatureModel.getFeaturesByProjectId(projectId);
+    return features;
 }
 
-export const updateFeature = async (data: UpdateFeature, featureId: string, userId: string) => {
-    await checkFeatureAccess(featureId, userId);
-
+export const updateFeature = async (data: { name: string }, featureId: string, userId: string) => {
     await validate.updateFeature(data);
 
-    const feature = await FeatureModel.findByPk(featureId);
+    const feature = await FeatureModel.findByPk(featureId, {
+        rejectOnEmpty: new Error('Feature not found')
+    });
 
-    if (!feature) throw new Error('Feature not found');
+    await feature.checkAccess(userId);
+    await feature.update(data, { fields: ['name'] });
+    await feature.clearCache();
 
-    await feature.update(data);
-
-    const features = await updateProjectFeaturesCache(feature.projectId.toString());
-    await invalidateFeatureCache(feature.featureId.toString());
-
+    const features = await FeatureModel.getFeaturesByProjectId(feature.projectId);
     return features;
 }
 
 export const deleteFeature = async (featureId: string, userId: string) => {
-//     await checkFeatureAccess(featureId, userId);
-// 
-//     const deletedFeature = await cascadeDeleteFeature(featureId);
-// 
-//     const features: Feature[] = await updateProjectFeaturesCache(deletedFeature.projectId.toString());
-//     await invalidateFeatureCache(featureId);
-// 
-//     return features;
+    const feature = await FeatureModel.findByPk(featureId, {
+        rejectOnEmpty: new Error('Feature not found')
+    });
+
+    await feature.checkAccess(userId);
+    await feature.destroy();
+
+    const features = await FeatureModel.getFeaturesByProjectId(feature.projectId);
+    return features;
 }
 
-export const createSubFeature = async (data: CreateSubFeature, featureId: string, userId: string) => {
-    await checkFeatureAccess(featureId, userId);
-
+export const createSubFeature = async (data: { name: string }, featureId: string, userId: string) => {
     await validate.updateFeature(data);
 
     const mainFeature = await FeatureModel.findByPk(featureId, {
+        rejectOnEmpty: new Error('Feature not found'),
         include: [includeSubFeatures]
     })
 
-    if (!mainFeature) return throwError('Feature not found');
+    await mainFeature.checkAccess(userId);
 
-    const projectId = mainFeature.projectId.toString();
+    const projectId = mainFeature.projectId;
 
-    const subFeature = await FeatureModel.create({
+    await FeatureModel.create({
         ...data,
         projectId: Number(projectId),
         parentId: Number(featureId),
         sort: mainFeature.subFeatures?.length || 0
     });
 
-    const features: Feature[] = await getFeaturesByProjectId(projectId);
-
-    await updateValue(`features:project:${projectId}`, features);
-    await invalidateFeatureCache(featureId);
-
+    const features = await FeatureModel.getFeaturesByProjectId(projectId);
     return features;
 }
 
-export const sortFeatures = async (data: SortFeature[], userId: string) => {
+export const sortFeatures = async (data: { featureId: number, sort: number }[], userId: string) => {
     await validate.sort(data);
 
     const featureId = data[0].featureId;
-    const feature = await FeatureModel.findByPk(featureId);
-
-    if (!feature) throw new Error('Feature not found');
     
-    await checkFeatureAccess(featureId, userId);``
+    const feature = await FeatureModel.findByPk(featureId, {
+        rejectOnEmpty: new Error('Feature not found')
+    });
+
+    await feature.checkAccess(userId);
 
     await Promise.all(data.map(({ featureId, sort }) => {
         FeatureModel.update(
@@ -131,8 +142,6 @@ export const sortFeatures = async (data: SortFeature[], userId: string) => {
             { where: { featureId } }
         )
     }));
-
-    await invalidateProjectFeaturesCache(feature.projectId.toString());
 
     return 'sorted';
 }

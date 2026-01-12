@@ -68,6 +68,9 @@ CommentModel.init(commentSchema, {
     modelName: "comment",
     tableName: "comments",
     timestamps: true,
-    paranoid: true
+    paranoid: true,
+    defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+    }
 });
 exports.default = CommentModel;

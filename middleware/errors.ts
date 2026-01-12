@@ -45,7 +45,10 @@ const onError = (err: any, req: any, res: any, next: any) => {
         validation: error.validation,
         controller: controller?.controller,
         endpoint: `${req.method} ${req.originalUrl}`,
-        error: err,
+    }
+
+    if (error.message !== err.message) {
+        payload.error = err.message
     }
 
     Object.keys(payload).forEach(key => {

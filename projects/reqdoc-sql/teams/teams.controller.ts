@@ -9,3 +9,27 @@ export const getTeams = async (req: Request, res: Response, next: NextFunction) 
         next(err);
     }
 }
+
+export const addUserToCurrentTeam = async (req: Request, res: Response, next: NextFunction) => {
+  try {    
+    const { userId } = req.params;
+    const { teamId } = req.user;
+
+    const result = await Team.addUserToCurrentTeam(teamId, userId);
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const removeUserFromCurrentTeam = async (req: Request, res: Response, next: NextFunction) => {
+  try {    
+    const { userId } = req.params;
+    const { teamId } = req.user;
+
+    const result = await Team.removeUserFromCurrentTeam(teamId, userId);
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+}

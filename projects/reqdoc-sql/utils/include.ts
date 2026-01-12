@@ -1,15 +1,22 @@
-import { FeatureModel, ReqModel, TeamModel } from '../models'
+import { FeatureModel, ProjectModel, ReqModel, TeamModel } from '../models'
 
 export const featureAttributes = ['featureId', 'projectId', 'parentId', 'name'];
 export const subFeatureAttributes = ['featureId', 'projectId', 'parentId', 'name'];
 export const mainFeatureAttributes = ['featureId', 'projectId', 'name'];
 export const reqAttributes = ['reqId', 'projectId', 'featureId', 'key', 'title', 'text', 'details', 'status']
+export const projectAttributes = ['projectId', 'name', 'projectKey', 'key'];
+
+export const includeProjects = {
+    model: ProjectModel,
+    as: 'projects',
+    required: false,
+    attributes: projectAttributes
+}
 
 
 export const includeSubFeatures = {
     model: FeatureModel,
     as: 'subFeatures',
-    where: { deleted: null },
     required: false,
     attributes: subFeatureAttributes
 }
@@ -22,18 +29,17 @@ export const includeMainFeature = {
 
 export const includeFeatures = {
     model: FeatureModel,
-    as: 'features',
-    where: { deleted: null },
     required: false,
     attributes: featureAttributes,
     include: [includeSubFeatures]
 }
 
+
 export const includeReqs = {
     model: ReqModel,
     as: 'reqs',
     required: false,
-    where: { changedReq: null, deleted: null },
+    where: { changedReq: null },
     attributes: reqAttributes
 }
 

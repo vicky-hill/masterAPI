@@ -15,10 +15,12 @@ const users_routes_1 = __importDefault(require("./projects/reqdoc-sql/users/user
 const teams_routes_1 = __importDefault(require("./projects/reqdoc-sql/teams/teams.routes"));
 const features_routes_1 = __importDefault(require("./projects/reqdoc-sql/features/features.routes"));
 const reqs_routes_1 = __importDefault(require("./projects/reqdoc-sql/reqs/reqs.routes"));
-router.use('/api/reqdoc-sql/users', users_routes_1.default);
-router.use('/api/reqdoc-sql/teams', teams_routes_1.default);
-router.use('/api/reqdoc-sql/features', features_routes_1.default);
-router.use('/api/reqdoc-sql/reqs', reqs_routes_1.default);
+const projects_routes_1 = __importDefault(require("./projects/reqdoc-sql/projects/projects.routes"));
+router.use('/api/reqdoc/users', users_routes_1.default);
+router.use('/api/reqdoc/teams', teams_routes_1.default);
+router.use('/api/reqdoc/features', features_routes_1.default);
+router.use('/api/reqdoc/reqs', reqs_routes_1.default);
+router.use('/api/reqdoc/projects', projects_routes_1.default);
 /* ===================================
    Hot Key
 =================================== */

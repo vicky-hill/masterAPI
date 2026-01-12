@@ -10,22 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFeaturesByProjectId = exports.getFeatureByProjectKey = exports.updateProjectFeaturesCache = exports.invalidateFeatureCache = exports.invalidateProjectFeaturesCache = void 0;
-const redis_1 = require("../../../utils/redis");
+const include_1 = require("../utils/include");
 const models_1 = require("../models");
 const invalidateProjectFeaturesCache = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
-    const cacheKey = `features:project:${projectId}`;
-    yield (0, redis_1.deleteValue)(cacheKey);
+    // const cacheKey = `features:project:${projectId}`
+    // await deleteValue(cacheKey)
 });
 exports.invalidateProjectFeaturesCache = invalidateProjectFeaturesCache;
 const invalidateFeatureCache = (featureId) => __awaiter(void 0, void 0, void 0, function* () {
-    const cacheKey = `feature:${featureId}`;
-    yield (0, redis_1.deleteValue)(cacheKey);
+    // const cacheKey = `feature:${featureId}`
+    // await deleteValue(cacheKey)
 });
 exports.invalidateFeatureCache = invalidateFeatureCache;
 const updateProjectFeaturesCache = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, exports.invalidateProjectFeaturesCache)(projectId);
-    const features = yield (0, exports.getFeaturesByProjectId)(projectId);
-    return features;
+    // const features: Feature[] = await getFeaturesByProjectId(projectId);
+    // return features;
 });
 exports.updateProjectFeaturesCache = updateProjectFeaturesCache;
 const getFeatureByProjectKey = (projectKey) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,24 +34,23 @@ const getFeatureByProjectKey = (projectKey) => __awaiter(void 0, void 0, void 0,
     });
     if (!project)
         throw new Error('Project not found');
-    const features = yield (0, exports.getFeaturesByProjectId)(project.getDataValue('projectId').toString());
-    return features;
+    // const features: Feature[] = await getFeaturesByProjectId(project.getDataValue('projectId').toString());
+    // return features;
 });
 exports.getFeatureByProjectKey = getFeatureByProjectKey;
 const getFeaturesByProjectId = (projectId) => __awaiter(void 0, void 0, void 0, function* () {
-    const cacheKey = `features:project:${projectId}`;
-    const cachedFeatures = yield (0, redis_1.getValue)(cacheKey);
-    if (cachedFeatures)
-        return JSON.parse(cachedFeatures);
-    // const features = await FeatureModel.findAll({
-    //     where: { projectId, parentId: null, deleted: null },
-    //     attributes: featureAttributes,
-    //     include: [
-    //         includeSubFeatures
-    //     ]
-    // });
-    //     await setValue(cacheKey, JSON.stringify(features));
+    //     const cacheKey = `features:project:${projectId}`
     // 
-    //     return features;
+    //     const cachedFeatures = await getValue(cacheKey)
+    //     if (cachedFeatures) return JSON.parse(cachedFeatures);
+    const features = yield models_1.FeatureModel.findAll({
+        where: { projectId },
+        attributes: include_1.featureAttributes,
+        include: [
+            include_1.includeSubFeatures
+        ]
+    });
+    // await setValue(cacheKey, JSON.stringify(features));
+    return features;
 });
 exports.getFeaturesByProjectId = getFeaturesByProjectId;

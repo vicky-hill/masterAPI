@@ -37,8 +37,10 @@ const onError = (err, req, res, next) => {
         validation: error.validation,
         controller: controller === null || controller === void 0 ? void 0 : controller.controller,
         endpoint: `${req.method} ${req.originalUrl}`,
-        error: err,
     };
+    if (error.message !== err.message) {
+        payload.error = err.message;
+    }
     Object.keys(payload).forEach(key => {
         if (payload[key] === 'null' || !payload[key]) {
             delete payload[key];

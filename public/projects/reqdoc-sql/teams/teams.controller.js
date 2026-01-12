@@ -42,7 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTeams = void 0;
+exports.removeUserFromCurrentTeam = exports.addUserToCurrentTeam = exports.getTeams = void 0;
 const Team = __importStar(require("./teams.functions"));
 const getTeams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -54,3 +54,27 @@ const getTeams = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getTeams = getTeams;
+const addUserToCurrentTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const { teamId } = req.user;
+        const result = yield Team.addUserToCurrentTeam(teamId, userId);
+        res.json(result);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.addUserToCurrentTeam = addUserToCurrentTeam;
+const removeUserFromCurrentTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const { teamId } = req.user;
+        const result = yield Team.removeUserFromCurrentTeam(teamId, userId);
+        res.json(result);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.removeUserFromCurrentTeam = removeUserFromCurrentTeam;

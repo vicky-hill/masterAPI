@@ -38,6 +38,12 @@ projects_model_1.default.belongsTo(teams_model_1.default, {
 projects_model_1.default.hasMany(features_model_1.default, {
     foreignKey: 'projectId'
 });
+projects_model_1.default.hasMany(reqs_model_1.default, {
+    foreignKey: 'projectId'
+});
+reqs_model_1.default.belongsTo(projects_model_1.default, {
+    foreignKey: 'projectId'
+});
 features_model_1.default.belongsTo(projects_model_1.default, {
     foreignKey: 'projectId'
 });
@@ -50,7 +56,9 @@ features_model_1.default.belongsTo(features_model_1.default, {
     as: 'mainFeature'
 });
 features_model_1.default.hasMany(reqs_model_1.default, {
-    foreignKey: 'featureId'
+    foreignKey: 'featureId',
+    onDelete: 'CASCADE',
+    hooks: true
 });
 reqs_model_1.default.belongsTo(features_model_1.default, {
     foreignKey: 'featureId'
@@ -61,7 +69,9 @@ reqs_model_1.default.hasMany(reqs_model_1.default, {
     as: 'history'
 });
 reqs_model_1.default.hasMany(comments_model_1.default, {
-    foreignKey: 'reqId'
+    foreignKey: 'reqId',
+    onDelete: 'CASCADE',
+    hooks: true
 });
 comments_model_1.default.belongsTo(reqs_model_1.default, {
     foreignKey: 'reqId'

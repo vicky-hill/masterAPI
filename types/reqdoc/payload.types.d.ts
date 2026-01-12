@@ -1,29 +1,6 @@
 import { Schema, model, Document, ObjectId } from 'mongoose'
 
-interface CreateFeature {
-    name: string
-    projectId: string
-}
 
-interface UpdateFeature {
-    name: string
-}
-
-interface CreateSubFeature {
-    name: string
-}
-
-interface SortFeature {
-    featureId: string,
-    sort: number
-}
-
-interface CreateProject {
-    name: string
-    teamId: number
-    projectKey: string
-    key: string
-}
 
 interface UpdateProject {
     name: string

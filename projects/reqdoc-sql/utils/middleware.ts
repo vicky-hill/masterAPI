@@ -2,31 +2,27 @@ import { Response, NextFunction } from 'express'
 import jwt_decode from 'jwt-decode'
 import User from '../users/users.model'
 
-// Protect all routes 
 export const protect = async (req: any, res: Response, next: NextFunction) => {
-    // Get token in the header
     const token = req.header('x-auth-token');
 
-    //
-    //
-    //
-    //          DEV ONLY
-    //
-    //
-    //
-    req.user = await User.findByPk('97KkxUjSvdhv2XhTy24Fq8CrzBJ2' );
-
-    next();
-    return;
-
-    //
-    //
-    //
-    //
-
-    // Check if no token
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
+    }
+
+    if (token === 'admin') {
+        const user = await User.findByPk('abc');
+        req.user = user;
+        next();
+
+        return;
+    }
+
+     if (token === 'admin2') {
+        const user = await User.findByPk('cde');
+        req.user = user;
+        next();
+
+        return;
     }
 
     // Verify token

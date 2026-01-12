@@ -10,9 +10,9 @@ import { getValue, setValue } from '../../../utils/redis'
 export const getAllGroups = async (language?: string) => {
     const translation_where: any = {};
 
-    const cacheKey = `groups:all`;
-    const cached = await getValue(cacheKey);
-    if (cached && !language) return cached;
+    // const cacheKey = `groups:all`;
+    // const cached = await getValue(cacheKey);
+    // if (cached && !language) return cached;
 
 
     if (language) {
@@ -68,7 +68,7 @@ export const getAllGroups = async (language?: string) => {
         return group;
     })
 
-    await setValue(cacheKey, groups);
+    // await setValue(cacheKey, groups);
 
     return groups;
 }

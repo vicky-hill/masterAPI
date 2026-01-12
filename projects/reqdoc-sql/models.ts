@@ -1,3 +1,4 @@
+import { InferAttributes } from 'sequelize'
 import TeamModel from './teams/teams.model'
 import UserModel from './users/users.model'
 import ProjectModel from './projects/projects.model'
@@ -5,7 +6,10 @@ import FeatureModel from './features/features.model'
 import ReqModel from './reqs/reqs.model'
 import CommentModel from './comments/comments.model'
 
+
 export type omit = { omit: 'createdAt' | 'updatedAt' | 'deletedAt' };
+
+export type User = InferAttributes<UserModel>
 
 UserModel.belongsToMany(TeamModel, {
   through: 'teamUsers',
@@ -35,6 +39,14 @@ ProjectModel.hasMany(FeatureModel, {
   foreignKey: 'projectId'
 })
 
+ProjectModel.hasMany(ReqModel, {
+  foreignKey: 'projectId'
+})
+
+ReqModel.belongsTo(ProjectModel, {
+  foreignKey: 'projectId'
+})
+
 FeatureModel.belongsTo(ProjectModel, {
   foreignKey: 'projectId'
 })
@@ -50,7 +62,9 @@ FeatureModel.belongsTo(FeatureModel, {
 })
 
 FeatureModel.hasMany(ReqModel, {
-  foreignKey: 'featureId'
+  foreignKey: 'featureId',
+  onDelete: 'CASCADE',
+  hooks: true
 })
 
 ReqModel.belongsTo(FeatureModel, {
@@ -64,7 +78,9 @@ ReqModel.hasMany(ReqModel, {
 })
 
 ReqModel.hasMany(CommentModel, {
-  foreignKey: 'reqId'
+  foreignKey: 'reqId',
+  onDelete: 'CASCADE',
+  hooks: true
 })
 
 CommentModel.belongsTo(ReqModel, {

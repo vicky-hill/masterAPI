@@ -42,35 +42,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProject = exports.getProject = exports.getProjects = void 0;
+exports.deleteProject = exports.updateProject = exports.createProject = exports.getProjectById = exports.getProjectsByTeam = void 0;
 const Project = __importStar(require("./projects.functions"));
-const getProjects = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getProjectsByTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { team } = req.user;
-        const projects = yield Project.getProjects(team);
+        const { teamId } = req.user;
+        const projects = yield Project.getProjectsByTeam(teamId);
         res.json(projects);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getProjects = getProjects;
-const getProject = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getProjectsByTeam = getProjectsByTeam;
+const getProjectById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { projectId } = req.params;
         const { userId } = req.user;
-        const data = yield Project.getProject(projectId, userId);
+        const data = yield Project.getProjectById(projectId, userId);
         res.json(data);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getProject = getProject;
+exports.getProjectById = getProjectById;
 const createProject = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { teamId } = req.user;
-        const project = yield Project.createProject(req.body, teamId);
+        const { teamId, userId } = req.user;
+        const project = yield Project.createProject(req.body, teamId, userId);
         res.json(project);
     }
     catch (err) {
@@ -78,3 +78,27 @@ const createProject = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.createProject = createProject;
+const updateProject = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { projectId } = req.params;
+        const { userId } = req.params;
+        const project = yield Project.updateProject(req.body, projectId, userId);
+        res.json(project);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.updateProject = updateProject;
+const deleteProject = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { projectId } = req.params;
+        const { userId } = req.user;
+        const project = yield Project.deleteProject(projectId, userId);
+        res.json(project);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.deleteProject = deleteProject;

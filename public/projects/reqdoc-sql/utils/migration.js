@@ -30,13 +30,13 @@ function removeUniqueRestraint(queryInterface) {
 }
 function addForeignKey(queryInterface) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield queryInterface.addConstraint('comments', {
-            fields: ['userId'],
+        yield queryInterface.addConstraint('reqs', {
+            fields: ['projectId'],
             type: 'foreign key',
-            name: 'comments_userId_fk',
+            name: 'reqs_projectId_fk',
             references: {
-                table: 'users',
-                field: 'userId'
+                table: 'projects',
+                field: 'projectId'
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'

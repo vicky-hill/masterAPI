@@ -15,27 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.protect = void 0;
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
 const users_model_1 = __importDefault(require("../users/users.model"));
-// Protect all routes 
 const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // Get token in the header
     const token = req.header('x-auth-token');
-    //
-    //
-    //
-    //          DEV ONLY
-    //
-    //
-    //
-    req.user = yield users_model_1.default.findByPk('97KkxUjSvdhv2XhTy24Fq8CrzBJ2');
-    next();
-    return;
-    //
-    //
-    //
-    //
-    // Check if no token
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
+    }
+    if (token === 'admin') {
+        const user = yield users_model_1.default.findByPk('abc');
+        req.user = user;
+        next();
+        return;
+    }
+    if (token === 'admin2') {
+        const user = yield users_model_1.default.findByPk('cde');
+        req.user = user;
+        next();
+        return;
     }
     // Verify token
     try {

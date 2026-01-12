@@ -1,4 +1,4 @@
-import { QueryInterface } from 'sequelize'
+import { QueryInterface, Sequelize } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
 
 async function addUniqueRestraint(queryInterface: QueryInterface): Promise<void> {
@@ -14,13 +14,13 @@ async function removeUniqueRestraint(queryInterface: QueryInterface): Promise<vo
 }
 
 async function addForeignKey(queryInterface: QueryInterface): Promise<void> {
-  await queryInterface.addConstraint('comments', {
-    fields: ['userId'],
+  await queryInterface.addConstraint('reqs', {
+    fields: ['projectId'],
     type: 'foreign key',
-    name: 'comments_userId_fk',
+    name: 'reqs_projectId_fk',
     references: {
-      table: 'users',
-      field: 'userId'
+      table: 'projects',
+      field: 'projectId'
     },
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'

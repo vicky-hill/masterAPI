@@ -42,12 +42,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sortFeatures = exports.createSubFeature = exports.deleteFeature = exports.updateFeature = exports.createFeature = exports.getFeature = exports.getProjectFeatures = void 0;
+exports.sortFeatures = exports.createSubFeature = exports.deleteFeature = exports.updateFeature = exports.createFeature = exports.getFeatureById = exports.getProjectFeatures = void 0;
 const Feature = __importStar(require("./features.functions"));
 const getProjectFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { projectKey } = req.params;
-        const features = yield Feature.getProjectFeatures(projectKey);
+        const { userId } = req.user;
+        const features = yield Feature.getProjectFeatures(projectKey, userId);
         res.json(features);
     }
     catch (err) {
@@ -55,18 +56,18 @@ const getProjectFeatures = (req, res, next) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.getProjectFeatures = getProjectFeatures;
-const getFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getFeatureById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { featureId } = req.params;
         const { userId } = req.user;
-        const feature = yield Feature.getFeature(featureId, userId);
+        const feature = yield Feature.getFeatureById(featureId, userId);
         res.json(feature);
     }
     catch (err) {
         next(err);
     }
 });
-exports.getFeature = getFeature;
+exports.getFeatureById = getFeatureById;
 const createFeature = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.user;

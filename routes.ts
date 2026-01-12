@@ -15,11 +15,13 @@ import reqdoc_sql_userRoutes from './projects/reqdoc-sql/users/users.routes'
 import reqdoc_sql_teamsRoutes from './projects/reqdoc-sql/teams/teams.routes'
 import reqdoc_sql_featuresRoutes from './projects/reqdoc-sql/features/features.routes'
 import reqdoc_sql_reqsRoutes from './projects/reqdoc-sql/reqs/reqs.routes'
+import reqdoc_sql_projectsRoutes from './projects/reqdoc-sql/projects/projects.routes'
 
-router.use('/api/reqdoc-sql/users', reqdoc_sql_userRoutes)
-router.use('/api/reqdoc-sql/teams', reqdoc_sql_teamsRoutes)
-router.use('/api/reqdoc-sql/features', reqdoc_sql_featuresRoutes)
-router.use('/api/reqdoc-sql/reqs', reqdoc_sql_reqsRoutes)
+router.use('/api/reqdoc/users', reqdoc_sql_userRoutes)
+router.use('/api/reqdoc/teams', reqdoc_sql_teamsRoutes)
+router.use('/api/reqdoc/features', reqdoc_sql_featuresRoutes)
+router.use('/api/reqdoc/reqs', reqdoc_sql_reqsRoutes)
+router.use('/api/reqdoc/projects', reqdoc_sql_projectsRoutes)
 
 /* ===================================
    Hot Key

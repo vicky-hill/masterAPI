@@ -52,7 +52,7 @@ const validateStrings = (values, string) => __awaiter(void 0, void 0, void 0, fu
             schemaObject[field.slice(1)] = yup.string();
         }
         else {
-            schemaObject[field] = yup.string().required(`No ${field} was provided`);
+            schemaObject[field] = yup.string().required(`Missing field: ${field}`);
         }
     });
     const schema = yup.object().shape(schemaObject);
@@ -69,14 +69,14 @@ const validate = {
     sort,
     createReq: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "~title text feature"); }),
     updateReq: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "~title ~text ~details"); }),
-    createProject: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name teamId projectKey key"); }),
+    createProject: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name projectKey reqKey"); }),
     updateProject: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "~name ~projectKey"); }),
-    createFeature: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name project"); }),
+    createFeature: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name projectId"); }),
     updateFeature: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name"); }),
     createTeam: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "user"); }),
     addComment: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "user text"); }),
     editComment: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "text"); }),
-    createUser: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "firebaseID email"); }),
+    createUser: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "userId email"); }),
     updateUser: (values) => __awaiter(void 0, void 0, void 0, function* () { return yield validateStrings(values, "name"); }),
 };
 exports.default = validate;

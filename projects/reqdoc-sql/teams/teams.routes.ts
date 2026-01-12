@@ -1,5 +1,5 @@
 import express, { Router } from 'express'
-import { getTeams } from './teams.controller'
+import { addUserToCurrentTeam, getTeams, removeUserFromCurrentTeam } from './teams.controller'
 import { protect } from '../utils/middleware'
 
 const router: Router = express.Router();
@@ -9,6 +9,9 @@ const router: Router = express.Router();
 ==================================== */
 
 router.route('/').get(protect, getTeams)
+
+router.route('/add/:userId').put(protect, addUserToCurrentTeam)
+router.route('/remove/:userId').put(protect, removeUserFromCurrentTeam)
 
 
 export default router;

@@ -4,20 +4,21 @@ import * as Feature from './features.functions'
 export const getProjectFeatures = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { projectKey } = req.params;
+        const { userId } = req.user;
 
-        const features = await Feature.getProjectFeatures(projectKey);
+        const features = await Feature.getProjectFeatures(projectKey, userId);
         res.json(features);
     } catch (err) {
         next(err);
     }
 }
 
-export const getFeature = async (req: Request, res: Response, next: NextFunction) => {
+export const getFeatureById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const feature = await Feature.getFeature(featureId, userId)
+        const feature = await Feature.getFeatureById(featureId, userId)
         res.json(feature);
     } catch (err: any) {
         next(err);

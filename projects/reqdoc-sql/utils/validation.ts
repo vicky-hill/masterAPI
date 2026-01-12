@@ -10,7 +10,7 @@ const validateStrings = async (values: any, string: string) => {
         if (isOptional) {
             schemaObject[field.slice(1)] = yup.string()
         } else {
-            schemaObject[field] = yup.string().required(`No ${field} was provided`)
+            schemaObject[field] = yup.string().required(`Missing field: ${field}`)
         }
     })
 
@@ -34,14 +34,14 @@ const validate = {
     sort,
     createReq: async (values: any) => await validateStrings(values, "~title text feature"),
     updateReq: async (values: any) => await validateStrings(values, "~title ~text ~details"),
-    createProject: async (values: any) => await validateStrings(values, "name teamId projectKey key"),
+    createProject: async (values: any) => await validateStrings(values, "name projectKey reqKey"),
     updateProject: async (values: any) => await validateStrings(values, "~name ~projectKey"),
-    createFeature: async (values: any) => await validateStrings(values, "name project"),
+    createFeature: async (values: any) => await validateStrings(values, "name projectId"),
     updateFeature: async (values: any) => await validateStrings(values, "name"),
     createTeam: async (values: any) => await validateStrings(values, "user"),
     addComment: async (values: any) => await validateStrings(values, "user text"),
     editComment: async (values: any) => await validateStrings(values, "text"),
-    createUser: async (values: any) => await validateStrings(values, "firebaseID email"),
+    createUser: async (values: any) => await validateStrings(values, "userId email"),
     updateUser: async (values: any) => await validateStrings(values, "name"),
 }
 

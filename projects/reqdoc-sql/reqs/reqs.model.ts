@@ -1,13 +1,13 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { omit } from '../models'
+import { CommentModel, omit } from '../models'
 
 class ReqModel extends Model<InferAttributes<ReqModel, omit>, InferCreationAttributes<ReqModel, omit>> {
     declare reqId: CreationOptional<number>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
     declare deletedAt: CreationOptional<Date | null>
-    // declare projectId: number
+    declare projectId: number
     declare featureId: number
     declare changedReq?: string | null
     declare latestReqId?: number
@@ -27,9 +27,9 @@ const reqSchema = {
         primaryKey: true,
         autoIncrement: true
     },
-    // projectId: {
-    //     type: Sequelize.INTEGER
-    // },
+    projectId: {
+        type: Sequelize.INTEGER
+    },
     featureId: {
         type: Sequelize.INTEGER
     },
@@ -66,7 +66,29 @@ ReqModel.init(reqSchema, {
     timestamps: true,
     paranoid: true,
     defaultScope: {
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
+        attributes: { exclude: ['sort', 'createdAt', 'updatedAt', 'deletedAt'] }
+    },
+    hooks: {
+        beforeDestroy: async (req, options) => {
+            await CommentModel.destroy({
+                where: { reqId: req.featureId },
+                transaction: options.transaction
+            });
+        },
+        beforeBulkDestroy: async (options) => {
+            const reqs = await ReqModel.findAll({
+                where: options.where,
+                attributes: ['reqId'],
+                paranoid: false
+            });
+
+            const reqIds = reqs.map(r => r.reqId);
+
+            await CommentModel.destroy({
+                where: { reqId: reqIds },
+                transaction: options.transaction
+            });
+        }
     }
 })
 

@@ -1,6 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/reqdoc.db.config'
-import { omit, TeamModel } from '../models'
+import { FeatureModel, omit, ProjectModel, TeamModel } from '../models'
+import { deleteValue, getValue, setValue } from '../../../utils/redis'
 
 class UserModel extends Model<InferAttributes<UserModel, omit>, InferCreationAttributes<UserModel, omit>> {
     declare userId: CreationOptional<string>
@@ -13,6 +14,29 @@ class UserModel extends Model<InferAttributes<UserModel, omit>, InferCreationAtt
 
     declare teams?: NonAttribute<TeamModel>[]
     declare team?: NonAttribute<TeamModel>
+
+//     async getUsersByFeature(featureId: number) {
+//         const cached = await getValue('users:feature', featureId);
+//         if (cached) return cached.users;
+//         
+//         const feature = await FeatureModel.findByPk(featureId, {
+//             include: [{
+//                 model: ProjectModel,
+//                 include: [{
+//                     model: TeamModel,
+//                     include: [UserModel]
+//                 }]
+//             }]
+//         })
+// 
+//         if (feature?.project?.team?.users?.length) {
+//             const users = feature?.project?.team?.users.map(user => user.userId);
+//             const value =  { featureId, users };
+//             
+//             await setValue('users:feature', value);
+//             return feature?.project?.team?.users.map(user => user.userId);
+//         }
+//     }
 }
 
 const userSchema = {
