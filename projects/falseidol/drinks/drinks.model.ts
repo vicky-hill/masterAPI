@@ -1,23 +1,8 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
-import { DrinkType, UserInfo } from '../../../types/falseidol/attribute.types'
-import UserModel, { User } from '../users/users.model'
+import { DrinkType } from '../../../types/falseidol/attribute.types'
+import User from '../users/users.model'
 import UserDrinkModel from './user.drink.model'
-
-export interface Drink {
-    drinkId: number
-    type: DrinkType
-    name: string
-    country: string
-    current: boolean
-    price: number
-    user: User
-    onMenu?: boolean
-    happyHour?: boolean
-    image?: string
-    sort?: number
-    description?: string
-}
 
 export interface FalseIdolDrink {
     id: number
@@ -45,11 +30,7 @@ class DrinkModel extends Model<InferAttributes<DrinkModel>, InferCreationAttribu
     declare happyHour?: boolean
     declare description?: string
     
-    declare userInfo?: UserInfo
-    
-    declare static associations: {
-       user: Association<DrinkModel, UserModel>
-    }
+    declare user?: NonAttribute<User>
 }
 
 const drinkSchema = {
@@ -98,11 +79,6 @@ DrinkModel.init(drinkSchema, {
   timestamps: false
 })
 
-DrinkModel.hasOne(UserDrinkModel, {
-    foreignKey: 'drinkId',
-    sourceKey: 'drinkId',
-    as: 'userInfo'
-});
-            
+     
 
 export default DrinkModel;

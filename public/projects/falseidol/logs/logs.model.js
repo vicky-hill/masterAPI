@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-class LogModel extends sequelize_1.Model {
+class Log extends sequelize_1.Model {
 }
 const logSchema = {
     logId: {
@@ -51,10 +51,10 @@ const logSchema = {
         unique: true
     }
 };
-LogModel.init(logSchema, {
+Log.init(logSchema, {
     sequelize: falseidol_db_config_1.default,
     modelName: "Logs",
     tableName: "logs",
     timestamps: false
 });
-exports.default = LogModel;
+exports.default = Log;

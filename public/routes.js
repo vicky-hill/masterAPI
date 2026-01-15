@@ -11,11 +11,11 @@ router.get('/health-check', (req, res) => { res.send('Great Health'); });
 /* ===================================
    Reqdoc
 =================================== */
-const users_routes_1 = __importDefault(require("./projects/reqdoc-sql/users/users.routes"));
-const teams_routes_1 = __importDefault(require("./projects/reqdoc-sql/teams/teams.routes"));
-const features_routes_1 = __importDefault(require("./projects/reqdoc-sql/features/features.routes"));
-const reqs_routes_1 = __importDefault(require("./projects/reqdoc-sql/reqs/reqs.routes"));
-const projects_routes_1 = __importDefault(require("./projects/reqdoc-sql/projects/projects.routes"));
+const users_routes_1 = __importDefault(require("./projects/reqdoc/users/users.routes"));
+const teams_routes_1 = __importDefault(require("./projects/reqdoc/teams/teams.routes"));
+const features_routes_1 = __importDefault(require("./projects/reqdoc/features/features.routes"));
+const reqs_routes_1 = __importDefault(require("./projects/reqdoc/reqs/reqs.routes"));
+const projects_routes_1 = __importDefault(require("./projects/reqdoc/projects/projects.routes"));
 router.use('/api/reqdoc/users', users_routes_1.default);
 router.use('/api/reqdoc/teams', teams_routes_1.default);
 router.use('/api/reqdoc/features', features_routes_1.default);

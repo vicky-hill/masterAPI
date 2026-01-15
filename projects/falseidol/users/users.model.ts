@@ -1,15 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
-export interface User {
-    userId: number
-    name: string
-    email: string
-    verified: boolean
-    isAdmin: boolean
-}
-
-class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare userId: CreationOptional<number>
     declare name: string
     declare email: string
@@ -39,7 +31,7 @@ const userSchema = {
     }
 }
 
-UserModel.init(userSchema, {
+User.init(userSchema, {
   sequelize,
   modelName: "User",
   tableName: "users",
@@ -47,4 +39,4 @@ UserModel.init(userSchema, {
 })
 
 
-export default UserModel;
+export default User;

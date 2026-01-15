@@ -9,7 +9,7 @@ export interface UserInfo {
     ordered: number
 }
 
-class UserDrinkModel extends Model<InferAttributes<UserDrinkModel>, InferCreationAttributes<UserDrinkModel>> {
+class UserDrink extends Model<InferAttributes<UserDrink>, InferCreationAttributes<UserDrink>> {
     declare userDrinkId: CreationOptional<number>
     declare drinkId: number
     declare userId: number
@@ -38,12 +38,12 @@ const userDrinkSchema = {
     }
 }
 
-UserDrinkModel.init(userDrinkSchema, {
+UserDrink.init(userDrinkSchema, {
   sequelize,
-  modelName: "",
+  modelName: "userDrink",
   tableName: "userDrinks",
   timestamps: false
 })
 
     
-export default UserDrinkModel;
+export default UserDrink;

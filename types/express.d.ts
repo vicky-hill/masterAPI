@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { InferAttributes, NonAttribute } from 'sequelize'
-import { TeamModel } from '../projects/reqdoc-sql/models'
+import { Team } from '../projects/reqdoc/models'
 
 declare global {
     namespace Express {
@@ -10,8 +10,8 @@ declare global {
             //     teamId: number
             //     email: string
             //     role: 'admin' | 'user'
-            //     teams: InferAttributes<TeamModel>[]
-            //     team: InferAttributes<TeamModel>
+            //     teams: InferAttributes<Team>[]
+            //     team: InferAttributes<Team>
             // }
             user: any
         }

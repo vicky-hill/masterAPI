@@ -2,7 +2,7 @@ import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOpt
 import sequelize from '../../../config/falseidol.db.config'
 
 
-class LogModel extends Model<InferAttributes<LogModel>, InferCreationAttributes<LogModel>> {
+class Log extends Model<InferAttributes<Log>, InferCreationAttributes<Log>> {
     declare logId: CreationOptional<number>
     declare request: string
 
@@ -20,7 +20,7 @@ const logSchema = {
     }
 }
 
-LogModel.init(logSchema, {
+Log.init(logSchema, {
   sequelize,
   modelName: "Logs",
   tableName: "logs",
@@ -29,4 +29,4 @@ LogModel.init(logSchema, {
 
             
 
-export default LogModel;
+export default Log;

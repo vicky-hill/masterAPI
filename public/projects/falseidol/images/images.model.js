@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-class ImagesModel extends sequelize_1.Model {
+class Image extends sequelize_1.Model {
 }
 const imagesSchema = {
     imageId: {
@@ -53,10 +53,10 @@ const imagesSchema = {
         type: sequelize_1.default.STRING
     }
 };
-ImagesModel.init(imagesSchema, {
+Image.init(imagesSchema, {
     sequelize: falseidol_db_config_1.default,
     modelName: "Images",
     tableName: "images",
     timestamps: false
 });
-exports.default = ImagesModel;
+exports.default = Image;

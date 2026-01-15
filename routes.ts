@@ -11,17 +11,17 @@ router.get('/health-check', (req, res) => { res.send('Great Health')})
 /* ===================================
    Reqdoc
 =================================== */
-import reqdoc_sql_userRoutes from './projects/reqdoc-sql/users/users.routes'
-import reqdoc_sql_teamsRoutes from './projects/reqdoc-sql/teams/teams.routes'
-import reqdoc_sql_featuresRoutes from './projects/reqdoc-sql/features/features.routes'
-import reqdoc_sql_reqsRoutes from './projects/reqdoc-sql/reqs/reqs.routes'
-import reqdoc_sql_projectsRoutes from './projects/reqdoc-sql/projects/projects.routes'
+import reqdoc_userRoutes from './projects/reqdoc/users/users.routes'
+import reqdoc_teamsRoutes from './projects/reqdoc/teams/teams.routes'
+import reqdoc_featuresRoutes from './projects/reqdoc/features/features.routes'
+import reqdoc_reqsRoutes from './projects/reqdoc/reqs/reqs.routes'
+import reqdoc_projectsRoutes from './projects/reqdoc/projects/projects.routes'
 
-router.use('/api/reqdoc/users', reqdoc_sql_userRoutes)
-router.use('/api/reqdoc/teams', reqdoc_sql_teamsRoutes)
-router.use('/api/reqdoc/features', reqdoc_sql_featuresRoutes)
-router.use('/api/reqdoc/reqs', reqdoc_sql_reqsRoutes)
-router.use('/api/reqdoc/projects', reqdoc_sql_projectsRoutes)
+router.use('/api/reqdoc/users', reqdoc_userRoutes)
+router.use('/api/reqdoc/teams', reqdoc_teamsRoutes)
+router.use('/api/reqdoc/features', reqdoc_featuresRoutes)
+router.use('/api/reqdoc/reqs', reqdoc_reqsRoutes)
+router.use('/api/reqdoc/projects', reqdoc_projectsRoutes)
 
 /* ===================================
    Hot Key

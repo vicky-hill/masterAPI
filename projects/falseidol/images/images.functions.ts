@@ -1,8 +1,8 @@
-import ImageModel from './images.model'
+import Image from './images.model'
 
 
 export const getImages = async () => {
-    const imageInstances = await ImageModel.findAll({
+    const imageInstances = await Image.findAll({
         where: {} 
     });
 
@@ -15,6 +15,6 @@ export const getImages = async () => {
 }
 
 export const importImages = async (data: any) => {
-    const images = await ImageModel.bulkCreate(data);
+    const images = await Image.bulkCreate(data);
     return images;
 }

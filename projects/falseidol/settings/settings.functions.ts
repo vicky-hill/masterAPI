@@ -1,9 +1,8 @@
-import { Setting } from '../../../types/falseidol/attribute.types'
-import LogModel from '../logs/logs.model'
-import SettingModel from './settings.model'
+import Log from '../logs/logs.model'
+import Setting from './settings.model'
 
 export const getSettings = async () => {
-    const settingInstances = await SettingModel.findAll({
+    const settingInstances = await Setting.findAll({
         where: {} 
     });
 
@@ -12,7 +11,7 @@ export const getSettings = async () => {
         return { ...setting };
     })
 
-    await LogModel.create({
+    await Log.create({
         request: 'getting settings' 
     })
 
@@ -20,7 +19,7 @@ export const getSettings = async () => {
 }
 
 export const updateSetting = async (data: Setting, settingId: string) => {
-    const setting = await SettingModel.update(data,
+    const setting = await Setting.update(data,
         { where: { settingId } }
     );
 

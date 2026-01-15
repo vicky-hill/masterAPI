@@ -1,13 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
-export interface Setting {
-    settingId: number
-    name: string
-    active: boolean
-}
-
-class SettingModel extends Model<InferAttributes<SettingModel>, InferCreationAttributes<SettingModel>> {
+class Setting extends Model<InferAttributes<Setting>, InferCreationAttributes<Setting>> {
     declare settingId: CreationOptional<number>
     declare name: string
     declare active: boolean
@@ -27,7 +21,7 @@ const settingSchema = {
     }
 }
 
-SettingModel.init(settingSchema, {
+Setting.init(settingSchema, {
   sequelize,
   modelName: "Settings",
   tableName: "settings",
@@ -35,4 +29,4 @@ SettingModel.init(settingSchema, {
 })
 
 
-export default SettingModel;
+export default Setting;

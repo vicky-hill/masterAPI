@@ -6,7 +6,7 @@ import cors from 'cors'
 import routes from './routes'
 import onError from './middleware/errors'
 
-import { migrateReqdoc } from './projects/reqdoc-sql/utils/migration'
+import { migrateReqdoc } from './projects/reqdoc/utils/migration'
 
 // migrateReqdoc();
 

@@ -1,43 +1,43 @@
 import { Drink, FalseIdolDrink } from '../../../types/falseidol/attribute.types'
-import SettingModel from '../settings/settings.model'
+import Setting from '../settings/settings.model'
 import DrinkModel from './drinks.model'
 import UserDrinkModel from './user.drink.model'
 
 
 export const getDrinks = async (type: string, current: string, userId: string) => {
-    const where: any = { current: true };
-    const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
+//     const where: any = { current: true };
+//     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
+// 
+//     const descriptionSetting = await Setting.findByPk(3);
+// 
+//     if (descriptionSetting?.getDataValue('active')) {
+//         attributes.push('description');
+//     }
+// 
+//     if (type) where.type = type.split(',');
+//     if (current === 'true') where.current = true;
+// 
+//     const drinkInstances = await DrinkModel.findAll({
+//         where,
+//         include: [{
+//             model: UserDrinkModel,
+//             as: 'userInfo',
+//             where: { userId },
+//             required: false
+//         }]
+//     });
+// 
+//     const drinks = drinkInstances.map((drinkInstance) => {
+//         const { userInfo, ...drink } = drinkInstance.get({ plain: true });
+// 
+//         return {
+//             ...drink,
+//             notes: userInfo?.notes || null,
+//             ordered: userInfo?.ordered || 0
+//         };
+//     })
 
-    const descriptionSetting = await SettingModel.findByPk(3);
-
-    if (descriptionSetting?.getDataValue('active')) {
-        attributes.push('description');
-    }
-
-    if (type) where.type = type.split(',');
-    if (current === 'true') where.current = true;
-
-    const drinkInstances = await DrinkModel.findAll({
-        where,
-        include: [{
-            model: UserDrinkModel,
-            as: 'userInfo',
-            where: { userId },
-            required: false
-        }]
-    });
-
-    const drinks = drinkInstances.map((drinkInstance) => {
-        const { userInfo, ...drink } = drinkInstance.get({ plain: true });
-
-        return {
-            ...drink,
-            notes: userInfo?.notes || null,
-            ordered: userInfo?.ordered || 0
-        };
-    })
-
-    return drinks;
+    // return drinks;
 }
 
 export const updateDrink = async (drinkId: number, data: Drink) => {
@@ -15490,7 +15490,6 @@ export const syncDrinks = async () => {
             "approvedBy": null
         }
     ]
-
 
     const getDrinkType = (drink: FalseIdolDrink) => {
         if (drink.country.toLocaleLowerCase().includes('bowl') || drink.name.toLocaleLowerCase().includes('bowl')) {

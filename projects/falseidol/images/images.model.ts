@@ -1,13 +1,7 @@
 import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 
-export interface Image {
-    imageId: number
-    name: string
-    url: string
-}
-
-class ImagesModel extends Model<InferAttributes<ImagesModel>, InferCreationAttributes<ImagesModel>> {
+class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>> {
     declare imageId: CreationOptional<number>
     declare name: string
     declare url: string
@@ -27,7 +21,7 @@ const imagesSchema = {
     }
 }
 
-ImagesModel.init(imagesSchema, {
+Image.init(imagesSchema, {
   sequelize,
   modelName: "Images",
   tableName: "images",
@@ -35,4 +29,4 @@ ImagesModel.init(imagesSchema, {
 })
 
 
-export default ImagesModel;
+export default Image;
