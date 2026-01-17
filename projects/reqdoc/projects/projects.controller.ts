@@ -40,7 +40,7 @@ export const updateProject = async (req: Request, res: Response, next: NextFunct
     const { projectId } = req.params;
     const { userId } = req.params;
     
-    const project = await Project.updateProject(req.body, projectId as string, userId);
+    const project = await Project.updateProject(req.body, projectId as string, userId as string);
     res.json(project)
   } catch (err) {
     next(err)

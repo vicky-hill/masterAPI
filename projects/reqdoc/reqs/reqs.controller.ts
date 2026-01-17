@@ -6,7 +6,7 @@ export const getReqsByFeatureId = async (req: Request, res: Response, next: Next
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const reqs = await Req.getReqsByFeatureId(featureId, userId);
+        const reqs = await Req.getReqsByFeatureId(featureId as string, userId as string);
         res.json(reqs);
     } catch (err) {
         next(err);
@@ -18,7 +18,7 @@ export const getReqById = async (req: Request, res: Response, next: NextFunction
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Req.getReqById(reqId as string, userId);
+        const requirement = await Req.getReqById(reqId as string, userId as string);
         res.json(requirement);
     } catch (err) {
         next(err);
@@ -30,7 +30,7 @@ export const getReqByKey = async (req: Request, res: Response, next: NextFunctio
         const { projectKey, reqKey } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Req.getReqByKey(projectKey, reqKey, userId);
+        const requirement = await Req.getReqByKey(projectKey as string, reqKey as string, userId as string);
         res.json(requirement);
     } catch (err) {
         next(err);
