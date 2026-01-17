@@ -15,7 +15,7 @@ export const getCategoryByID = async (req: Request, res: Response, next: NextFun
     try {
         const { categoryId } = req.params;
 
-        const categories = await Category.getCategoryById(categoryId);
+        const categories = await Category.getCategoryById(categoryId as string);
         res.json(categories);
     } catch (err) {
         next(err);
@@ -35,7 +35,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
     try {
         const { categoryId } = req.params;
 
-        const category = await Category.updateCategory(categoryId, req.body);
+        const category = await Category.updateCategory(categoryId as string, req.body);
         res.json(category);
     } catch (err) {
         next(err);
@@ -46,7 +46,7 @@ export const deleteCategory = async (req: Request, res: Response, next: NextFunc
     try {
         const { categoryId } = req.params;
 
-        const category = await Category.deleteCategory(categoryId);
+        const category = await Category.deleteCategory(categoryId as string);
         res.json(category);
     } catch (err) {
         next(err);

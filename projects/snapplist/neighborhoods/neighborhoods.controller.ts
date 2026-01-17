@@ -26,7 +26,7 @@ export const getNeighborhoodById = async (req: Request, res: Response, next: Nex
     try {
         const { neighborhoodId } = req.params;
 
-        const neighborhood: NeighborhoodAttributes | null = await Neighborhood.findById(neighborhoodId);
+        const neighborhood: NeighborhoodAttributes | null = await Neighborhood.findById(neighborhoodId as string);
         if (!neighborhood) return throwError('Neighborhood not found');
 
         res.json(neighborhood);
@@ -54,7 +54,7 @@ export const updateNeighborhood = async (req: Request, res: Response, next: Next
         const { neighborhoodId } = req.params;
 
         const updatedNeighborhood: NeighborhoodAttributes | null = await Neighborhood.findByIdAndUpdate(
-            neighborhoodId, req.body, { new: true }
+            neighborhoodId as string, req.body, { new: true }
         );
 
         res.json(updatedNeighborhood);
@@ -67,7 +67,7 @@ export const deleteNeighborhood = async (req: Request, res: Response, next: Next
     try {
         const { neighborhoodId } = req.params;
 
-        const neighborhood = await Neighborhood.findByIdAndDelete(neighborhoodId);
+        const neighborhood = await Neighborhood.findByIdAndDelete(neighborhoodId as string);
 
         res.json(neighborhood);
     } catch (err: any) {

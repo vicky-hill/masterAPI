@@ -37,7 +37,7 @@ export const getWord = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { wordId } = req.params;
 
-        const word = await Word.getWord(wordId);
+        const word = await Word.getWord(wordId as string);
         res.json(word);
     } catch (err) {
         next(err);
@@ -59,7 +59,7 @@ export const updateWord = async (req: Request, res: Response, next: NextFunction
     try {
         const { wordId } = req.params;
 
-        const word = await Word.updateWord(req.body, wordId);
+        const word = await Word.updateWord(req.body, wordId as string);
         res.json(word);
     } catch (err) {
         next(err);
@@ -70,7 +70,7 @@ export const deleteWord = async (req: Request, res: Response, next: NextFunction
     try {
         const { wordId } = req.params;
 
-        const word = await Word.deleteWord(wordId);
+        const word = await Word.deleteWord(wordId as string);
         res.json(word);
     } catch (err) {
         next(err);
@@ -81,7 +81,7 @@ export const importWords = async (req: Request, res: Response, next: NextFunctio
     try {
         const { userId } = req.user;
 
-        const words = await Word.importWords(userId);
+        const words = await Word.importWords(userId as string);
         res.json(words);       
     } catch (err) {
       console.log(err);

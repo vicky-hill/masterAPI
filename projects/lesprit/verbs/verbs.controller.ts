@@ -14,7 +14,7 @@ export const getVerb = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { verbId } = req.params;
 
-        const verb = await Verb.getVerb(verbId);
+        const verb = await Verb.getVerb(verbId as string);
         res.json(verb);
     } catch (err) {
         next(err);
@@ -34,7 +34,7 @@ export const updateVerb = async (req: Request, res: Response, next: NextFunction
     try {
         const { verbId } = req.params;
 
-        const verb = await Verb.updateVerb(req.body, verbId);
+        const verb = await Verb.updateVerb(req.body, verbId as string);
         res.json(verb);    
     } catch (err) {
         next(err);
@@ -45,7 +45,7 @@ export const deleteVerb = async (req: Request, res: Response, next: NextFunction
     try {
         const { verbId } = req.params;
 
-        const verb = await Verb.deleteVerb(verbId);
+        const verb = await Verb.deleteVerb(verbId as string);
         res.json(verb);    
     } catch (err) {
         next(err);

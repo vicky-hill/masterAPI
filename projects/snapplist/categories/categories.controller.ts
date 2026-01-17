@@ -18,7 +18,7 @@ export const getCategoryById = async (req: Request, res: Response, next: NextFun
     try {
         const { categoryId } = req.params;
 
-        const category: CategoryAttributes | null = await Category.findById(categoryId);
+        const category: CategoryAttributes | null = await Category.findById(categoryId as string);
         if (!category) return throwError('Category not found');
 
         res.json(category);
@@ -48,7 +48,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
         const { categoryId } = req.params;
 
         const updatedCategory: CategoryAttributes | null = await Category.findByIdAndUpdate(
-            categoryId, req.body, { new: true }
+            categoryId as string, req.body, { new: true }
         );
 
         res.json(updatedCategory);
@@ -62,7 +62,7 @@ export const deleteCategory = async (req: Request, res: Response, next: NextFunc
     try {
         const { categoryId } = req.params;
 
-        const category = await Category.findByIdAndDelete(categoryId);
+        const category = await Category.findByIdAndDelete(categoryId as string);
 
         res.json(category);
     } catch (err: any) {

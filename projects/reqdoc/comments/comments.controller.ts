@@ -6,7 +6,7 @@ export const addComment = async (req: Request, res: Response, next: NextFunction
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Comment.addComment(req.body, reqId, userId);
+        const requirement = await Comment.addComment(req.body, reqId as string, userId as string);
         res.json(requirement)
     } catch (err) {
         next(err)
@@ -18,7 +18,7 @@ export const editComment = async (req: Request, res: Response, next: NextFunctio
         const { commentId } = req.params;
         const { userId } = req.user;
 
-        const result = await Comment.editComment(req.body, commentId, userId);
+        const result = await Comment.editComment(req.body, commentId as string, userId as string);
         res.json(result)
     } catch (err) {
         next(err)
@@ -30,7 +30,7 @@ export const deleteComment = async (req: Request, res: Response, next: NextFunct
         const { commentId } = req.params;
         const { userId } = req.user;
 
-        const comment = await Comment.deleteComment(commentId, userId);
+        const comment = await Comment.deleteComment(commentId as string, userId as string);
         res.json(comment)
     } catch (err) {
         next(err)

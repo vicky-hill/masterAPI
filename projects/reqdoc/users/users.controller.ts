@@ -14,7 +14,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { userId } = req.params;
 
-        const user = await User.getUser(userId);
+        const user = await User.getUser(userId as string);
         res.json(user);
     } catch (err) {
         next(err);
@@ -25,7 +25,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   try {    
     const { userId } = req.params;
 
-    const user = await User.createUser(req.body, userId);
+    const user = await User.createUser(req.body, userId as string);
     res.json(user)
   } catch (err) {
     next(err)
@@ -36,7 +36,7 @@ export const inviteUser = async (req: Request, res: Response, next: NextFunction
   try {   
     const { userId } = req.user;
 
-    const result = await User.inviteUser(req.body, userId);
+    const result = await User.inviteUser(req.body, userId as string);
     res.json(result)
   } catch (err) {
     next(err)
@@ -48,7 +48,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const { userId } = req.params;
     const { userId: loggedInUserId } = req.user;
     
-    const user = await User.updateUser(req.body, userId, loggedInUserId);
+    const user = await User.updateUser(req.body, userId as string, loggedInUserId as string);
     res.json(user)
   } catch (err) {
     next(err)

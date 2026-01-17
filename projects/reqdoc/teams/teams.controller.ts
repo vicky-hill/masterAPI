@@ -15,7 +15,7 @@ export const addUserToCurrentTeam = async (req: Request, res: Response, next: Ne
     const { userId } = req.params;
     const { teamId } = req.user;
 
-    const result = await Team.addUserToCurrentTeam(teamId, userId);
+    const result = await Team.addUserToCurrentTeam(teamId as string, userId as string);
     res.json(result)
   } catch (err) {
     next(err)
@@ -27,7 +27,7 @@ export const removeUserFromCurrentTeam = async (req: Request, res: Response, nex
     const { userId } = req.params;
     const { teamId } = req.user;
 
-    const result = await Team.removeUserFromCurrentTeam(teamId, userId);
+    const result = await Team.removeUserFromCurrentTeam(teamId as string, userId as string);
     res.json(result)
   } catch (err) {
     next(err)

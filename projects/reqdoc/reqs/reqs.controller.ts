@@ -18,7 +18,7 @@ export const getReqById = async (req: Request, res: Response, next: NextFunction
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Req.getReqById(reqId, userId);
+        const requirement = await Req.getReqById(reqId as string, userId);
         res.json(requirement);
     } catch (err) {
         next(err);
@@ -41,7 +41,7 @@ export const createReq = async (req: Request, res: Response, next: NextFunction)
     try {
         const { userId } = req.user;
 
-        const requirement = await Req.createReq(req.body, userId);
+        const requirement = await Req.createReq(req.body, userId as string);
         res.json(requirement);
     } catch (err) {
         next(err);
@@ -53,7 +53,7 @@ export const updateReq = async (req: Request, res: Response, next: NextFunction)
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Req.updateReq(req.body, reqId, userId);
+        const requirement = await Req.updateReq(req.body, reqId as string, userId as string);
         res.json(requirement);
     } catch (err) {
         next(err);
@@ -65,7 +65,7 @@ export const deleteReq = async (req: Request, res: Response, next: NextFunction)
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const requirement = await Req.deleteReq(reqId, userId);
+        const requirement = await Req.deleteReq(reqId as string, userId as string);
         res.json(requirement);
     } catch (err) {
         next(err);
@@ -77,7 +77,7 @@ export const changeReq = async (req: Request, res: Response, next: NextFunction)
         const { reqId } = req.params;
         const { userId } = req.user;
 
-        const result = await Req.changeReq(req.body, reqId, userId);
+        const result = await Req.changeReq(req.body, reqId as string, userId as string);
         res.json(result)
     } catch (err) {
         next(err)
@@ -99,7 +99,7 @@ export const searchReqs = async (req: Request, res: Response, next: NextFunction
         const { projectId } = req.params;
         const { userId } = req.user;
 
-        const result = await Req.searchReqs(projectId, term as string, userId);
+        const result = await Req.searchReqs(projectId as string, term as string, userId as string);
         res.json(result)
     } catch (err) {
         next(err)

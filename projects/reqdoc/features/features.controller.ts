@@ -6,7 +6,7 @@ export const getProjectFeatures = async (req: Request, res: Response, next: Next
         const { projectKey } = req.params;
         const { userId } = req.user;
 
-        const features = await Feature.getProjectFeatures(projectKey, userId);
+        const features = await Feature.getProjectFeatures(projectKey as string, userId as string);
         res.json(features);
     } catch (err) {
         next(err);
@@ -18,7 +18,7 @@ export const getFeatureById = async (req: Request, res: Response, next: NextFunc
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const feature = await Feature.getFeatureById(featureId, userId)
+        const feature = await Feature.getFeatureById(featureId as string, userId as string)
         res.json(feature);
     } catch (err: any) {
         next(err);
@@ -29,7 +29,7 @@ export const createFeature = async (req: Request, res: Response, next: NextFunct
     try {
         const { userId } = req.user;
 
-        const feature = await Feature.createFeature(req.body, userId);
+        const feature = await Feature.createFeature(req.body, userId as string);
         res.json(feature);
     } catch (err: any) {
         next(err);
@@ -41,7 +41,7 @@ export const updateFeature = async (req: Request, res: Response, next: NextFunct
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const feature = await Feature.updateFeature(req.body, featureId, userId);
+        const feature = await Feature.updateFeature(req.body, featureId as string, userId as string);
         res.json(feature);
     } catch (err: any) {
         next(err);
@@ -53,7 +53,7 @@ export const deleteFeature = async (req: Request, res: Response, next: NextFunct
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const deletedFeature = await Feature.deleteFeature(featureId, userId);
+        const deletedFeature = await Feature.deleteFeature(featureId as string, userId as string);
         res.json(deletedFeature);
     } catch (err: any) {
         next(err);
@@ -65,7 +65,7 @@ export const createSubFeature = async (req: Request, res: Response, next: NextFu
         const { featureId } = req.params;
         const { userId } = req.user;
 
-        const subFeature = await Feature.createSubFeature(req.body, featureId, userId);
+        const subFeature = await Feature.createSubFeature(req.body, featureId as string, userId as string);
         res.json(subFeature);
     } catch (err: any) {
         next(err);
@@ -76,7 +76,7 @@ export const sortFeatures = async (req: Request, res: Response, next: NextFuncti
     try {
         const { userId } = req.user;
 
-        const data = await Feature.sortFeatures(req.body, userId);
+        const data = await Feature.sortFeatures(req.body, userId as string);
         res.json(data);
     } catch (err: any) {
         next(err);
