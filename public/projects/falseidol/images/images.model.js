@@ -55,7 +55,7 @@ const imagesSchema = {
 };
 Image.init(imagesSchema, {
     sequelize: falseidol_db_config_1.default,
-    modelName: "Images",
+    modelName: "image",
     tableName: "images",
     timestamps: false
 });

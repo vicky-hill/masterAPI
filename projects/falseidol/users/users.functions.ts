@@ -1,9 +1,11 @@
-import { User } from '../../../types/falseidol/attribute.types'
-import UserModel from './users.model'
+import { User } from '../utils/models'
+import jwt_decode from 'jwt-decode'
+import { Request } from 'express'
+
 
 export const getUsers = async () => {
-    const userInstances = await UserModel.findAll({
-        where: {} 
+    const userInstances = await User.findAll({
+        where: {}
     });
 
     const users = userInstances.map((userInstance) => {
@@ -14,37 +16,39 @@ export const getUsers = async () => {
     return users;
 }
 
-export const getUser = async (userId: string): Promise<any> => {
-    const userInstance = await UserModel.findOne({
+export const getUser = async (userId: string) => {
+    const user = await User.findOne({
+        rejectOnEmpty: new Error('User not found'),
         where: { userId }
     });
-
-    if (!userInstance) throw new Error('User not found');
-
-    const user = userInstance.get({ plain: true });
 
     return user;
 }
 
 export const createUser = async (data: User) => {
-    const user = await UserModel.create(data);
-
+    const user = await User.create(data);
     return user;
 }
 
 export const updateUser = async (data: User, userId: string) => {
-    await UserModel.update(data,
-        { where: { userId } }
-    );
+    const user = await User.findOne({
+        rejectOnEmpty: new Error('User not found'),
+        where: { userId }
+    });
 
-    const user = await UserModel.findByPk(userId);
-
-    if (!user) throw new Error('User not found');
+    await user.update(data);
 
     return user;
 }
 
 export const deleteUser = async (userId: string) => {
-    await UserModel.destroy({ where: { userId }});
+    await User.destroy({ where: { userId } });
     return { userId };
+}
+
+export const loginUser = async (userId: string, req: Request) => {
+    req.session = { token: JSON.stringify({ falseidol: userId }) }
+
+    const user = await getUser(userId);
+    return user;
 }

@@ -23,7 +23,7 @@ const imagesSchema = {
 
 Image.init(imagesSchema, {
   sequelize,
-  modelName: "Images",
+  modelName: "image",
   tableName: "images",
   timestamps: false
 })

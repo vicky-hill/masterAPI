@@ -1,8 +1,7 @@
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize'
+import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute, HasManyAddAssociationMixin, HasManyRemoveAssociationMixin } from 'sequelize'
 import sequelize from '../../../config/falseidol.db.config'
 import { DrinkType } from '../../../types/falseidol/attribute.types'
-import User from '../users/users.model'
-import UserDrinkModel from './user.drink.model'
+import UserDrink from './user.drink.model'
 
 export interface FalseIdolDrink {
     id: number
@@ -18,7 +17,7 @@ export interface FalseIdolDrink {
     approvedBy: string | null
 }
 
-class DrinkModel extends Model<InferAttributes<DrinkModel>, InferCreationAttributes<DrinkModel>> {
+class Drink extends Model<InferAttributes<Drink>, InferCreationAttributes<Drink>> {
     declare drinkId: CreationOptional<number>
     declare type: DrinkType
     declare name: string
@@ -30,7 +29,12 @@ class DrinkModel extends Model<InferAttributes<DrinkModel>, InferCreationAttribu
     declare happyHour?: boolean
     declare description?: string
     
-    declare user?: NonAttribute<User>
+    declare userInfo?: NonAttribute<UserDrink>[]
+    declare notes?: string | null
+    declare orederd?: number
+    
+    declare addUserInfo: HasManyAddAssociationMixin<UserDrink, number>
+    declare removeUserInfo: HasManyRemoveAssociationMixin<UserDrink, number>
 }
 
 const drinkSchema = {
@@ -72,13 +76,13 @@ const drinkSchema = {
     }
 }
 
-DrinkModel.init(drinkSchema, {
+Drink.init(drinkSchema, {
   sequelize,
-  modelName: "Drink",
+  modelName: "drink",
   tableName: "drinks",
   timestamps: false
 })
 
      
 
-export default DrinkModel;
+export default Drink;

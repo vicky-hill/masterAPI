@@ -63,7 +63,7 @@ const userSchema = {
 };
 User.init(userSchema, {
     sequelize: falseidol_db_config_1.default,
-    modelName: "User",
+    modelName: "user",
     tableName: "users",
     timestamps: false
 });

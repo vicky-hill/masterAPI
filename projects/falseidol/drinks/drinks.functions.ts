@@ -1,58 +1,58 @@
-import { Drink, FalseIdolDrink } from '../../../types/falseidol/attribute.types'
+import { FalseIdolDrink } from '../../../types/falseidol/attribute.types'
 import Setting from '../settings/settings.model'
-import DrinkModel from './drinks.model'
-import UserDrinkModel from './user.drink.model'
+import Drink from './drinks.model'
+import UserDrink from './user.drink.model'
 
 
 export const getDrinks = async (type: string, current: string, userId: string) => {
-//     const where: any = { current: true };
-//     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
-// 
-//     const descriptionSetting = await Setting.findByPk(3);
-// 
-//     if (descriptionSetting?.getDataValue('active')) {
-//         attributes.push('description');
-//     }
-// 
-//     if (type) where.type = type.split(',');
-//     if (current === 'true') where.current = true;
-// 
-//     const drinkInstances = await DrinkModel.findAll({
-//         where,
-//         include: [{
-//             model: UserDrinkModel,
-//             as: 'userInfo',
-//             where: { userId },
-//             required: false
-//         }]
-//     });
-// 
-//     const drinks = drinkInstances.map((drinkInstance) => {
-//         const { userInfo, ...drink } = drinkInstance.get({ plain: true });
-// 
-//         return {
-//             ...drink,
-//             notes: userInfo?.notes || null,
-//             ordered: userInfo?.ordered || 0
-//         };
-//     })
+    const where: any = { current: true };
+    const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
 
-    // return drinks;
+    const descriptionSetting = await Setting.findByPk(3);
+
+    if (descriptionSetting?.getDataValue('active')) {
+        attributes.push('description');
+    }
+
+    if (type) where.type = type.split(',');
+    if (current === 'true') where.current = true;
+
+    const drinkInstances = await Drink.findAll({
+        where,
+        include: [{
+            model: UserDrink,
+            as: 'userInfo',
+            where: { userId },
+            required: false
+        }]
+    });
+
+    const drinks = drinkInstances.map((drinkInstance) => {
+        const { userInfo, ...drink }: any = drinkInstance.get({ plain: true });
+
+        return {
+            ...drink,
+            notes: userInfo[0]?.notes || null,
+            ordered: userInfo[0]?.ordered || 0
+        };
+    })
+
+    return drinks;
 }
 
-export const updateDrink = async (drinkId: number, data: Drink) => {
-    await DrinkModel.update(
+export const updateDrink = async (drinkId: number, data: any) => {
+    await Drink.update(
         data,
         { where: { drinkId } }
     )
 
-    const drink = await DrinkModel.findByPk(drinkId);
+    const drink = await Drink.findByPk(drinkId);
 
     return drink;
 }
 
-export const createDrink = async (data: Drink) => {
-    const drink = await DrinkModel.create(data);
+export const createDrink = async (data: any) => {
+    const drink = await Drink.create(data);
     return drink;
 }
 
@@ -15512,7 +15512,7 @@ export const syncDrinks = async () => {
         happyHour: drink.country.toLocaleLowerCase().includes('happy') && drink.current
     }))
 
-    const drinks = await DrinkModel.bulkCreate(payload, {
+    const drinks = await Drink.bulkCreate(payload, {
         updateOnDuplicate: ['type', 'country', 'current', 'happyHour'],
         conflictAttributes: ['name']
     });

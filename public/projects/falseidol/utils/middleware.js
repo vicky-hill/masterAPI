@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAdmin = exports.protect = void 0;
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
-const users_model_1 = __importDefault(require("../users/users.model"));
+const models_1 = require("../utils/models");
 // Protect all routes 
 const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     // Get token in the header
@@ -22,7 +22,7 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     // Verify token
     try {
         const decoded = (0, jwt_decode_1.default)(token);
-        const user = yield users_model_1.default.findByPk(decoded.user_id);
+        const user = yield models_1.User.findByPk(decoded.user_id);
         if (!user) {
             return res.status(401).json({ msg: 'No user found' });
         }
@@ -33,6 +33,7 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next();
     }
     catch (err) {
+        console.log(err);
         res.status(401).json({ msg: 'Token is not valid' });
     }
 });

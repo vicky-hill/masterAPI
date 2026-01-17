@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express'
 import jwt_decode from 'jwt-decode'
-import User from '../users/users.model'
+import { User } from '../utils/models'
 
 
 // Protect all routes 
@@ -25,6 +25,7 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
         req.user = user;
         next();
     } catch (err) {
+        console.log(err);
         res.status(401).json({ msg: 'Token is not valid' });
     }
 };

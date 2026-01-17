@@ -3,12 +3,15 @@ import connectDB from './config/db'
 import dotenv from 'dotenv'
 import logger from 'morgan'
 import cors from 'cors'
+import cookieSession from 'cookie-session'
 import routes from './routes'
 import onError from './middleware/errors'
 
 import { migrateReqdoc } from './projects/reqdoc/utils/migration'
+import { migrateFalseIdol } from './projects/falseidol/utils/migration'
 
 // migrateReqdoc();
+// migrateFalseIdol();
 
 dotenv.config();
 
@@ -20,6 +23,11 @@ connectDB();
 app.use(express.json());
 app.use(logger("dev"));
 app.use(cors());
+app.use(cookieSession({
+    name: 'session',
+    keys: [process.env.COOKIE_SECRET || 'your-secret-key'],
+    maxAge: 24 * 60 * 60 * 1000
+}));
 
 app.use('/', routes);
 

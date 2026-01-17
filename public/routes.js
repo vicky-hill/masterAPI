@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("./projects/sandbox/utils/models");
+require("./projects/falseidol/utils/models");
 const router = express_1.default.Router();
 // Check backend health
 router.get('/health-check', (req, res) => { res.send('Great Health'); });
@@ -75,10 +76,10 @@ router.use('/api/fluent/phrases', phrases_routes_1.default);
 /* ===================================
    False Idol
 =================================== */
-const drinks_routes_1 = __importDefault(require("./projects/falseIdol/drinks/drinks.routes"));
-const users_routes_4 = __importDefault(require("./projects/falseIdol/users/users.routes"));
-const images_routes_1 = __importDefault(require("./projects/falseIdol/images/images.routes"));
-const settings_routes_1 = __importDefault(require("./projects/falseIdol/settings/settings.routes"));
+const drinks_routes_1 = __importDefault(require("./projects/falseidol/drinks/drinks.routes"));
+const users_routes_4 = __importDefault(require("./projects/falseidol/users/users.routes"));
+const images_routes_1 = __importDefault(require("./projects/falseidol/images/images.routes"));
+const settings_routes_1 = __importDefault(require("./projects/falseidol/settings/settings.routes"));
 router.use('/api/falseidol/drinks', drinks_routes_1.default);
 router.use('/api/falseidol/users', users_routes_4.default);
 router.use('/api/falseidol/images', images_routes_1.default);

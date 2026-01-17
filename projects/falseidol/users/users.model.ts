@@ -33,7 +33,7 @@ const userSchema = {
 
 User.init(userSchema, {
   sequelize,
-  modelName: "User",
+  modelName: "user",
   tableName: "users",
   timestamps: false
 })

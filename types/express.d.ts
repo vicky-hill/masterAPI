@@ -14,6 +14,7 @@ declare global {
             //     team: InferAttributes<Team>
             // }
             user: any
+            session?: { token?: string } | null
         }
     }
 }

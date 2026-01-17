@@ -1,2 +1,161 @@
 {
+    "workbench.startupEditor": "none",
+    "git.autorefresh": false,
+    "git.detectSubmodules": false,
+    "git.decorations.enabled": false,
+    "git.confirmForcePush": false,
+    "git.confirmSync": false,
+    "git.enabled": false,
+    "git.enableStatusBarSync": false,
+    "git.openDiffOnClick": false,
+    "git.pullTags": false,
+    "git.promptToSaveFilesBeforeCommit": "never",
+    "git.showCommitInput": false,
+    "git.showProgress": false,
+    "git.suggestSmartCommit": false,
+    "git.terminalAuthentication": false,
+    "github.gitAuthentication": false,
+    "search.useIgnoreFiles": false,
+    "files.exclude": {
+        "_next": true,
+        ".api": true,
+        ".npmrc": true,
+        ".vercel": true,
+        "**/.firebase": true,
+        "**/.firebaserc": true,
+        "**/.github": true,
+        "**/.gitignore": true,
+        "**/.husky": true,
+        "**/.netlify": true,
+        "**/.next": true,
+        "**/.storybook": true,
+        "**/.vscode": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/node_modules": true,
+        "build": true,
+        "Icon": true,
+        "Icon?": true,
+        "package-lock.json": true,
+        "vercel.json": true,
+        "yarn.lock": true
+    },
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "editor.renderWhitespace": "none",
+    "editor.hover.enabled": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.rulers": [],
+    "breadcrumbs.enabled": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "typescript.validate.enable": true,
+    "javascript.validate.enable": true,
+    "editor.bracketPairColorization.enabled": false,
+    "editor.quickSuggestionsDelay": 0,
+    "editor.tokenColorCustomizations": {
+        "[Hop Light (Italics)]": {
+            "textMateRules": [
+                {
+                    "scope": [
+                        "comment",
+                        "comment.block",
+                        "comment.line",
+                        "comment.block.documentation",
+                        "entity.other.attribute-name",
+                        "keyword",
+                        "keyword.control",
+                        "keyword.operator",
+                        "keyword.other",
+                        "storage",
+                        "storage.type",
+                        "storage.modifier",
+                        "variable.language",
+                        "variable.parameter",
+                        "markup.italic",
+                        "markup.quote"
+                    ],
+                    "settings": {
+                        "fontStyle": ""
+                    }
+                },
+                {
+                    "scope": "storage.type.class.jsdoc",
+                    "settings": {
+                        "fontStyle": "bold"
+                    }
+                },
+                {
+                    "scope": "variable.other.jsdoc",
+                    "settings": {
+                        "foreground": "#5d5c5c",
+                    }
+                },
+                {
+                    "scope": [
+                        "markup.heading.markdown",
+                        "markup.heading.markdown punctuation.definition.heading.markdown"
+                    ],
+                    "settings": {
+                        "foreground": "#569CD6",
+                        "fontStyle": "bold"
+                    }
+                }
+            ]
+        }
+    },
+    "editor.codeActionsOnSave": {},
+    "remote.portsAttributes": {
+        "443": {
+            "protocol": "https"
+        },
+        "8443": {
+            "protocol": "https"
+        }
+    },
+    "explorer.confirmDragAndDrop": false,
+    "less.lint.unknownAtRules": "ignore",
+    "css.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore",
+    "workbench.editor.enablePreview": false,
+    "explorer.compactFolders": false,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single",
+    "editor.foldingHighlight": false,
+    "editor.minimap.enabled": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    },
+    "editor.stickyScroll.scrollWithEditor": false,
+    "workbench.tree.enableStickyScroll": false,
+    "editor.stickyScroll.enabled": false,
+    "editor.defaultColorDecorators": "auto",
+    "editor.lightbulb.enabled": "off",
+    "workbench.layoutControl.enabled": false,
+    "window.commandCenter": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.activityBar.location": "hidden",
+    "workbench.statusBar.visible": false,
+    "editor.inlineSuggest.enabled": false,
+    "editor.comments.ignoreEmptyLines": false,
+    "github.copilot.editor.enableAutoCompletions": false,
+    "workbench.colorTheme": "Hop Light",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "chat.agent.enabled": false,
+    "workbench.commandPalette.experimental.askChatLocation": "quickChat",
+    "chat.disableAIFeatures": true,
+    "editor.dropIntoEditor.preferences": [],
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "javascript": "javascript",
+        "css": "css"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    }
 }

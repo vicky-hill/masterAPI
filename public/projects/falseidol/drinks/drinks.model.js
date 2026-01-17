@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = __importStar(require("sequelize"));
 const falseidol_db_config_1 = __importDefault(require("../../../config/falseidol.db.config"));
-class DrinkModel extends sequelize_1.Model {
+class Drink extends sequelize_1.Model {
 }
 const drinkSchema = {
     drinkId: {
@@ -78,10 +78,10 @@ const drinkSchema = {
         type: sequelize_1.default.STRING
     }
 };
-DrinkModel.init(drinkSchema, {
+Drink.init(drinkSchema, {
     sequelize: falseidol_db_config_1.default,
-    modelName: "Drink",
+    modelName: "drink",
     tableName: "drinks",
     timestamps: false
 });
-exports.default = DrinkModel;
+exports.default = Drink;
