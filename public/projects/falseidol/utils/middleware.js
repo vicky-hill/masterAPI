@@ -15,12 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAdmin = exports.protect = void 0;
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
 const models_1 = require("../utils/models");
-// Protect all routes 
 const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // Get token in the header
-    const token = req.header('x-auth-token');
-    // Verify token
+    var _a;
     try {
+        const session = JSON.parse(((_a = req.session) === null || _a === void 0 ? void 0 : _a.token) || '{}');
+        const userId = session.falseidol;
+        if (userId) {
+            const user = yield models_1.User.findByPk(userId);
+            if (user) {
+                req.user = user;
+                return next();
+            }
+        }
+        const token = req.header('x-auth-token');
         const decoded = (0, jwt_decode_1.default)(token);
         const user = yield models_1.User.findByPk(decoded.user_id);
         if (!user) {

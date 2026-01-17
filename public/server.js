@@ -23,8 +23,14 @@ app.use((0, cors_1.default)());
 app.use((0, cookie_session_1.default)({
     name: 'session',
     keys: [process.env.COOKIE_SECRET || 'your-secret-key'],
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 30 * 24 * 60 * 60 * 1000
 }));
+app.use((req, res, next) => {
+    if (req.session) {
+        req.session.nowInMinutes = Math.floor(Date.now() / 60e3);
+    }
+    next();
+});
 app.use('/', routes_1.default);
 app.use((err, req, res, next) => {
     var _a;

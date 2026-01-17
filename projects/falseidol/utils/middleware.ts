@@ -2,14 +2,21 @@ import { Response, NextFunction } from 'express'
 import jwt_decode from 'jwt-decode'
 import { User } from '../utils/models'
 
-
-// Protect all routes 
 export const protect = async (req: any, res: Response, next: NextFunction) => {
-    // Get token in the header
-    const token = req.header('x-auth-token');
-
-    // Verify token
     try {
+        const session = JSON.parse(req.session?.token || '{}');
+        const userId = session.falseidol;
+
+        if (userId) {
+            const user = await User.findByPk(userId);
+            
+            if (user) {
+                req.user = user;
+                return next();
+            }
+        }
+        
+        const token = req.header('x-auth-token');
         const decoded: any = jwt_decode(token);
 
         const user = await User.findByPk(decoded.user_id);
