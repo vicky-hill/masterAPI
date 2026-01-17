@@ -36,7 +36,7 @@ export const getList = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { listId } = req.params;
 
-        const list = await List.getList(listId);
+        const list = await List.getList(listId as string);
         res.json(list);
     } catch (err) {
         next(err);
@@ -47,7 +47,7 @@ export const updateList = async (req: Request, res: Response, next: NextFunction
     try {
         const { listId } = req.params;
 
-        const list = await List.updateList(req.body, listId);
+        const list = await List.updateList(req.body, listId as string);
         res.json(list);
     } catch (err) {
         next(err);
@@ -59,7 +59,7 @@ export const addListToUser = async (req: Request, res: Response, next: NextFunct
         const { userId } = req.user;
         const { listId } = req.params;
 
-        const list = await List.addListToUser(listId, userId);
+        const list = await List.addListToUser(listId as string, userId as string);
         res.json(list);
     } catch (err) {
         next(err);
@@ -71,7 +71,7 @@ export const removeListFromUser = async (req: Request, res: Response, next: Next
         const { userId } = req.user;
         const { listId } = req.params;
 
-        const list = await List.removeListFromUser(listId, userId);
+        const list = await List.removeListFromUser(listId as string, userId as string);
         res.json(list);
     } catch (err) {
         next(err);
@@ -82,7 +82,7 @@ export const deleteList = async (req: Request, res: Response, next: NextFunction
     try {
         const { listId } = req.params;
 
-        const list = await List.deleteList(listId);
+        const list = await List.deleteList(listId as string);
         res.json(list);
     } catch (err) {
         next(err);
@@ -93,7 +93,7 @@ export const deleteUserLists = async (req: Request, res: Response, next: NextFun
     try {
         const { userId } = req.user;
 
-        const deleted = await List.deleteUserLists(userId);
+        const deleted = await List.deleteUserLists(userId as string);
         res.json({ deleted });
     } catch (err) {
         next(err);

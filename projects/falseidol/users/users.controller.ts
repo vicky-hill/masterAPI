@@ -14,7 +14,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     try {
         const { userId } = req.params;
 
-        const user = await User.getUser(userId);
+        const user = await User.getUser(userId as string);
         res.json(user);
     } catch (err) {
         next(err);
@@ -57,7 +57,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     try {
         const { userId } = req.params;
 
-        const user = await User.updateUser(req.body, userId);
+        const user = await User.updateUser(req.body, userId as string);
         res.json(user);
     } catch (err) {
         next(err);
@@ -68,7 +68,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     try {
         const { userId } = req.params;
 
-        const user = await User.deleteUser(userId);
+        const user = await User.deleteUser(userId as string);
         res.json(user);
     } catch (err) {
         next(err);

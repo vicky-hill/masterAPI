@@ -14,7 +14,7 @@ export const updateSetting = async (req: Request, res: Response, next: NextFunct
     try {
         const { settingId } = req.params;
 
-        const setting = await Setting.updateSetting(req.body, settingId);
+        const setting = await Setting.updateSetting(req.body, settingId as string);
         res.json(setting);
     } catch (err) {
         next(err);

@@ -14,7 +14,7 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
     try {
         const { productId } = req.params;
 
-        const product = await Product.getProduct(productId);
+        const product = await Product.getProduct(productId as string);
         res.json(product);
     } catch (err) {
         next(err);
@@ -34,7 +34,7 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
     try {
         const { productId } = req.params;
 
-        const product = await Product.updateProduct(req.body, productId);
+        const product = await Product.updateProduct(req.body, productId as string);
         res.json(product);
     } catch (err) {
         next(err);
@@ -45,7 +45,7 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
     try {
         const { productId } = req.params;
 
-        const product = await Product.deleteProduct(productId);
+        const product = await Product.deleteProduct(productId as string);
         res.json(product);
     } catch (err) {
         next(err);

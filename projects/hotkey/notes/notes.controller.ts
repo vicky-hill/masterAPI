@@ -14,7 +14,7 @@ export const getNotes = async (req: Request, res: Response, next: NextFunction) 
 export const getNoteById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-        const note = await Notes.getNoteById(noteId);
+        const note = await Notes.getNoteById(noteId as string);
         res.json(note);
     } catch (err: any) {
         next(err);
@@ -34,7 +34,7 @@ export const createNote = async (req: Request, res: Response, next: NextFunction
 export const updateNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-        const updatedNote = await Notes.updateNote(noteId, req.body);
+        const updatedNote = await Notes.updateNote(noteId as string, req.body);
         res.json(updatedNote);
     } catch (err: any) {
         next(err);
@@ -44,7 +44,7 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
 export const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { noteId } = req.params;
-        const note = await Notes.deleteNote(noteId);
+        const note = await Notes.deleteNote(noteId as string);
         res.json(note);
     } catch (err: any) {
         next(err);

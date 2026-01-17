@@ -14,7 +14,7 @@ export const getPhrase = async (req: Request, res: Response, next: NextFunction)
     try {
         const { phraseId } = req.params;
 
-        const phrase = await Phrase.getPhrase(phraseId);
+        const phrase = await Phrase.getPhrase(phraseId as string);
         res.json(phrase);
     } catch (err) {
         next(err);
@@ -43,7 +43,7 @@ export const updatePhrase = async (req: Request, res: Response, next: NextFuncti
     try {
         const { phraseId } = req.params;
 
-        const phrase = await Phrase.updatePhrase(req.body, phraseId);
+        const phrase = await Phrase.updatePhrase(req.body, phraseId as string);
         res.json(phrase);
     } catch (err) {
         next(err);
@@ -54,7 +54,7 @@ export const deletePhrase = async (req: Request, res: Response, next: NextFuncti
     try {
         const { phraseId } = req.params;
 
-        const phrase = await Phrase.deletePhrase(phraseId);
+        const phrase = await Phrase.deletePhrase(phraseId as string);
         res.json(phrase);
     } catch (err) {
         next(err);
@@ -74,7 +74,7 @@ export const resetPhraseSort = async (req: Request, res: Response, next: NextFun
     try {
         const { lessonId } = req.params;
 
-        const phrases = await Phrase.resetPhraseSort(Number(lessonId));
+        const phrases = await Phrase.resetPhraseSort(Number(lessonId as string));
         res.json(phrases);
     } catch (err) {
         next(err);
