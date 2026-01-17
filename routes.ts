@@ -1,13 +1,83 @@
-import express, { Router} from 'express'
+import express, { Router } from 'express'
 import './projects/sandbox/utils/models'
 import './projects/falseidol/utils/models'
 
+type Site = 'falseidol' | 'reqdoc' | 'fluent' | 'hotkey' | 'tiki' | 'snapplist' | 'sandbox' | 'lesprit'
+
 const router: Router = express.Router()
 
+router.get('/login/:site', (req, res, next) => {
+   try {
+      const site = req.params.site as Site;
 
-// Check backend health
-router.get('/health-check', (req, res) => { res.send('Great Health')})
+      const token = req.header('x-auth-token');
 
+      if (!token) return res.status(401).json({ msg: 'No valid token' });
+
+      let userId;
+
+      if (token === 'admin') {
+         if (site === 'reqdoc') userId = process.env.ADMIN_REQDOC;
+         if (site === 'falseidol') userId = process.env.ADMIN_FALSEIDOL;
+
+      } else {
+         const decoded: any = jwt_decode(token);
+         userId = decoded.user_id;
+      }
+
+      const session = JSON.parse(req.session?.token || '{}');
+
+      if (session) {
+         req.session = {
+            token: JSON.stringify({
+               ...session,
+               [site]: userId
+            })
+         }
+      } else {
+         req.session = {
+            token: JSON.stringify({
+               [site]: userId
+            })
+         }
+      }
+
+      res.json('logged in');
+   } catch (err: any) {
+      res.status(401).json({ msg: 'Token is not valid' });
+   }
+})
+
+router.get('/logout/:site', (req, res, next) => {
+   try {
+      const site = req.params.site as Site;
+      const session = JSON.parse(req.session?.token || '{}');
+
+      delete session[site];
+
+      if (session) {
+         req.session = {
+            token: JSON.stringify(session)
+         }
+      }
+
+      res.json('logged out');
+   } catch (err: any) {
+      res.status(500).json({ msg: 'Something went wrong' });
+   }
+})
+
+router.get('/session', (req, res, next) => {
+   try {
+      const session = JSON.parse(req.session?.token || '{}');
+
+      console.log(req.session)
+
+      res.json(session);
+   } catch (err: any) {
+      res.status(500).json({ msg: 'Something went wrong' });
+   }
+})
 
 /* ===================================
    Reqdoc
@@ -112,6 +182,7 @@ router.use('/api/falseidol/settings', falseidol_settingsRoutes)
 =================================== */
 
 import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
+import jwt_decode from 'jwt-decode';
 
 router.use('/api/sandbox/posts', sandbox_postRoutes)
 

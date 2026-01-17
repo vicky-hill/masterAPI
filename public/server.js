@@ -22,7 +22,7 @@ app.use((0, morgan_1.default)("dev"));
 app.use((0, cors_1.default)());
 app.use((0, cookie_session_1.default)({
     name: 'session',
-    keys: [process.env.COOKIE_SECRET || 'your-secret-key'],
+    keys: [process.env.SECRET],
     maxAge: 30 * 24 * 60 * 60 * 1000
 }));
 app.use((req, res, next) => {

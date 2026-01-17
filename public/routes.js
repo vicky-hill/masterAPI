@@ -7,8 +7,71 @@ const express_1 = __importDefault(require("express"));
 require("./projects/sandbox/utils/models");
 require("./projects/falseidol/utils/models");
 const router = express_1.default.Router();
-// Check backend health
-router.get('/health-check', (req, res) => { res.send('Great Health'); });
+router.get('/login/:site', (req, res, next) => {
+    var _a;
+    try {
+        const site = req.params.site;
+        const token = req.header('x-auth-token');
+        if (!token)
+            return res.status(401).json({ msg: 'No valid token' });
+        let userId;
+        if (token === 'admin') {
+            if (site === 'reqdoc')
+                userId = process.env.ADMIN_REQDOC;
+            if (site === 'falseidol')
+                userId = process.env.ADMIN_FALSEIDOL;
+        }
+        else {
+            const decoded = (0, jwt_decode_1.default)(token);
+            userId = decoded.user_id;
+        }
+        const session = JSON.parse(((_a = req.session) === null || _a === void 0 ? void 0 : _a.token) || '{}');
+        if (session) {
+            req.session = {
+                token: JSON.stringify(Object.assign(Object.assign({}, session), { [site]: userId }))
+            };
+        }
+        else {
+            req.session = {
+                token: JSON.stringify({
+                    [site]: userId
+                })
+            };
+        }
+        res.json('logged in');
+    }
+    catch (err) {
+        res.status(401).json({ msg: 'Token is not valid' });
+    }
+});
+router.get('/logout/:site', (req, res, next) => {
+    var _a;
+    try {
+        const site = req.params.site;
+        const session = JSON.parse(((_a = req.session) === null || _a === void 0 ? void 0 : _a.token) || '{}');
+        delete session[site];
+        if (session) {
+            req.session = {
+                token: JSON.stringify(session)
+            };
+        }
+        res.json('logged out');
+    }
+    catch (err) {
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+});
+router.get('/session', (req, res, next) => {
+    var _a;
+    try {
+        const session = JSON.parse(((_a = req.session) === null || _a === void 0 ? void 0 : _a.token) || '{}');
+        console.log(req.session);
+        res.json(session);
+    }
+    catch (err) {
+        res.status(500).json({ msg: 'Something went wrong' });
+    }
+});
 /* ===================================
    Reqdoc
 =================================== */
@@ -88,5 +151,6 @@ router.use('/api/falseidol/settings', settings_routes_1.default);
    Sandbox
 =================================== */
 const posts_routes_1 = __importDefault(require("./projects/sandbox/posts/posts.routes"));
+const jwt_decode_1 = __importDefault(require("jwt-decode"));
 router.use('/api/sandbox/posts', posts_routes_1.default);
 exports.default = router;

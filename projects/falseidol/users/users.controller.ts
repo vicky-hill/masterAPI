@@ -32,17 +32,6 @@ export const getCurrentUser = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { userId } = req.user;
-
-        const user = await User.loginUser(userId, req);
-        res.json(user);
-    } catch (err) {
-        next(err);
-    }
-}
-
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await User.createUser(req.body);

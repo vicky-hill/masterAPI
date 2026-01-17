@@ -25,7 +25,7 @@ app.use(logger("dev"));
 app.use(cors());
 app.use(cookieSession({
     name: 'session',
-    keys: [process.env.COOKIE_SECRET || 'your-secret-key'],
+    keys: [process.env.SECRET!],
     maxAge: 30 * 24 * 60 * 60 * 1000
 }));
 

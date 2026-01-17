@@ -23,6 +23,9 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         if (userId) {
             const user = yield models_1.User.findByPk(userId);
             if (user) {
+                if (req.route.path !== '/current' && !user.verified) {
+                    return res.status(401).json({ msg: 'User is not verified' });
+                }
                 req.user = user;
                 return next();
             }

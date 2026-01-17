@@ -9,13 +9,17 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
 
         if (userId) {
             const user = await User.findByPk(userId);
-            
+
             if (user) {
+                if (req.route.path !== '/current' && !user.verified) {
+                    return res.status(401).json({ msg: 'User is not verified' });
+                }
+
                 req.user = user;
                 return next();
             }
         }
-        
+
         const token = req.header('x-auth-token');
         const decoded: any = jwt_decode(token);
 

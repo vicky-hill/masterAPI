@@ -42,7 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.createUser = exports.loginUser = exports.getCurrentUser = exports.getUser = exports.getUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createUser = exports.getCurrentUser = exports.getUser = exports.getUsers = void 0;
 const User = __importStar(require("./users.functions"));
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -76,17 +76,6 @@ const getCurrentUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.getCurrentUser = getCurrentUser;
-const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { userId } = req.user;
-        const user = yield User.loginUser(userId, req);
-        res.json(user);
-    }
-    catch (err) {
-        next(err);
-    }
-});
-exports.loginUser = loginUser;
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield User.createUser(req.body);

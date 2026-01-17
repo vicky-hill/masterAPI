@@ -1,1 +1,1 @@
-export const ADMIN = process.env.ADMIN_RECDOC;
+export const ADMIN = process.env.ADMIN_REQDOC;

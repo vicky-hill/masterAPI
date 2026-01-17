@@ -45,10 +45,3 @@ export const deleteUser = async (userId: string) => {
     await User.destroy({ where: { userId } });
     return { userId };
 }
-
-export const loginUser = async (userId: string, req: Request) => {
-    req.session = { token: JSON.stringify({ falseidol: userId }) }
-
-    const user = await getUser(userId);
-    return user;
-}

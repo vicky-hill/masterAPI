@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const models_1 = require("../utils/models");
 const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const userInstances = yield models_1.User.findAll({
@@ -49,9 +49,3 @@ const deleteUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     return { userId };
 });
 exports.deleteUser = deleteUser;
-const loginUser = (userId, req) => __awaiter(void 0, void 0, void 0, function* () {
-    req.session = { token: JSON.stringify({ falseidol: userId }) };
-    const user = yield (0, exports.getUser)(userId);
-    return user;
-});
-exports.loginUser = loginUser;
