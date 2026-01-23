@@ -22,11 +22,26 @@ connectDB();
 
 app.use(express.json());
 app.use(logger("dev"));
-app.use(cors());
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || (isDevelopment ? ['http://localhost:3000'] : []);
+
+app.use(cors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    credentials: true
+}));
+
 app.use(cookieSession({
     name: 'session',
     keys: [process.env.SECRET!],
-    maxAge: 30 * 24 * 60 * 60 * 1000
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    path: '/',
+    // For cross-origin requests (localhost:3000 -> localhost:4000), we need 'none'
+    // Note: Browsers require secure: true with sameSite: 'none', but for localhost
+    // some browsers may accept secure: false. If it doesn't work, use HTTPS or Next.js rewrites.
+    sameSite: 'none',
+    secure: false, // Set to true in production (requires HTTPS)
+    httpOnly: true
 }));
 
 app.use((req, res, next) => {

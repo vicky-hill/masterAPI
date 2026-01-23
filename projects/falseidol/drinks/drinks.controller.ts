@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
 import * as Drink from './drinks.functions'
 
+export const getAllDrinks = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allDrinks = await Drink.getAllDrinks();
+    res.json(allDrinks)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const getDrinks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { type, current } = req.query;
@@ -13,12 +22,11 @@ export const getDrinks = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
-
 export const updateDrink = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { drinkId } = req.params;
 
-        const drink = await Drink.updateDrink(Number(drinkId as string), req.body);
+        const drink = await Drink.updateDrink(Number(drinkId), req.body);
         res.json(drink);
     } catch (err) {
         next(err);
@@ -34,7 +42,17 @@ export const createDrink = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export const requestDrink = async (req: Request, res: Response, next: NextFunction) => {
+  try {    
+    const { drinkId } = req.params;
+    const { userId } = req.user;
 
+    const result = await Drink.requestDrink(Number(drinkId), userId);
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+}
 
 
 export const syncDrinks = async (req: Request, res: Response, next: NextFunction) => {

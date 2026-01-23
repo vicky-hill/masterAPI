@@ -33,6 +33,10 @@ export const protect = async (req: any, res: Response, next: NextFunction) => {
             return res.status(401).json({ msg: 'User is not verified' });
         }
 
+        if (req.baseUrl.includes('dashboard') && !user.isAdmin) {
+            return res.status(401).json({ msg: 'No dashboard access' });
+        }
+
         req.user = user;
         next();
     } catch (err) {

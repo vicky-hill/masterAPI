@@ -2,6 +2,7 @@ import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOpt
 import sequelize from '../../../config/falseidol.db.config'
 import { DrinkType } from '../../../types/falseidol/attribute.types'
 import UserDrink from './user.drink.model'
+import Setting from '../settings/settings.model'
 
 export interface FalseIdolDrink {
     id: number
@@ -28,13 +29,41 @@ class Drink extends Model<InferAttributes<Drink>, InferCreationAttributes<Drink>
     declare onMenu?: boolean
     declare happyHour?: boolean
     declare description?: string
-    
+
     declare userInfo?: NonAttribute<UserDrink>[]
     declare notes?: string | null
     declare orederd?: number
-    
+
     declare addUserInfo: HasManyAddAssociationMixin<UserDrink, number>
     declare removeUserInfo: HasManyRemoveAssociationMixin<UserDrink, number>
+
+    static async getDrinkById(drinkId: number | string, userId: string) {
+        const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
+
+        const descriptionSetting = await Setting.findByPk(3);
+
+        if (descriptionSetting?.active) {
+            attributes.push('description');
+        }
+
+        const drinkInstance = await Drink.findByPk(drinkId, {
+            rejectOnEmpty: new Error('Drink not found'),
+            include: [{
+                model: UserDrink,
+                as: 'userInfo',
+                where: { userId },
+                required: false
+            }]
+        });
+
+        const { userInfo, ...drink }: any = drinkInstance.get({ plain: true });
+
+        return {
+            ...drink,
+            notes: userInfo[0]?.notes || null,
+            ordered: userInfo[0]?.ordered || 0
+        }
+    }
 }
 
 const drinkSchema = {
@@ -77,12 +106,12 @@ const drinkSchema = {
 }
 
 Drink.init(drinkSchema, {
-  sequelize,
-  modelName: "drink",
-  tableName: "drinks",
-  timestamps: false
+    sequelize,
+    modelName: "drink",
+    tableName: "drinks",
+    timestamps: false
 })
 
-     
+
 
 export default Drink;

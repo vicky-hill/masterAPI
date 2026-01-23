@@ -4,6 +4,14 @@ import Drink from './drinks.model'
 import UserDrink from './user.drink.model'
 
 
+export const getAllDrinks = async () => {
+    const drinks = await Drink.findAll({
+        where: {}
+    });
+
+    return drinks;
+}
+
 export const getDrinks = async (type: string, current: string, userId: string) => {
     const where: any = { current: true };
     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort']
@@ -41,10 +49,7 @@ export const getDrinks = async (type: string, current: string, userId: string) =
 }
 
 export const updateDrink = async (drinkId: number, data: any) => {
-    await Drink.update(
-        data,
-        { where: { drinkId } }
-    )
+    await Drink.update(data, { where: { drinkId } })
 
     const drink = await Drink.findByPk(drinkId);
 
@@ -53,6 +58,25 @@ export const updateDrink = async (drinkId: number, data: any) => {
 
 export const createDrink = async (data: any) => {
     const drink = await Drink.create(data);
+    return drink;
+}
+
+export const requestDrink = async (drinkId: number, userId: string) => {
+    const userDrink = await UserDrink.findOne({
+        where: { drinkId, userId }
+    })
+
+    if (userDrink) {
+        await userDrink.increment({ ordered: 1 })
+    } else {
+        await UserDrink.create({
+            drinkId,
+            userId,
+            ordered: 1
+        })
+    }
+
+    const drink = await Drink.getDrinkById(drinkId, userId);
     return drink;
 }
 
@@ -15512,10 +15536,25 @@ export const syncDrinks = async () => {
         happyHour: drink.country.toLocaleLowerCase().includes('happy') && drink.current
     }))
 
-    const drinks = await Drink.bulkCreate(payload, {
+    const existingDrinksOnMenu = await Drink.findAll({
+        where: { onMenu: true },
+        attributes: ['name']
+    });
+    const onMenuNames = new Set(existingDrinksOnMenu.map(d => d.name));
+
+    const drinksToUpdate = payload.filter((drink: any) => !onMenuNames.has(drink.name));
+    const drinksToSkip = payload.filter((drink: any) => onMenuNames.has(drink.name));
+
+    const drinks = await Drink.bulkCreate(drinksToUpdate, {
         updateOnDuplicate: ['type', 'country', 'current', 'happyHour'],
         conflictAttributes: ['name']
     });
+
+    if (drinksToSkip.length > 0) {
+        await Drink.bulkCreate(drinksToSkip, {
+            ignoreDuplicates: true
+        });
+    }
 
     return drinks;
 }

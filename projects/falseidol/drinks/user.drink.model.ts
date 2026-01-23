@@ -12,9 +12,9 @@ export interface UserInfo {
 class UserDrink extends Model<InferAttributes<UserDrink>, InferCreationAttributes<UserDrink>> {
     declare userDrinkId: CreationOptional<number>
     declare drinkId: number
-    declare userId: number
+    declare userId: string
     declare notes?: string
-    declare ordered?: boolean
+    declare ordered?: number
 }
 
 const userDrinkSchema = {
@@ -27,14 +27,14 @@ const userDrinkSchema = {
         type: Sequelize.INTEGER
     },
     userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     },
     notes: {
         type: Sequelize.STRING
     },
     ordered: {
         type: Sequelize.INTEGER,
-        defaultValue: false
+        defaultValue: 0
     }
 }
 

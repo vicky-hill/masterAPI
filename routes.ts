@@ -42,7 +42,7 @@ router.get('/login/:site', (req, res, next) => {
          }
       }
 
-      res.json('logged in');
+      res.json(JSON.parse(req.session.token!));
    } catch (err: any) {
       res.status(401).json({ msg: 'Token is not valid' });
    }
