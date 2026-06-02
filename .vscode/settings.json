@@ -143,7 +143,7 @@
     "editor.inlineSuggest.enabled": false,
     "editor.comments.ignoreEmptyLines": false,
     "github.copilot.editor.enableAutoCompletions": false,
-    "workbench.colorTheme": "Hop Light",
+    "workbench.colorTheme": "Hop Light (Italics)",
     "github.copilot.nextEditSuggestions.enabled": true,
     "workbench.secondarySideBar.defaultVisibility": "hidden",
     "chat.agent.enabled": false,

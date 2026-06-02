@@ -182,8 +182,13 @@ router.use('/api/falseidol/settings', falseidol_settingsRoutes)
 =================================== */
 
 import sandbox_postRoutes from './projects/sandbox/posts/posts.routes'
+import sandbox_spendingRoutes from './projects/sandbox/spending/spending.routes'
 import jwt_decode from 'jwt-decode';
+import { getPDM } from './projects/sandbox/pdm/pdm.controller'
 
 router.use('/api/sandbox/posts', sandbox_postRoutes)
+router.use('/api/sandbox/spending', sandbox_spendingRoutes)
+
+router.route('/pdm').get(getPDM)
 
 export default router;

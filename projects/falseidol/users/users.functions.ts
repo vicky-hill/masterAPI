@@ -1,18 +1,8 @@
 import { User } from '../utils/models'
-import jwt_decode from 'jwt-decode'
-import { Request } from 'express'
 
 
 export const getUsers = async () => {
-    const userInstances = await User.findAll({
-        where: {}
-    });
-
-    const users = userInstances.map((userInstance) => {
-        const user = userInstance.get({ plain: true });
-        return { ...user };
-    })
-
+    const users = await User.findAll();
     return users;
 }
 

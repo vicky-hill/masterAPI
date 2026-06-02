@@ -23,10 +23,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syncDrinks = exports.createDrink = exports.updateDrink = exports.getDrinks = void 0;
+exports.syncDrinks = exports.requestDrink = exports.createDrink = exports.updateDrink = exports.getDrinks = exports.getAllDrinks = void 0;
 const settings_model_1 = __importDefault(require("../settings/settings.model"));
 const drinks_model_1 = __importDefault(require("./drinks.model"));
 const user_drink_model_1 = __importDefault(require("./user.drink.model"));
+const getAllDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
+    const drinks = yield drinks_model_1.default.findAll();
+    return drinks;
+});
+exports.getAllDrinks = getAllDrinks;
 const getDrinks = (type, current, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const where = { current: true };
     const attributes = ['drinkId', 'type', 'name', 'current', 'onMenu', 'price', 'happyHour', 'image', 'sort'];
@@ -56,8 +61,10 @@ const getDrinks = (type, current, userId) => __awaiter(void 0, void 0, void 0, f
 });
 exports.getDrinks = getDrinks;
 const updateDrink = (drinkId, data) => __awaiter(void 0, void 0, void 0, function* () {
-    yield drinks_model_1.default.update(data, { where: { drinkId } });
-    const drink = yield drinks_model_1.default.findByPk(drinkId);
+    const drink = yield drinks_model_1.default.findByPk(drinkId, {
+        rejectOnEmpty: new Error('Drink not found')
+    });
+    yield drink.update(data);
     return drink;
 });
 exports.updateDrink = updateDrink;
@@ -66,6 +73,24 @@ const createDrink = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return drink;
 });
 exports.createDrink = createDrink;
+const requestDrink = (drinkId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userDrink = yield user_drink_model_1.default.findOne({
+        where: { drinkId, userId }
+    });
+    if (userDrink) {
+        yield userDrink.increment({ ordered: 1 });
+    }
+    else {
+        yield user_drink_model_1.default.create({
+            drinkId,
+            userId,
+            ordered: 1
+        });
+    }
+    const drink = yield drinks_model_1.default.getDrinkById(drinkId, userId);
+    return drink;
+});
+exports.requestDrink = requestDrink;
 const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
     const data = [
         {
@@ -15517,10 +15542,22 @@ const syncDrinks = () => __awaiter(void 0, void 0, void 0, function* () {
         price: Number(drink.price),
         happyHour: drink.country.toLocaleLowerCase().includes('happy') && drink.current
     }));
-    const drinks = yield drinks_model_1.default.bulkCreate(payload, {
+    const existingDrinksOnMenu = yield drinks_model_1.default.findAll({
+        where: { onMenu: true },
+        attributes: ['name']
+    });
+    const onMenuNames = new Set(existingDrinksOnMenu.map(d => d.name));
+    const drinksToUpdate = payload.filter((drink) => !onMenuNames.has(drink.name));
+    const drinksToSkip = payload.filter((drink) => onMenuNames.has(drink.name));
+    const drinks = yield drinks_model_1.default.bulkCreate(drinksToUpdate, {
         updateOnDuplicate: ['type', 'country', 'current', 'happyHour'],
         conflictAttributes: ['name']
     });
+    if (drinksToSkip.length > 0) {
+        yield drinks_model_1.default.bulkCreate(drinksToSkip, {
+            ignoreDuplicates: true
+        });
+    }
     return drinks;
 });
 exports.syncDrinks = syncDrinks;

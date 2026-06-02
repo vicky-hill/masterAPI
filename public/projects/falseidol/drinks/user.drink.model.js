@@ -50,14 +50,14 @@ const userDrinkSchema = {
         type: sequelize_1.default.INTEGER
     },
     userId: {
-        type: sequelize_1.default.INTEGER
+        type: sequelize_1.default.STRING
     },
     notes: {
         type: sequelize_1.default.STRING
     },
     ordered: {
         type: sequelize_1.default.INTEGER,
-        defaultValue: false
+        defaultValue: 0
     }
 };
 UserDrink.init(userDrinkSchema, {

@@ -42,8 +42,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syncDrinks = exports.createDrink = exports.updateDrink = exports.getDrinks = void 0;
+exports.syncDrinks = exports.requestDrink = exports.createDrink = exports.updateDrink = exports.getDrinks = exports.getAllDrinks = void 0;
 const Drink = __importStar(require("./drinks.functions"));
+const getAllDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const allDrinks = yield Drink.getAllDrinks();
+        res.json(allDrinks);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.getAllDrinks = getAllDrinks;
 const getDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { type, current } = req.query;
@@ -77,6 +87,18 @@ const createDrink = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.createDrink = createDrink;
+const requestDrink = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { drinkId } = req.params;
+        const { userId } = req.user;
+        const result = yield Drink.requestDrink(Number(drinkId), userId);
+        res.json(result);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.requestDrink = requestDrink;
 const syncDrinks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const drinks = yield Drink.syncDrinks();

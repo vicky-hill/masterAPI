@@ -13,26 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateSetting = exports.getSettings = void 0;
-const logs_model_1 = __importDefault(require("../logs/logs.model"));
 const settings_model_1 = __importDefault(require("./settings.model"));
 const getSettings = () => __awaiter(void 0, void 0, void 0, function* () {
-    const settingInstances = yield settings_model_1.default.findAll({
-        where: {}
-    });
-    const settings = settingInstances.map((settingInstance) => {
-        const setting = settingInstance.get({ plain: true });
-        return Object.assign({}, setting);
-    });
-    yield logs_model_1.default.create({
-        request: 'getting settings'
-    });
+    const settings = yield settings_model_1.default.findAll();
     return settings;
 });
 exports.getSettings = getSettings;
 const updateSetting = (data, settingId) => __awaiter(void 0, void 0, void 0, function* () {
-    const setting = yield settings_model_1.default.update(data, { where: { settingId } });
-    if (!setting)
-        throw new Error('Setting not found');
+    const setting = yield settings_model_1.default.findByPk(settingId, {
+        rejectOnEmpty: new Error('Setting not found')
+    });
+    yield setting.update(data);
     return setting;
 });
 exports.updateSetting = updateSetting;

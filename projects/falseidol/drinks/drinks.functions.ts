@@ -5,9 +5,7 @@ import UserDrink from './user.drink.model'
 
 
 export const getAllDrinks = async () => {
-    const drinks = await Drink.findAll({
-        where: {}
-    });
+    const drinks = await Drink.findAll();
 
     return drinks;
 }
@@ -49,9 +47,11 @@ export const getDrinks = async (type: string, current: string, userId: string) =
 }
 
 export const updateDrink = async (drinkId: number, data: any) => {
-    await Drink.update(data, { where: { drinkId } })
-
-    const drink = await Drink.findByPk(drinkId);
+    const drink = await Drink.findByPk(drinkId, {
+        rejectOnEmpty: new Error('Drink not found')
+    });
+   
+    await drink.update(data);
 
     return drink;
 }

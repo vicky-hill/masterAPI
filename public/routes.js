@@ -38,7 +38,7 @@ router.get('/login/:site', (req, res, next) => {
                 })
             };
         }
-        res.json('logged in');
+        res.json(JSON.parse(req.session.token));
     }
     catch (err) {
         res.status(401).json({ msg: 'Token is not valid' });
@@ -152,5 +152,7 @@ router.use('/api/falseidol/settings', settings_routes_1.default);
 =================================== */
 const posts_routes_1 = __importDefault(require("./projects/sandbox/posts/posts.routes"));
 const jwt_decode_1 = __importDefault(require("jwt-decode"));
+const pdm_controller_1 = require("./projects/sandbox/pdm/pdm.controller");
 router.use('/api/sandbox/posts', posts_routes_1.default);
+router.route('/pdm').get(pdm_controller_1.getPDM);
 exports.default = router;

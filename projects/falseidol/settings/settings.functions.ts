@@ -1,29 +1,16 @@
-import Log from '../logs/logs.model'
 import Setting from './settings.model'
 
 export const getSettings = async () => {
-    const settingInstances = await Setting.findAll({
-        where: {} 
-    });
-
-    const settings = settingInstances.map((settingInstance) => {
-        const setting = settingInstance.get({ plain: true });
-        return { ...setting };
-    })
-
-    await Log.create({
-        request: 'getting settings' 
-    })
-
+    const settings = await Setting.findAll();
     return settings;
 }
 
 export const updateSetting = async (data: Setting, settingId: string) => {
-    const setting = await Setting.update(data,
-        { where: { settingId } }
-    );
+    const setting = await Setting.findByPk(settingId, {
+        rejectOnEmpty: new Error('Setting not found')
+    });
 
-    if (!setting) throw new Error('Setting not found');
-
+    await setting.update(data);
+    
     return setting;
 }
